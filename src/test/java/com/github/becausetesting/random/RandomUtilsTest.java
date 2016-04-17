@@ -38,11 +38,7 @@ public class RandomUtilsTest {
 	}
 	@Test
 	public void testGetRandomString() {
-		String randomstr = RandomUtilsTest.getRandomString(2);
-		String randomstr2 = RandomUtilsTest.getRandomString(2);
-		//assertEquals(30, maxNumber);
-		System.out.println("random string is: "+randomstr); 
-		System.out.println("random string is: "+randomstr2); 
+		
 	}
 
 	

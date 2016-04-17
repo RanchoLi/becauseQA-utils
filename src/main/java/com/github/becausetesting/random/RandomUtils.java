@@ -3,6 +3,9 @@ package com.github.becausetesting.random;
 
 
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,16 +17,7 @@ public class RandomUtils {
 		return ThreadLocalRandom.current().nextInt(min, max + 1);
 	}
 
-	public String getRandomString(int len){
-		String result="";
-		String alphabet ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; //9
-		int n = alphabet.length(); //10
-		for(int k=0;k<len;k++){
-			 result = result + alphabet.charAt(new SecureRandom().nextInt(n)); //13
-		}
-		return result;
-		
-	}
+	
 	public String getGUID() {
 		return UUID.randomUUID().toString();
 	}
@@ -71,4 +65,10 @@ public class RandomUtils {
 		return min;
 	}
 	
+	public int getMinNumber3(int[] arrays){
+		List asList = Arrays.asList(arrays);
+		Integer maxnumber = (Integer)Collections.min(asList);
+		return maxnumber.intValue();
+		
+	}
 }

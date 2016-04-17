@@ -4,10 +4,16 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.MonthDay;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.becausetesting.time.TimeUtils.UNIT;
 
 public class TimeUtilsTest {
 
@@ -42,6 +48,12 @@ public class TimeUtilsTest {
 	@Test
 	public void testWhichdayOfWeek() {
 		String whichdayOfWeek = time.whichdayOfWeek(LocalDateTime.now());
+		LocalDateTime now = LocalDateTime.now();
+		
+		LocalDateTime plus = now.plus(-1, ChronoUnit.YEARS);
+		long dateDiff = time.dateDiff(UNIT.DAYS,plus, now);
+		
+		
 		System.out.println(whichdayOfWeek);
 	}
 

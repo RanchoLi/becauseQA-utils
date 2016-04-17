@@ -21,6 +21,10 @@
 		<freemarker.version>2.3.23</freemarker.version>
 		<ews.version>2.0</ews.version>
 		<version.mail>1.5.0-b01</version.mail>
+		<dom4j.version>1.6</dom4j.version>
+		<jtds.version>1.3.1</jtds.version>
+		<jexcelapi.version>2.6.12</jexcelapi.version>
+		<json.version>2.6.2</json.version>
 
 		<!-- plugins dependencies -->
 
@@ -36,19 +40,42 @@
 			<artifactId>freemarker</artifactId>
 			<version>${freemarker.version}</version>
 		</dependency>
-
 		<!-- A java client library to access Exchange web services -->
 		<dependency>
 			<groupId>com.microsoft.ews-java-api</groupId>
 			<artifactId>ews-java-api</artifactId>
 			<version>${ews.version}</version>
 		</dependency>
+		<!-- java email -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>${version.mail}</version>
 		</dependency>
-
+		<!-- xml parse -->
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>${dom4j.version}</version>
+		</dependency>
+		<!-- java excel api -->
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>${jexcelapi.version}</version>
+		</dependency>
+		<!-- jdbc connection -->
+		<dependency>
+			<groupId>net.sourceforge.jtds</groupId>
+			<artifactId>jtds</artifactId>
+			<version>${jtds.version}</version>
+		</dependency>
+		<!-- json parse -->
+		<dependency>			    
+			<groupId>com.google.code.gson</groupId>			    
+			<artifactId>gson</artifactId>			    
+			<version>${json.version}</version>
+		</dependency>
 
 	</dependencies>
 
