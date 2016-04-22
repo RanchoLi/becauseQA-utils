@@ -2,9 +2,12 @@ package com.github.becausetesting.time;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.MonthDay;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
@@ -19,7 +22,7 @@ public class TimeUtils {
 	/*
 	 * LocalDateTime ==Year +Month /YearMonth MonthDay DayOfWeek
 	 */
-	enum UNIT {
+	public static enum UNIT {
 		YEAR, MONTH, WEEK, DAYS, HOURS, MINUTES, SECONDS, NANOSECONDS;
 	}
 
@@ -30,6 +33,11 @@ public class TimeUtils {
 	public LocalDateTime ofDateTime(int year, int month, int day) {
 		return LocalDateTime.of(year, month, day, 0, 0);
 	}
+	
+	public LocalDateTime ofDateTime(Instant instant){
+		LocalDateTime ofInstant = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+		return ofInstant;
+	}
 
 	public String dateTimeString(LocalDateTime date, String pattern) {
 		return date.format(DateTimeFormatter.ofPattern(pattern));
@@ -38,11 +46,20 @@ public class TimeUtils {
 	public LocalDateTime string2DateTime(String datetime, String pattern) {
 		return LocalDateTime.parse(datetime, DateTimeFormatter.ofPattern(pattern));
 	}
+	
+	public long getSeconds(LocalDateTime dateTime){
+		//long epochSecond = dateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
+		long epochSecond = dateTime.atZone(ZoneOffset.UTC).toEpochSecond();
+		return epochSecond;
+	}
+	public Instant toInstant(LocalDateTime dateTime){
+		Instant instant = dateTime.toInstant(ZoneOffset.UTC);
+		return instant;
+	}
 
 	/**
-	 * whichdayOfWeek:(这里用一句话描述这个方法的作用). TODO(这里描述这个方法适用条件 – 可选).
-	 * TODO(这里描述这个方法的执行流程 – 可选). TODO(这里描述这个方法的使用方法 – 可选). TODO(这里描述这个方法的注意事项 –
-	 * 可选).
+	 * whichdayOfWeek:
+	 * TODO
 	 *
 	 * @author Administrator
 	 * @param datetime
@@ -55,8 +72,7 @@ public class TimeUtils {
 	}
 
 	/**
-	 * dateAdd:(这里用一句话描述这个方法的作用). TODO(这里描述这个方法适用条件 – 可选). TODO(这里描述这个方法的执行流程 –
-	 * 可选). TODO(这里描述这个方法的使用方法 – 可选). TODO(这里描述这个方法的注意事项 – 可选).
+	 * dateAdd:
 	 *
 	 * @author Administrator
 	 * @param unit

@@ -25,7 +25,7 @@ import com.github.becausetesting.string.StringUtils;
 
 public class EmailUtils {
 
-	private static String emailfile = "email";
+	private static File emailfile;
 	
 	private MimeMultipart multipart;
 	private BodyPart bodypart;
@@ -130,7 +130,7 @@ public class EmailUtils {
 	}
 
 
-	public static void setEmailfile(String emailfile) {
+	public static void setEmailfile(File emailfile) {
 		EmailUtils.emailfile = emailfile;
 	}
 

@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.axis.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -260,21 +259,14 @@ public class CommandUtils {
 	*/
 
 	
-
-	/**
-	 * Get the command in a string form.
-	 *
-	 * @param command
-	 *            The command represented as a string array.
-	 * @return A string representing the command.
-	 */
-	public static String convertCommandStringArrayToString(String[] command) {
-		String output = "";
-		for (String com : command) {
-			output += " " + com;
+	public static String humanReadableCommandLineOutput(List<String> arguments) {
+		String debugOutput = "";
+		for (String argument : arguments) {
+			debugOutput += argument + " ";
 		}
-
-		return output;
+		return debugOutput.trim();
 	}
+
+	
 }
 

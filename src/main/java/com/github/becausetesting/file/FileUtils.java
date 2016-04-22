@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,8 @@ import java.util.List;
 public class FileUtils {
 
 	private List<File> fileList = new ArrayList<File>();
+
+	private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
 	public void createFile(File filePath) {
 		if (filePath.exists()) {
@@ -60,7 +63,7 @@ public class FileUtils {
 		}
 	}
 
-	public boolean copyorMove(String sourceFile, String destinationPath) {
+	public boolean copy(String sourceFile, String destinationPath) {
 		File file = new File(sourceFile);
 		if (file.exists()) {
 			String filename = file.getName();
@@ -75,23 +78,39 @@ public class FileUtils {
 		}
 	}
 
-	public boolean copyorMoveStream(String sourceFile, String destinationPath) {
+	public static long copy(InputStream input, OutputStream output) throws IOException {
+		long count = 0;
+		int length = 0;
+		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+		while ((length = input.read(buffer))!=-1) {
+			output.write(buffer, 0, length);
+			count += length;
+		}
+		output.flush();
+		output.close();
+		input.close();
+		return count;
+	}
+
+	public static long copyFile(String sourceFile, String destinationPath) {
 		File file = new File(sourceFile);
+		int bytesum = 0;
 		if (file.exists()) {
 			InputStream inStream;
 			try {
 				inStream = new FileInputStream(sourceFile);
 				FileOutputStream fs = new FileOutputStream(destinationPath);
-				byte[] buffer = new byte[1444];
+				byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 				int length = 0;
-				int bytesum = 0;
+				
 				while ((length = inStream.read(buffer)) != -1) {
 					bytesum += length;
 					fs.write(buffer, 0, length);
 				}
-				inStream.close();
+				fs.flush();
 				fs.close();
-				return true;
+				inStream.close();
+				
 			} catch (FileNotFoundException e) {
 
 				// TODO Auto-generated catch block
@@ -105,7 +124,8 @@ public class FileUtils {
 			}
 
 		}
-		return false;
+		return bytesum;
+		
 	}
 
 	public List<File> listFilePath(String filePath, String... filter) {
@@ -132,7 +152,7 @@ public class FileUtils {
 				}
 			}
 
-		} 
+		}
 
 		return fileList;
 	}

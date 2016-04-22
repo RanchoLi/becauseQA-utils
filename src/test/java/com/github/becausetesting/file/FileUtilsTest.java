@@ -42,7 +42,7 @@ public class FileUtilsTest {
 		fileUtils.createFile(new File(pathname));
 		fileUtils.deleteFileorDirectory(new File(pathname));
 
-		fileUtils.copyorMove("D:\\Downloads\\OpenLiveWriterSetup.exe", "E:\\Softwares");
+		fileUtils.copy("D:\\Downloads\\OpenLiveWriterSetup.exe", "E:\\Softwares");
 
 		List<File> listFilePath = fileUtils.listFilePath("E:\\Softwares", ".exe");
 

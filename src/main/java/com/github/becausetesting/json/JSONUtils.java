@@ -11,6 +11,10 @@ package com.github.becausetesting.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * ClassName:JSONUtils  
@@ -43,12 +47,26 @@ public class JSONUtils {
 	 * @return
 	 * @since JDK 1.8
 	 */
-	public String toJson(Object jsonElement){
+	public String fromObject(Object jsonElement){
 		return gson.toJson(jsonElement);
 	}
 	
-	public <T> T fromJson(String json,Class<T> classOfT){
+	public <T> T toJson(String json,Class<T> classOfT){
 		return gson.fromJson(json, classOfT);
+	}
+	
+	public JsonElement toJsonElementParse(String json){
+		JsonParser parser=new JsonParser();
+		JsonElement JsonElement= parser.parse(json);
+		//JsonElement jsonElement = gson.fromJson(json, JsonElement.class);
+		//JsonArray jsonArray = jsonElement.getAsJsonArray();
+		return JsonElement;
+	}
+	public JsonElement toJsonElement(String json){
+		
+		JsonElement jsonElement = gson.fromJson(json, JsonElement.class);
+		//JsonObject jsonObject = jsonElement.getAsJsonObject();
+		return jsonElement;
 	}
 }
 

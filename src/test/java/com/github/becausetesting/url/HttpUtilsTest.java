@@ -43,12 +43,12 @@ public class HttpUtilsTest {
 	@Test
 	public void testGetResponse() {
 		try {
-		httpUtils.doGetResponse(new URL("https://www.baidu.com"));
+		httpUtils.getRequest(new URL("https://www.baidu.com"), null);
 		
 		Map<String,String> data=new HashMap<String,String>();
 		
 		data.put("search", "est");
-		httpUtils.doPostResponse(new URL("https://www.baidu.com"), data);
+		//httpUtils.postRequest(url, headers, data)(new URL("https://www.baidu.com"), data);
 		
 		} catch (IOException e) {
 			

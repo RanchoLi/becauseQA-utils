@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration debug="true"
+	xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<!-- <param name="Target" value="System.out"/> -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p:%d{yyyy-MM-dd HH:mm:ss a}:%m%n" />
+		</layout>
+		<!-- <filter class="org.apache.log4j.varia.LevelRangeFilter"> <param name="LevelMin" 
+			value="DEBUG"/> <param name="LevelMax" value="DEBUG"/> </filter> -->
+	</appender>
+	<!-- output the debug -->
+	<!-- <appender name="log4jDebug" class="org.apache.log4j.DailyRollingFileAppender"> 
+		<param name="File" value="log_"/> <param name="MaxFileSize" value="KB"/> 
+		<param name="MaxBackupIndex" value="2"/> -->
+	<appender name="log4jDebug" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="maxFileSize" value="10KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="file" value="./target/logs/debug.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p:%d{yyyy-MM-dd HH:mm:ss a}:%m%n" />
+		</layout>
+
+	</appender>
+
+	<appender name="log4jInfo" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="maxFileSize" value="10KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="file" value="./target/logs/info.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%p:%d{yyyy-MM-dd HH:mm:ss a}:%m%n" />
+		</layout>
+
+	</appender>
+
+	<appender name="log4jWarn" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="maxFileSize" value="10KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="file" value="./target/logs/warning.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%p:%d{yyyy-MM-dd HH:mm:ss a}:%m%n [Thread: %t][Current Running Method Name: %l,Class Name:%c]%n" />
+		</layout>
+
+	</appender>
+	<!-- <appender name="log4jError" class="org.apache.log4j.DailyRollingFileAppender"> -->
+	<appender name="log4jError" class="org.apache.log4j.RollingFileAppender">
+
+		<param name="Append" value="true" />
+		<param name="maxFileSize" value="10KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="file" value="./target/logs/errors.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%p:%d{yyyy-MM-dd HH:mm:ss a}:%m%n [Thread: %t][Current Running Method Name: %l,Class Name:%c]%n" />
+		</layout>
+
+	</appender>
+
+	<root>
+		<level value="debug" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="log4jDebug" />
+		<appender-ref ref="log4jInfo" />
+		<appender-ref ref="log4jWarn" />
+		<appender-ref ref="log4jError" />
+	</root>
+</log4j:configuration>

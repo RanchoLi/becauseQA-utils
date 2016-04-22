@@ -1,5 +1,7 @@
 package com.github.becausetesting.properties;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -13,11 +15,16 @@ public class PropertyUtils {
 	
 	//**********************using resourcebundle********************************************
 	
-	public static void setResourceBundle(String propertyfile) {
-		ResourceBundle tempresourceBundle = ResourceBundle.getBundle(propertyfile, Locale.getDefault());
-		InputStream propertyresource = PropertyUtils.class.getClassLoader().getResourceAsStream(propertyfile+".properties");
+	public static void setResourceBundle(File propertyfile) {
+		String filename = propertyfile.getName();
+		int pos=filename.lastIndexOf(".");
+		if(pos>0){
+			filename=filename.substring(0, pos);
+		}
+		ResourceBundle tempresourceBundle = ResourceBundle.getBundle(filename, Locale.getDefault());
+		//InputStream propertyresource = PropertyUtils.class.getClassLoader().getResourceAsStream(propertyfile+".properties");
 		try {
-			properties.load(propertyresource);
+			properties.load(new FileInputStream(propertyfile));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
