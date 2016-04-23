@@ -86,9 +86,9 @@ public class HttpUtils {
 
 	}
 	public void setAuthorizationHeader(String username, String password) {
-		Base64Utils base64 = new Base64Utils();
+		//Base64Utils base64 = new Base64Utils();
 		String userpass = username + ":" + password;
-		String basicAuth = base64.encrypt(userpass);
+		String basicAuth = Base64Utils.encryptBasic(userpass);
 		Map<String, String> header = new HashMap<>();
 		header.put("Authorization", "Basic " + basicAuth);
 		setHeaders(header);
