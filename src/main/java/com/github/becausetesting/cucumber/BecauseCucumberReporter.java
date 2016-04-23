@@ -101,8 +101,15 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
 	}
 
-	/*****************************************************************************/
+	
 
+	/**
+	 * startExecutionUnit: 
+	 * @author alterhu2020@gmail.com
+	 * @param executionUnitRunner the runner from junit.
+	 * @param runNotifier the notfier from junit.
+	 * @since JDK 1.8
+	 */
 	public void startExecutionUnit(ExecutionUnitRunner executionUnitRunner, RunNotifier runNotifier) {
 		this.executionUnitRunner = executionUnitRunner;
 		this.runNotifier = runNotifier;

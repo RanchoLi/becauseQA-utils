@@ -24,14 +24,17 @@ import com.github.becausetesting.time.TimeUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-/**
- * @ClassName: TestRailAPI
- * @Description: TODO
- * @author alterhu2020@gmail.com
- * @date Aug 3, 2014 9:26:51 AM
- * 
- */
 
+
+/**
+ * ClassName: TestRailAPI  
+ * Function: TODO ADD FUNCTION.  
+ * Reason: TODO ADD REASON 
+ * date: Apr 23, 2016 7:13:20 PM  
+ * @author alterhu2020@gmail.com
+ * @version 1.0.0
+ * @since JDK 1.8
+ */
 public class TestRailAPI {
 
 	// the priority code in test rail
@@ -87,6 +90,13 @@ public class TestRailAPI {
 
 	private HttpUtils httpUtils;
 
+	/**
+	 * Creates a new instance of TestRailAPI.
+	 *
+	 * @param baseurl testrail url.
+	 * @param username testrail username.
+	 * @param password testrail password.
+	 */
 	public TestRailAPI(String baseurl, String username, String password) {
 		this.setBase_Url(baseurl);
 		this.setUser(username);
@@ -98,15 +108,24 @@ public class TestRailAPI {
 
 	}
 
+	/**
+	 * Creates a new instance of TestRailAPI.
+	 *
+	 */
 	public TestRailAPI() {
 		this.setBase_Url("https://gdcqatestrail01/testrail/index.php?/api/v2/");
 		this.setUser("qa_test_automation@greendotcorp.com");
 		this.setPassword("qa_test_automation");
 	}
 
-	/**********************************
-	 * Http Request Method
-	 **************************************************/
+	
+	/**
+	 * getRequest: 
+	 * @author alterhu2020@gmail.com
+	 * @param url testrail api uri.
+	 * @return the response content.
+	 * @since JDK 1.8
+	 */
 	private Object getRequest(String url) {
 		HttpsCert.ignoreCert();
 		httpUtils = new HttpUtils();
@@ -158,17 +177,7 @@ public class TestRailAPI {
 		return responsetext;
 	}
 
-	/**********************************
-	 * Http Request Method
-	 **************************************************/
-	/**
-	 * {@code} getProjectByName @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         projectname @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public boolean getProjectByName(String projectname) {
 		boolean findproject = false;
 		String url = "get_projects";
@@ -189,12 +198,7 @@ public class TestRailAPI {
 		return findproject;
 	}
 
-	/**
-	 *  getPriorities @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code List
-	 *         <JsonObject> return type @throws
-	 */
+	
 
 	public List<JsonObject> getPriorities() {
 		List<JsonObject> prioritieslist = new ArrayList<JsonObject>();
@@ -223,13 +227,7 @@ public class TestRailAPI {
 		 */
 	}
 
-	/**
-	 *  createProject @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param projectname @param @param
-	 *         description @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
+	
 
 	public long createProject(String projectname, String description) {
 		String newurl = "add_project";
@@ -245,13 +243,6 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  updateProject @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param projectname @param @param
-	 *         description @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
 
 	public long updateProject(String projectname, String description) {
 
@@ -268,12 +259,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  getUserID @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
+
 
 	public boolean getUserID() {
 		boolean finduser = false;
@@ -292,14 +278,7 @@ public class TestRailAPI {
 		return finduser;
 	}
 
-	/**
-	 *  getMilestone @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         milestonename @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public boolean getMilestone(String milestonename) {
 		boolean findmilestone = false;
 		String url = String.format("get_milestones/%d", this.projectid);
@@ -316,13 +295,6 @@ public class TestRailAPI {
 		return findmilestone;
 	}
 
-	/**
-	 *  getMilestone @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         milestonename @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
 
 	public boolean getLatestMilestone() {
 		boolean findmilestone = false;
@@ -339,14 +311,7 @@ public class TestRailAPI {
 		return findmilestone;
 	}
 
-	/**
-	 *  createMilestone @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param milestonename @param @param
-	 *         parameters @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
-
+	
 	public long createMilestone(String milestonename, String description, String duedate) {
 
 		String newmilestone = String.format("add_milestone/%d", this.projectid);
@@ -369,13 +334,7 @@ public class TestRailAPI {
 		return this.milestoneid;
 	}
 
-	/**
-	 *  updateMilestone @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param milestonename @param @param
-	 *         description @param @param duedate @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
+	
 
 	public long updateMilestone(String milestonename, String description, String duedate) {
 
@@ -398,13 +357,7 @@ public class TestRailAPI {
 		return this.milestoneid;
 	}
 
-	/**
-	 *  getTestPlan @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
+
 
 	public boolean getTestPlan(String planname) {
 		boolean iscreated = false;
@@ -656,14 +609,7 @@ public class TestRailAPI {
 		return isupdate;
 	}
 
-	/**
-	 *  createTestPlan @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
-
+	
 	public long createTestPlan(String planname) {
 
 		String planurl = String.format("add_plan/%s", this.projectid);
@@ -677,13 +623,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  updateTestPlan @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
+	
 
 	public long updateTestPlan(String planname) {
 
@@ -699,14 +639,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  closeTestPlan @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public void closeTestPlan(String planname) {
 		String url = String.format("get_plans/%d", this.projectid);
 		JsonArray plans = (JsonArray) getRequest(url);
@@ -724,13 +657,7 @@ public class TestRailAPI {
 		// return false;
 	}
 
-	/**
-	 *  getTestRun @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         runame @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
+
 
 	public boolean getTestRun(String runame) {
 		boolean findrun = false;
@@ -756,12 +683,6 @@ public class TestRailAPI {
 		return findrun;
 	}
 
-	/**
-	 *  createTestPlanRun @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
 
 	public long createTestPlanRunForSuite() {
 		String runurl = String.format("add_plan_entry/%d", this.planid);
@@ -800,19 +721,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  updateTestPlanRunForTestSection @Description: This function is a
-	 *         bug by now ,as metioned in offical document ,so you should use
-	 *         the add_plan_entry intead it
-	 *         http://forum.gurock.com/topic/1584/adding-a-new-test-run-
-	 *         configuration-to-an-existing-entry/ it's a to-do list for
-	 *         testrail team by 2014/8/3 @deprecated @author
-	 *         alterhu2020@gmail.com @param @param runame @param @param
-	 *         sectionid @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public boolean updateTestPlanRunForTestSection(String runame, long sectionid) {
 
 		// getTestRun(runame);
@@ -834,19 +743,7 @@ public class TestRailAPI {
 		return false;
 	}
 
-	/**
-	 *  updateTestPlanRunForCases @Description: This function is a bug by
-	 *         now ,as metioned in offical document ,so you should use the
-	 *         add_plan_entry intead it
-	 *         http://forum.gurock.com/topic/1584/adding-a-new-test-run-
-	 *         configuration-to-an-existing-entry/ it's a to-do list for
-	 *         testrail team by 2014/8/3 @deprecated @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         caseids @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public boolean updateTestPlanRunForCases(long[] caseids) {
 
 		// getTestRun(runame);
@@ -866,13 +763,7 @@ public class TestRailAPI {
 		return false;
 	}
 
-	/**
-	 *  getTestsInRun @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public boolean getTestsInRun() {
 		boolean hastests = false;
 		String url = String.format("get_tests/%d", this.runid);
@@ -883,14 +774,7 @@ public class TestRailAPI {
 		return hastests;
 	}
 
-	/**
-	 *  getTestSuite @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         suitename @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public boolean getTestSuite(String suitename) {
 		boolean iscreated = false;
 		String url = String.format("get_suites/%s", this.projectid);
@@ -906,14 +790,7 @@ public class TestRailAPI {
 		return iscreated;
 	}
 
-	/**
-	 *  getTestSuite @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         suitename @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
-
+	
 	public String getTestSuite(long suiteid) {
 		String suitename = null;
 		String url = String.format("get_suites/%s", this.projectid);
@@ -929,10 +806,7 @@ public class TestRailAPI {
 		return suitename;
 	}
 
-	/**
-	 * @param caseid
-	 * @return test code
-	 */
+
 	public long getTestSuiteidByTestCaseId(long caseid) {
 		long suiteid = 0;
 		String url = String.format("get_case/%d", caseid);
@@ -947,14 +821,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  createTestSuite @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param suitename @param @param
-	 *         description @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
-
+	
 	public long createTestSuite(String suitename, String description) {
 
 		String newsuiteurl = String.format("add_suite/%s", this.projectid);
@@ -968,13 +835,7 @@ public class TestRailAPI {
 		return this.suiteid;
 	}
 
-	/**
-	 *  updateTestSuite @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param suitename @param @param
-	 *         description @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
+	
 
 	public long updateTestSuite(String suitename, String description) {
 
@@ -989,14 +850,7 @@ public class TestRailAPI {
 		return this.suiteid;
 	}
 
-	/**
-	 *  deleteTestSuite @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param suitename @param @param
-	 *         description @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
-
+	
 	public long deleteTestSuite(String suitename) {
 
 		getTestSuite(suitename);
@@ -1008,17 +862,7 @@ public class TestRailAPI {
 		return this.suiteid;
 	}
 
-	/**
-	 * 
-	 * /* without the parent section ,it's at the suite
-	 */
-	/**
-	 *  createTestSection @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         sectionname @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
+	
 
 	public long createTestSection(String... sectionnames) {
 		// parse the section strin
@@ -1076,14 +920,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  updateTestSection @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         sectionname @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
-
+	
 	public long updateTestSection(String sectionname) {
 		String newsectionurl = String.format("update_section/%d", this.sectionid);
 		HashMap<String, Object> postData = new HashMap<String, Object>();
@@ -1096,13 +933,7 @@ public class TestRailAPI {
 		return this.sectionid;
 	}
 
-	/**
-	 *  getCaseList @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param
-	 *         sectionid @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long[]
-	 *         return type @throws
-	 */
+	
 
 	public long[] getTestCaseIds(long sectionid) {
 		String url = String.format("get_cases/%s&suite_id=%s&section_id=%d", this.projectid, this.suiteid, sectionid);
@@ -1140,13 +971,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  getTestCase @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param casename @param @param
-	 *         sectionid @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
+	
 
 	public long getTestCase(String casename, long sectionid) {
 		long caseid = 0;
@@ -1163,14 +988,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  getTestCase @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param casename @param @param
-	 *         sectionid @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
-
+	
 	public long getTestCase(String casename) {
 		long caseid = 0;
 		String url = String.format("get_cases/%s&suite_id=%s&section_id=%d", this.projectid, this.suiteid,
@@ -1188,16 +1006,7 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 *  createTestCase @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param caseName @param @param
-	 *         sectionId @param @param refs @param @param
-	 *         parameters @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code long
-	 *         return type @throws
-	 */
-
-	@SuppressWarnings("rawtypes")
+	
 	public long createTestCase(String caseName, CASETYPECODE typeid, PRIORITYCODE priorityid, String refs,
 			HashMap<String, Object> parameters) {
 		long newcaseid = 0;
@@ -1226,14 +1035,7 @@ public class TestRailAPI {
 		return newcaseid;
 	}
 
-	/**
-	 *  updateTestCase @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param caseName @param @param
-	 *         caseId @param @param refs @param @param
-	 *         parameters @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
+	
 	public boolean updateTestCase(String caseName, CASETYPECODE typeid, PRIORITYCODE priorityid, String refs,
 			HashMap parameters) {
 		boolean hadupdated = false;
@@ -1266,17 +1068,7 @@ public class TestRailAPI {
 		return hadupdated;
 
 	}
-	/*
-	 * 
-	 * 1 Passed 2 Blocked 3 Untested 4 Retest 5 Failed
-	 */
-	/**
-	 *  runTestCase @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @param casename @param @param
-	 *         result @param @param rundescription @param @return test code @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code boolean
-	 *         return type @throws
-	 */
+	
 
 	public boolean addTestResultForTestRun(LocalDateTime start,RESULTCODE status, String version,
 			String rundescription) {

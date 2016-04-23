@@ -35,10 +35,9 @@ public class ExcelUtils {
 	public static ExcelUtils INSTANCE = null;
 	
 	/**
-	 * @Title: getInstance
-	 * @Description: TODO
+	 * 
 	 * @author ahu@greendotcorp.com
-	 * @param filename
+	 * @param excelfile the excel file name.
 	 * @return ExcelUtils return type
 	 */
 
@@ -61,8 +60,8 @@ public class ExcelUtils {
 	/**
 	 * getRowdataViaOneColumns: 
 	 * @author alterhu2020@gmail.com
-	 * @param sheetname
-	 * @param firstcolumn
+	 * @param sheetname excel sheet name.
+	 * @param firstcolumn first column name.
 	 * @return excel values
 	 * @since JDK 1.8
 	 */

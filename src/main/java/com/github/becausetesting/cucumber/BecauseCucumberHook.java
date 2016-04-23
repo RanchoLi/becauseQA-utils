@@ -59,14 +59,14 @@ public interface BecauseCucumberHook {
 	/**
 	 * beforeEachScenario:before start the cucumber scenario
 	 * @author alterhu2020@gmail.com
-	 * @param scenario
+	 * @param scenario the parameter for cucumber scenario.
 	 * @since JDK 1.8
 	 */
 	public void beforeEachScenario(Scenario scenario);  //start the selenium 
 	/**
 	 * afterEachScenario: after finished the cucumber scenario
 	 * @author alterhu2020@gmail.com
-	 * @param scenario
+	 * @param scenario the parameter for cucumber scenario.
 	 * @since JDK 1.8
 	 */
 	public void afterEachScenario(Scenario scenario); // upload the result into test tool
@@ -75,7 +75,7 @@ public interface BecauseCucumberHook {
 	/**
 	 * beforeEachFeature: before each cucumber feature is running
 	 * @author alterhu2020@gmail.com
-	 * @param feature
+	 * @param feature the feature for cucumber feature.
 	 * @since JDK 1.8
 	 */
 	public void beforeEachFeature(Feature feature); // upload the tese cases into test run

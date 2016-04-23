@@ -28,13 +28,12 @@ import com.github.becausetesting.encrypt.Base64Utils;
 import com.github.becausetesting.json.JSONUtils;
 
 /**
- * ClassName:HttpUtils Function: TODO ADD FUNCTION. Reason: TODO ADD REASON.
+ * ClassName:HttpUtils 
  * Date: 2016年4月16日 下午6:52:01
  * 
  * @author Administrator
  * @version 1.0.0
  * @since JDK 1.8
- * @see {@link HttpClientUtils}
  */
 public class HttpUtils {
 
@@ -85,6 +84,13 @@ public class HttpUtils {
 		}
 
 	}
+	/**
+	 * setAuthorizationHeader: 
+	 * @author alterhu2020@gmail.com
+	 * @param username username.
+	 * @param password password.
+	 * @since JDK 1.8
+	 */
 	public void setAuthorizationHeader(String username, String password) {
 		//Base64Utils base64 = new Base64Utils();
 		String userpass = username + ":" + password;

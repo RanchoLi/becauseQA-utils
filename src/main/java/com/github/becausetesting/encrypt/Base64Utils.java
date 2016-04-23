@@ -20,7 +20,7 @@ public class Base64Utils {
 	/**
 	
 	 * @author Administrator
-	 * @param password
+	 * @param password input password to encrypt.
 	 * @return the encrypt code
 	 * @since JDK 1.8
 	 */
@@ -39,7 +39,7 @@ public class Base64Utils {
 	/**
 	 * decrypt: decrypt the base64 code
 	 * @author Administrator
-	 * @param base64password
+	 * @param base64password the password need to input to encrypt.
 	 * @return the decrypt string value
 	 * @since JDK 1.8
 	 */
@@ -81,8 +81,8 @@ public class Base64Utils {
 	/**
 	 * Encrypt: encrypt md5 or sha1
 	 * @author alterhu2020@gmail.com
-	 * @param type
-	 * @param originstr
+	 * @param type the md5 or sha1.
+	 * @param originstr the string need to encrypt.
 	 * @return the encrypt code
 	 * @since JDK 1.8
 	 */
@@ -122,7 +122,7 @@ public class Base64Utils {
 	/**
 	 * md5: md5 encrypt
 	 * @author Administrator
-	 * @param originstr
+	 * @param originstr the string want to encrypt.
 	 * @return encrypt code
 	 * @since JDK 1.8
 	 */

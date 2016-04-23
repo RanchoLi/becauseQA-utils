@@ -34,13 +34,12 @@ public class HttpsCert {
 
 	
 
-	/** 
-	* @Title: ignoreCert 
-	* @Description: TODO
-	* @author ahu@greendotcorp.comm     
-	* @return void    return type
-	*/ 
-	
+
+	/**
+	 * ignoreCert: ignore the cert
+	 * @author alterhu2020@gmail.com
+	 * @since JDK 1.8
+	 */
 	public static void ignoreCert() {
 		try {
 			SSLContext sc = SSLContext.getInstance("SSL");

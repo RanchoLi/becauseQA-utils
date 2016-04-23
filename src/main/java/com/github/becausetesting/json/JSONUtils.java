@@ -35,10 +35,10 @@ public class JSONUtils {
 	}
 	
 	/**
-	 * toJson: 
+	 * toJson:  get the josn
 	 * @author Administrator
-	 * @param jsonElement
-	 * @return String
+	 * @param jsonElement json object.
+	 * @return  the return string.
 	 * @since JDK 1.8
 	 */
 	public String fromObject(Object jsonElement){

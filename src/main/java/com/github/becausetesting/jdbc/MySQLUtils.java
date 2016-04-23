@@ -52,16 +52,16 @@ public class MySQLUtils {
 	public static ResultSet rs = null;
 
 	
-	/**
-	 *getConnection @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param drivername @param @param
-	 * driverurl @param @param user @param @param
-	 * password @param @return @return Connection return type @throws
-	 * 
-	 * jdbc:jtds:sqlserver://GDCQA4-SQL01/QA4;useNTLMv2=true;domain=nextestate.com;
-	 */
+
 	
 
+	/**
+	 * getAuthorizationConnection:  
+	 * jdbc:jtds:sqlserver://GDCQA4-SQL01/QA4;useNTLMv2=true;domain=nextestate.com;
+	 * @author alterhu2020@gmail.com
+	 * @param url url parameter.
+	 * @since JDK 1.8
+	 */
 	public void getAuthorizationConnection(String url) {
 
 		try {
@@ -78,14 +78,16 @@ public class MySQLUtils {
 		}
 
 	}
-	/**
-	 * etConnection @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param drivername @param @param
-	 * driverurl @param @param user @param @param
-	 * password @param @return @return Connection return type @throws
-	 * 
-	 */
+	
 
+	/**
+	 * getConnection: get jdbc connection
+	 * @author alterhu2020@gmail.com
+	 * @param url the jdbc url.
+	 * @param user the jdbc username.
+	 * @param password the jdbc password.
+	 * @since JDK 1.8
+	 */
 	public void getConnection(String url,String user,String password) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -102,12 +104,14 @@ public class MySQLUtils {
 
 	}
 
-	/**
-	 * @Title: getConnection @Description: TODO @author
-	 * ahu@greendotcorp.com @param @return @return Connection return
-	 * type @throws
-	 */
+	
 
+	/**
+	 * getConnection: get jdbc connection
+	 * @author alterhu2020@gmail.com
+	 * @param propertyfile the jdbc store properties file.
+	 * @since JDK 1.8
+	 */
 	public void getConnection(File propertyfile) {
 		
 		PropertyUtils.setResourceBundle(propertyfile);
@@ -136,7 +140,7 @@ public class MySQLUtils {
 	/**
 	 * selectRecord: 
 	 * @author alterhu2020@gmail.com
-	 * @param sql
+	 * @param sql sql statement.
 	 * @return ResultSet
 	 * @since JDK 1.8
 	 */
@@ -151,14 +155,13 @@ public class MySQLUtils {
 		return rs;
 	}
 
+	
 	/**
-	 * Method updateRecord.
-	 * 
-	 * @param con
-	 *            Connection
-	 * @param deletesql
-	 *            String
-	 * @return int
+	 * updateRecord: update the sql
+	 * @author alterhu2020@gmail.com
+	 * @param sql the sql statement.
+	 * @return the count affected.
+	 * @since JDK 1.8
 	 */
 	public int updateRecord(String sql) {
 		int updaterows = 0;
@@ -175,10 +178,10 @@ public class MySQLUtils {
 
 
 	/**
-	 * updateBatchSQL: 
+	 * updateBatchSQL: update batch SQL
 	 * @author alterhu2020@gmail.com
-	 * @param sql
-	 * @return int 
+	 * @param sql the sql statement.
+	 * @return int the update count.
 	 * @since JDK 1.8
 	 */
 	public int updateBatchSQL(String... sql) {
@@ -193,10 +196,10 @@ public class MySQLUtils {
 
 
 	/**
-	 * callStoreProcedure: 
+	 * callStoreProcedure: call a storeprocedure
 	 * @author alterhu2020@gmail.com
-	 * @param procedure
-	 * @return CallableStatement
+	 * @param procedure the procedure name.
+	 * @return CallableStatement the storeprocedure object.
 	 * @since JDK 1.8
 	 */
 	public static CallableStatement callStoreProcedure(String procedure) {
@@ -213,13 +216,13 @@ public class MySQLUtils {
 
 
 
+
 	/**
-	 * Method closeAllConnections.
-	 * 
-	 * @param con
-	 *            Connection
-	 * @param rs
-	 *            ResultSet
+	 * closeAllConnections: close the jdbc connection
+	 * @author alterhu2020@gmail.com
+	 * @param con jdbc connection object.
+	 * @param rs jdbc resultset object.
+	 * @since JDK 1.8
 	 */
 	public static void closeAllConnections(Connection con, ResultSet rs) {
 		try {

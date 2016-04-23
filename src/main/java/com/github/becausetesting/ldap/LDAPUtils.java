@@ -14,9 +14,8 @@ package com.github.becausetesting.ldap;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 23, 2016 2:11:03 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * @version  1.0.0
+ * @since    JDK 1.8 
  */
 
 import java.security.MessageDigest;
@@ -52,10 +51,10 @@ public class LDAPUtils {
 	 * getContext: get the ldap connection
 	 *
 	 * @author Administrator
-	 * @param servername should be :ldap://localhost:389/dc=domainname,dc=com  
-	 * @param user or null
-	 * @param password or null
-	 * @return get the DirContext 
+	 * @param servername should be :ldap://localhost:389/dc=domainname,dc=com. 
+	 * @param user the username or null.
+	 * @param password the password or null.
+	 * @return get the DirContext object.
 	 * @since JDK 1.8
 	 */
 	public static DirContext getContext(String servername, String user, String password) {
@@ -109,8 +108,8 @@ public class LDAPUtils {
 	/**
 	 * verifySHA: compare the SHA1 password with the user input password
 	 * @author Administrator
-	 * @param ldappw
-	 * @param inputpw
+	 * @param ldappw the ldap password.
+	 * @param inputpw user input password.
 	 * @return true or false
 	 * @since JDK 1.8
 	 */
@@ -188,8 +187,8 @@ public class LDAPUtils {
 	 * compare if it's correct as user input
 	 *
 	 * @author Administrator
-	 * @param user
-	 * @param pwd
+	 * @param user the username.
+	 * @param pwd the password.
 	 * @return true or false
 	 * @since JDK 1.8
 	 */

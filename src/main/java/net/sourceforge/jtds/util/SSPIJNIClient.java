@@ -132,11 +132,13 @@ public class SSPIJNIClient {
 		// empty constructor
 	}
 
+	
 	/**
-	 * Returns the singleton <code>SSPIJNIClient</code> instance.
-	 *
-	 * @throws SQLException
-	 *             if an error occurs during initialization
+	 * getInstance:  get SSPIJNIClient object.
+	 * @author alterhu2020@gmail.com
+	 * @return SSPIJNIClient object.
+	 * @throws Exception any exception.
+	 * @since JDK 1.8
 	 */
 	public static synchronized SSPIJNIClient getInstance() throws Exception {
 
@@ -179,6 +181,7 @@ public class SSPIJNIClient {
 	 * @throws Exception
 	 *             if an error occurs during the call or the SSPI client is
 	 *             uninitialized
+	 *@return the whole byte array.
 	 */
 	public byte[] invokePrepareSSORequest() throws Exception {
 		if (!initialized) {
@@ -190,10 +193,11 @@ public class SSPIJNIClient {
 	/**
 	 * Calls <code>#prepareSSOSubmit(byte[], long)</code> to prepare the NTLM
 	 * TYPE-3 message.
-	 *
+	 *@param buf the buffer byte object.
 	 * @throws Exception
 	 *             if an error occurs during the call or the SSPI client is
 	 *             uninitialized
+	 * @return the whole byte arrays.
 	 */
 	public byte[] invokePrepareSSOSubmit(byte[] buf) throws Exception {
 		if (!initialized) {

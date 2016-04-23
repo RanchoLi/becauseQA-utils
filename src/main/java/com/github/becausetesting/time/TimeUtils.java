@@ -62,8 +62,8 @@ public class TimeUtils {
 	 * TODO
 	 *
 	 * @author Administrator
-	 * @param datetime
-	 * @return
+	 * @param datetime LocalDateTime parameter.
+	 * @return the return string week.
 	 * @since JDK 1.8
 	 */
 	public String whichdayOfWeek(LocalDateTime datetime) {
@@ -75,10 +75,10 @@ public class TimeUtils {
 	 * dateAdd:
 	 *
 	 * @author Administrator
-	 * @param unit
-	 * @param amount
-	 * @param dateTime
-	 * @return
+	 * @param unit the unit like week or minute.
+	 * @param amount the date amount.
+	 * @param dateTime the LocalDateTime object.
+	 * @return localdatetime object.
 	 * @since JDK 1.8
 	 */
 	public LocalDateTime dateAdd(UNIT unit, long amount, LocalDateTime dateTime) {

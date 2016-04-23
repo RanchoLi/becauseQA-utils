@@ -40,8 +40,8 @@ public class XMLUtils {
 	 * Parse: the xml document
 	 *
 	 * @author Administrator
-	 * @param xmlfile
-	 * @param nodename
+	 * @param xmlfile xml file to parse.
+	 * @param nodename the node name to find.
 	 * @since JDK 1.8
 	 */
 	public void SAXParse(File xmlfile, String nodename) {

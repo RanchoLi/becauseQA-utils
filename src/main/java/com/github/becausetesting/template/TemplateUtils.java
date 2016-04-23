@@ -20,8 +20,8 @@ public class TemplateUtils {
 
 	/**
 	 * @deprecated
-	 * @param templatename
-	 * @param dataModel
+	 * @param templatename template short name.
+	 * @param dataModel the freemarker data model.
 	 * template is in src/main/resources
 	 */
 	protected void renderResourceContent(String templatename, Object dataModel) {
@@ -47,8 +47,8 @@ public class TemplateUtils {
 	}
 
 	/**
-	 * @param templatename
-	 * @param dataModel
+	 * @param templatename the template name.
+	 * @param dataModel the freemarker object.
 	 *  template is in src/main/resources
 	 */
 	public void renderContent(String templatename, Object dataModel) {
@@ -78,11 +78,10 @@ public class TemplateUtils {
 	}
 
 	/**
-	 * @param templatename
-	 * @param result
-	 * @param out
-	 * @throws TemplateException
-	 * @throws IOException
+	 * @param templatename template name.
+	 * @param result the data model object.
+	 * @throws TemplateException template exception.
+	 * @throws IOException io exception for template.
 	 */
 	public void rendText(String templatename, Map<String, Object> result) throws TemplateException, IOException {
 		String outputPath = templatename + ".html";

@@ -72,7 +72,7 @@ public class CommandUtils {
 	/**
 	 * executeCommandwithAdminstrator: 
 	 * @author alterhu2020@gmail.com
-	 * @param command
+	 * @param command the command string you input.
 	 * @return output command line content
 	 * @since JDK 1.8
 	 * @deprecated
@@ -106,7 +106,7 @@ public class CommandUtils {
 	/**
 	 * executeCommand: 
 	 * @author alterhu2020@gmail.com
-	 * @param command
+	 * @param command input content command.
 	 * @return command line content
 	 * @since JDK 1.8
 	 */
@@ -140,8 +140,8 @@ public class CommandUtils {
 	/**
 	 * executeCommand: 
 	 * @author alterhu2020@gmail.com
-	 * @param workdirectory
-	 * @param command
+	 * @param workdirectory the directory you want to switch.
+	 * @param command input command.
 	 * @return command line content
 	 * @since JDK 1.8
 	 */
@@ -176,7 +176,7 @@ public class CommandUtils {
 	/**
 	 * destoryWindowsProcess: 
 	 * @author alterhu2020@gmail.com
-	 * @param processname
+	 * @param processname the process name .
 	 * @return command line content
 	 * @since JDK 1.8
 	 */
@@ -269,7 +269,7 @@ public class CommandUtils {
 	/**
 	 * humanReadableCommandLineOutput: 
 	 * @author alterhu2020@gmail.com
-	 * @param arguments
+	 * @param arguments output list string.
 	 * @return content of command line
 	 * @since JDK 1.8
 	 */

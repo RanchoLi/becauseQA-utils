@@ -52,16 +52,14 @@ public class SQLServerUtils {
 	public static ResultSet rs = null;
 
 	
+
 	/**
-	 * @Title: getConnection @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param drivername @param @param
-	 * driverurl @param @param user @param @param
-	 * password @param @return @return Connection return type @throws
-	 * 
+	 * getAuthorizationConnection: 
+	 * @author alterhu2020@gmail.com
+	 * @param url url for jdbc.
+	 * @since JDK 1.8
 	 * jdbc:jtds:sqlserver://GDCQA4-SQL01/QA4;useNTLMv2=true;domain=nextestate.com;
 	 */
-	
-
 	public void getAuthorizationConnection(String url) {
 
 		try {
@@ -78,14 +76,16 @@ public class SQLServerUtils {
 		}
 
 	}
+
 	/**
-	 * @Title: getConnection @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param drivername @param @param
-	 * driverurl @param @param user @param @param
-	 * password @param @return @return Connection return type @throws
+	 * getConnection: get jdbc connection
+	 * @author alterhu2020@gmail.com
+	 * @param url jdbc url.
+	 * @param user jdbc username.
+	 * @param password jdbc password.
+	 * @since JDK 1.8
 	 * useNTLMv2=true;domain=nextestate.com
 	 */
-
 	public void getConnection(String url,String user,String password) {
 		try {
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
@@ -102,12 +102,13 @@ public class SQLServerUtils {
 
 	}
 
-	/**
-	 * @Title: getConnection @Description: TODO @author
-	 * ahu@greendotcorp.com @param @return @return Connection return
-	 * type @throws
-	 */
 
+	/**
+	 * getConnection: get jdbc connection
+	 * @author alterhu2020@gmail.com
+	 * @param propertyfile the jdbc properties file.
+	 * @since JDK 1.8
+	 */
 	public void getConnection(File propertyfile) {
 		
 		PropertyUtils.setResourceBundle(propertyfile);
@@ -133,12 +134,15 @@ public class SQLServerUtils {
 	
 	}
 
-	/**
-	 * @Title: selectRecord @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param con @param @param
-	 * sql @param @return @return ResultSet return type @throws
-	 */
+	
 
+	/**
+	 * selectRecord: query result
+	 * @author alterhu2020@gmail.com
+	 * @param sql the jdbc sql.
+	 * @return the resultset object.
+	 * @since JDK 1.8
+	 */
 	public ResultSet selectRecord(String sql) {
 		try {
 			rs = connection.prepareStatement(sql).executeQuery();
@@ -150,14 +154,13 @@ public class SQLServerUtils {
 		return rs;
 	}
 
+	
 	/**
-	 * Method updateRecord.
-	 * 
-	 * @param con
-	 *            Connection
-	 * @param deletesql
-	 *            String
-	 * @return int
+	 * updateRecord: update jdbc result
+	 * @author alterhu2020@gmail.com
+	 * @param sql sql statement.
+	 * @return the affect count.
+	 * @since JDK 1.8
 	 */
 	public int updateRecord(String sql) {
 		int updaterows = 0;
@@ -172,11 +175,6 @@ public class SQLServerUtils {
 	}
 	
 
-	/**
-	 * @Title: runBatchSQL @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param con @param @param
-	 * sql @param @return @return int return type @throws
-	 */
 
 	public int updateBatchSQL(String... sql) {
 		int updaterow = 0;
@@ -188,11 +186,7 @@ public class SQLServerUtils {
 	}
 	
 	
-	/**
-	 * @Title: callStoreProcedure @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param con @param @param
-	 * procedure @param @return @return CallableStatement return type @throws
-	 */
+	
 
 	public static CallableStatement callStoreProcedure(String procedure) {
 		try {
@@ -208,14 +202,7 @@ public class SQLServerUtils {
 
 
 
-	/**
-	 * Method closeAllConnections.
-	 * 
-	 * @param con
-	 *            Connection
-	 * @param rs
-	 *            ResultSet
-	 */
+	
 	public static void closeAllConnections(Connection con, ResultSet rs) {
 		try {
 			if (con != null) {
