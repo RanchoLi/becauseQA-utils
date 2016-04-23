@@ -37,7 +37,7 @@ import net.sourceforge.jtds.jdbc.Driver;
 /**
  * A JNI client to SSPI based CPP program (DLL) that returns the user
  * credentials for NTLM authentication.
- * <p/>
+ * 
  * The DLL name is ntlmauth.dll.
  *
  * @author Magendran Sathaiah (mahi@aztec.soft.net)

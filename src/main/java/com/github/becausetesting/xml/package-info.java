@@ -1,7 +1,4 @@
 /**
- * 
- */
-/**
  * @author ahu
  * parse the xml document: 
  * 1. SAXParserFactory.newInstance().newSAXParser();

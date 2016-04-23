@@ -14,9 +14,8 @@ package com.github.becausetesting.http;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 17, 2016 6:29:02 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * @version  1.0.0
+ * @since    JDK 1.8	 
  */
 public class HttpClientUtils {
 

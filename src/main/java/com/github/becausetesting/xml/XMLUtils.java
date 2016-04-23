@@ -30,16 +30,14 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * ClassName: XMLUtils Function: TODO ADD FUNCTION. Reason: TODO ADD REASON(可选).
- * date: 
- *
  * @author Administrator
- * @version
+ * @version 1.0.0
  * @since JDK 1.8
  */
 public class XMLUtils {
 
 	/**
-	 * Parse:
+	 * Parse: the xml document
 	 *
 	 * @author Administrator
 	 * @param xmlfile
@@ -148,7 +146,7 @@ public class XMLUtils {
 		 * getResult:
 		 *
 		 * @author Administrator
-		 * @return
+		 * @return String
 		 * @since JDK 1.8
 		 */
 		public String getResult(){

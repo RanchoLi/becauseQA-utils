@@ -27,9 +27,8 @@ import java.util.List;
  * Date: Apr 16, 2016 11:19:12 PM
  * 
  * @author Administrator
- * @version
+ * @version 1.0.0
  * @since JDK 1.8
- * @see
  */
 public class FileUtils {
 

@@ -23,6 +23,15 @@ import javax.mail.internet.MimeMultipart;
 import com.github.becausetesting.properties.PropertyUtils;
 import com.github.becausetesting.string.StringUtils;
 
+/**
+ * ClassName: EmailUtils  
+ * Function: TODO ADD FUNCTION.  
+ * Reason: TODO ADD REASON 
+ * date: Apr 23, 2016 6:14:54 PM  
+ * @author alterhu2020@gmail.com
+ * @version 1.0.0
+ * @since JDK 1.8
+ */
 public class EmailUtils {
 
 	private static File emailfile;

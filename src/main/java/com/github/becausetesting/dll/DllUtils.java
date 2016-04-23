@@ -5,9 +5,15 @@ import java.util.List;
 
 import com.github.becausetesting.string.StringUtils;
 
-/*
- * 
- * get java.library.path  == windows path
+
+/**
+ * ClassName: DllUtils  
+ * Function: TODO ADD FUNCTION.  
+ * Reason: TODO ADD REASON 
+ * date: Apr 23, 2016 6:14:32 PM  
+ * @author alterhu2020@gmail.com
+ * @version 1.0.0
+ * @since JDK 1.8
  */
 public class DllUtils {
 

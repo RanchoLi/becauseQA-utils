@@ -12,21 +12,16 @@ import java.util.Base64;
  * date: Apr 22, 2016 11:14:20 PM  
  *
  * @author Administrator
- * @version 
+ * @version 1.0.0
  * @since JDK 1.8
  */
 public class Base64Utils {
 
 	/**
-	 * encrypt: 
-	 * TODO
-	 * TODO
-	 * TODO 
-	 * TODO 
-	 *
+	
 	 * @author Administrator
 	 * @param password
-	 * @return
+	 * @return the encrypt code
 	 * @since JDK 1.8
 	 */
 	public static String encryptBasic(String password) {
@@ -42,15 +37,10 @@ public class Base64Utils {
 	}
 	
 	/**
-	 * decrypt: 
-	 * TODO
-	 * TODO
-	 * TODO 
-	 * TODO 
-	 *
+	 * decrypt: decrypt the base64 code
 	 * @author Administrator
 	 * @param base64password
-	 * @return
+	 * @return the decrypt string value
 	 * @since JDK 1.8
 	 */
 	public static String decryptBasic(String base64password){
@@ -87,11 +77,13 @@ public class Base64Utils {
 		return decryptstr;
 	}
 	
-	/*
-	 * @author Administrator
+	
+	/**
+	 * Encrypt: encrypt md5 or sha1
+	 * @author alterhu2020@gmail.com
 	 * @param type
 	 * @param originstr
-	 * @return
+	 * @return the encrypt code
 	 * @since JDK 1.8
 	 */
 	protected static String Encrypt(String type,String originstr){
@@ -128,15 +120,10 @@ public class Base64Utils {
 		
 	}
 	/**
-	 * md5: 
-	 * TODO
-	 * TODO
-	 * TODO 
-	 * TODO 
-	 *
+	 * md5: md5 encrypt
 	 * @author Administrator
 	 * @param originstr
-	 * @return
+	 * @return encrypt code
 	 * @since JDK 1.8
 	 */
 	public static String encryptMD5(String originstr) {

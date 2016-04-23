@@ -19,34 +19,25 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * ClassName:CommandUtils  
+ * ClassName: CommandUtils  
  * Function: TODO ADD FUNCTION.  
- * Reason:	 TODO ADD REASON.  
- * Date:     Apr 16, 2016 10:59:06 PM 
- * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * Reason: TODO ADD REASON 
+ * date: Apr 23, 2016 6:07:49 PM  
+ * @author alterhu2020@gmail.com
+ * @version 1.0.0
+ * @since JDK 1.8
  */
 public class CommandUtils {
 
 	
 	/**
-	 * not recommand
-	 * @deprecated
-	 * @Title: executeCommand
-	 * @Description: TODO
+	 * executeCommand: 
 	 * @author alterhu2020@gmail.com
-	 * @param @param
-	 *            command
-	 * @param @return
-	 * @return String return type
-	 * @throws @example:
-	 *             Runtime.getRuntime().exec(
-	 *             "runas /profile /user:Administrator /savecred \"cmd.exe /c Powrprof.dll,SetSuspendState\""
-	 *             );
+	 * @param command testing
+	 * @return the command line output content
+	 * @since JDK 1.8
+	 * @deprecated take to use 
 	 */
-
 	public static String executeCommand(String command) {
 
 		StringBuffer output = new StringBuffer();
@@ -76,22 +67,16 @@ public class CommandUtils {
 
 	}
 
-	/**
-	 * not recommand
-	 * @deprecated using executeCommand(List<String>)
-	 * @Title: executeCommand
-	 * @Description: TODO
-	 * @author alterhu2020@gmail.com
-	 * @param @param
-	 *            command
-	 * @param @return
-	 * @return String return type
-	 * @throws @example:
-	 *             Runtime.getRuntime().exec(
-	 *             "runas /profile /user:Administrator /savecred \"cmd.exe /c Powrprof.dll,SetSuspendState\""
-	 *             );
-	 */
 
+
+	/**
+	 * executeCommandwithAdminstrator: 
+	 * @author alterhu2020@gmail.com
+	 * @param command
+	 * @return output command line content
+	 * @since JDK 1.8
+	 * @deprecated
+	 */
 	public static String executeCommandwithAdminstrator(String command) {
 
 		StringBuffer output = new StringBuffer();
@@ -118,6 +103,13 @@ public class CommandUtils {
 
 	}
 
+	/**
+	 * executeCommand: 
+	 * @author alterhu2020@gmail.com
+	 * @param command
+	 * @return command line content
+	 * @since JDK 1.8
+	 */
 	public static String executeCommand(List<String> command) {
 
 		StringBuffer output = new StringBuffer();
@@ -145,6 +137,14 @@ public class CommandUtils {
 		return output.toString();
 	}
 
+	/**
+	 * executeCommand: 
+	 * @author alterhu2020@gmail.com
+	 * @param workdirectory
+	 * @param command
+	 * @return command line content
+	 * @since JDK 1.8
+	 */
 	public static String executeCommand(String workdirectory, List<String> command) {
 
 		StringBuffer output = new StringBuffer();
@@ -173,6 +173,13 @@ public class CommandUtils {
 		return output.toString();
 	}
 
+	/**
+	 * destoryWindowsProcess: 
+	 * @author alterhu2020@gmail.com
+	 * @param processname
+	 * @return command line content
+	 * @since JDK 1.8
+	 */
 	public static String destoryWindowsProcess(String processname) {
 
 		StringBuffer output = new StringBuffer();
@@ -259,6 +266,13 @@ public class CommandUtils {
 	*/
 
 	
+	/**
+	 * humanReadableCommandLineOutput: 
+	 * @author alterhu2020@gmail.com
+	 * @param arguments
+	 * @return content of command line
+	 * @since JDK 1.8
+	 */
 	public static String humanReadableCommandLineOutput(List<String> arguments) {
 		String debugOutput = "";
 		for (String argument : arguments) {

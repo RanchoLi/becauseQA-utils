@@ -5,6 +5,15 @@ import cucumber.runtime.CucumberException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+/**
+ * ClassName: Assertions  
+ * Function: TODO ADD FUNCTION.  
+ * Reason: TODO ADD REASON 
+ * date: Apr 23, 2016 6:10:43 PM  
+ * @author alterhu2020@gmail.com
+ * @version 1.0.0
+ * @since JDK 1.8
+ */
 public class Assertions {
     public static void assertNoCucumberAnnotatedMethods(Class clazz) {
         for (Method method : clazz.getDeclaredMethods()) {

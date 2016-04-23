@@ -55,7 +55,7 @@ public class LDAPUtils {
 	 * @param servername should be :ldap://localhost:389/dc=domainname,dc=com  
 	 * @param user or null
 	 * @param password or null
-	 * @return
+	 * @return get the DirContext 
 	 * @since JDK 1.8
 	 */
 	public static DirContext getContext(String servername, String user, String password) {
@@ -93,11 +93,6 @@ public class LDAPUtils {
 
 	/**
 	 * closeCtx: CLOSE the connection
-	 * TODO
-	 * TODO
-	 * TODO 
-	 * TODO 
-	 *
 	 * @author Administrator
 	 * @since JDK 1.8
 	 */
@@ -113,15 +108,10 @@ public class LDAPUtils {
 
 	/**
 	 * verifySHA: compare the SHA1 password with the user input password
-	 * TODO
-	 * TODO
-	 * TODO 
-	 * TODO 
-	 *
 	 * @author Administrator
 	 * @param ldappw
 	 * @param inputpw
-	 * @return
+	 * @return true or false
 	 * @since JDK 1.8
 	 */
 	private static boolean verifySHA(String ldappw, String inputpw) {
@@ -173,13 +163,8 @@ public class LDAPUtils {
 
 	/**
 	 * getCurrentUserEmail: from the ldap server to get the user's email
-	 * TODO
-	 * TODO
-	 * TODO 
-	 * TODO 
-	 *
 	 * @author Administrator
-	 * @return
+	 * @return the user email address
 	 * @since JDK 1.8
 	 */
 	public static String getCurrentUserEmail() {
@@ -205,7 +190,7 @@ public class LDAPUtils {
 	 * @author Administrator
 	 * @param user
 	 * @param pwd
-	 * @return
+	 * @return true or false
 	 * @since JDK 1.8
 	 */
 	public static boolean searchByUserNameAndAuthenticate(String user, String pwd) {

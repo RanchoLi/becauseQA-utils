@@ -28,9 +28,8 @@ import com.github.becausetesting.properties.PropertyUtils;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 16, 2016 11:07:18 PM 
  * @author   Administrator
- * @version  
+ * @version  1.0.0
  * @since    JDK 1.8
- * @see 	
  * 
  *  jtds connection string: 
  *  SQL Server: 
@@ -54,12 +53,12 @@ public class MySQLUtils {
 
 	
 	/**
-	 * @Title: getConnection @Description: TODO @author
+	 *getConnection @Description: TODO @author
 	 * ahu@greendotcorp.com @param @param drivername @param @param
 	 * driverurl @param @param user @param @param
 	 * password @param @return @return Connection return type @throws
 	 * 
-	 * @see jdbc:jtds:sqlserver://GDCQA4-SQL01/QA4;useNTLMv2=true;domain=nextestate.com;
+	 * jdbc:jtds:sqlserver://GDCQA4-SQL01/QA4;useNTLMv2=true;domain=nextestate.com;
 	 */
 	
 
@@ -80,11 +79,11 @@ public class MySQLUtils {
 
 	}
 	/**
-	 * @Title: getConnection @Description: TODO @author
+	 * etConnection @Description: TODO @author
 	 * ahu@greendotcorp.com @param @param drivername @param @param
 	 * driverurl @param @param user @param @param
 	 * password @param @return @return Connection return type @throws
-	 * @see useNTLMv2=true;domain=nextestate.com
+	 * 
 	 */
 
 	public void getConnection(String url,String user,String password) {
@@ -133,12 +132,14 @@ public class MySQLUtils {
 	
 	}
 
-	/**
-	 * @Title: selectRecord @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param con @param @param
-	 * sql @param @return @return ResultSet return type @throws
-	 */
 
+	/**
+	 * selectRecord: 
+	 * @author alterhu2020@gmail.com
+	 * @param sql
+	 * @return ResultSet
+	 * @since JDK 1.8
+	 */
 	public ResultSet selectRecord(String sql) {
 		try {
 			rs = connection.prepareStatement(sql).executeQuery();
@@ -172,12 +173,14 @@ public class MySQLUtils {
 	}
 	
 
-	/**
-	 * @Title: runBatchSQL @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param con @param @param
-	 * sql @param @return @return int return type @throws
-	 */
 
+	/**
+	 * updateBatchSQL: 
+	 * @author alterhu2020@gmail.com
+	 * @param sql
+	 * @return int 
+	 * @since JDK 1.8
+	 */
 	public int updateBatchSQL(String... sql) {
 		int updaterow = 0;
 		for (String subsql : sql) {
@@ -187,13 +190,15 @@ public class MySQLUtils {
 
 	}
 	
-	
-	/**
-	 * @Title: callStoreProcedure @Description: TODO @author
-	 * ahu@greendotcorp.com @param @param con @param @param
-	 * procedure @param @return @return CallableStatement return type @throws
-	 */
 
+
+	/**
+	 * callStoreProcedure: 
+	 * @author alterhu2020@gmail.com
+	 * @param procedure
+	 * @return CallableStatement
+	 * @since JDK 1.8
+	 */
 	public static CallableStatement callStoreProcedure(String procedure) {
 		try {
 			CallableStatement prepareCall = connection.prepareCall(procedure);

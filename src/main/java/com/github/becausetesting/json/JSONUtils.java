@@ -22,9 +22,8 @@ import com.google.gson.JsonParser;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 17, 2016 2:30:48 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * @version  1.0.0
+ * @since    JDK 1.8	 
  */
 public class JSONUtils {
 
@@ -37,14 +36,9 @@ public class JSONUtils {
 	
 	/**
 	 * toJson: 
-	 * TODO
-	 * TODO
-	 * TODO 
-	 * TODO serivziable
-	 *
 	 * @author Administrator
 	 * @param jsonElement
-	 * @return
+	 * @return String
 	 * @since JDK 1.8
 	 */
 	public String fromObject(Object jsonElement){

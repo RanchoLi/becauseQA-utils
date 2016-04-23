@@ -27,9 +27,8 @@ import java.security.cert.X509Certificate;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 16, 2016 11:30:00 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * @version  1.0.0
+ * @since    JDK 1.8	 
  */
 public class HttpsCert {
 
@@ -38,10 +37,8 @@ public class HttpsCert {
 	/** 
 	* @Title: ignoreCert 
 	* @Description: TODO
-	* @author ahu@greendotcorp.com
-	* @param     
+	* @author ahu@greendotcorp.comm     
 	* @return void    return type
-	* @throws 
 	*/ 
 	
 	public static void ignoreCert() {

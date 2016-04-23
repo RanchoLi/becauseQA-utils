@@ -10,7 +10,10 @@ public enum Environment {
 	private Configuration configuration;
 
 	/**
-	 * @return
+	 * initializeFreemarkerConfiguration: 
+	 * @author alterhu2020@gmail.com
+	 * @return the freemarker Configuration Object
+	 * @since JDK 1.8
 	 */
 	public Configuration initializeFreemarkerConfiguration() {
 		configuration = new Configuration(Configuration.VERSION_2_3_23);

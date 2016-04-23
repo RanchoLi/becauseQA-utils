@@ -1,7 +1,4 @@
 /**
- * 
- */
-/**
  * @author ahu
  * 
  * read the property file content

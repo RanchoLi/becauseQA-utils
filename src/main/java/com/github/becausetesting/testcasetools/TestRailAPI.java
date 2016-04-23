@@ -162,10 +162,10 @@ public class TestRailAPI {
 	 * Http Request Method
 	 **************************************************/
 	/**
-	 * @Title: getProjectByName @Description: TODO @author
+	 * {@code} getProjectByName @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         projectname @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         projectname @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -190,9 +190,9 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getPriorities @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return List
+	 *  getPriorities @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code List
 	 *         <JsonObject> return type @throws
 	 */
 
@@ -206,9 +206,9 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getProjectConfiguration @Description: TODO @author
+	 *  getProjectConfiguration @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @throws
-	 *         MalformedURLException @param @throws IOException @return void
+	 *         MalformedURLException @param @throws IOException @return test code void
 	 *         return type @throws
 	 */
 
@@ -224,10 +224,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: createProject @Description: TODO @author
+	 *  createProject @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param projectname @param @param
-	 *         description @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         description @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -246,10 +246,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateProject @Description: TODO @author
+	 *  updateProject @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param projectname @param @param
-	 *         description @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         description @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -269,9 +269,9 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getUserID @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *  getUserID @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -293,10 +293,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getMilestone @Description: TODO @author
+	 *  getMilestone @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         milestonename @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         milestonename @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -317,10 +317,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getMilestone @Description: TODO @author
+	 *  getMilestone @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         milestonename @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         milestonename @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -340,10 +340,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: createMilestone @Description: TODO @author
+	 *  createMilestone @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param milestonename @param @param
-	 *         parameters @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         parameters @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -370,10 +370,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateMilestone @Description: TODO @author
+	 *  updateMilestone @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param milestonename @param @param
-	 *         description @param @param duedate @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         description @param @param duedate @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -399,10 +399,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getTestPlan @Description: TODO @author
+	 *  getTestPlan @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         planname @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -657,10 +657,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: createTestPlan @Description: TODO @author
+	 *  createTestPlan @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         planname @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -678,10 +678,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateTestPlan @Description: TODO @author
+	 *  updateTestPlan @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         planname @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -700,10 +700,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: closeTestPlan @Description: TODO @author
+	 *  closeTestPlan @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         planname @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         planname @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -725,10 +725,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getTestRun @Description: TODO @author
+	 *  getTestRun @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         runame @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         runame @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -757,9 +757,9 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: createTestPlanRun @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *  createTestPlanRun @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -801,15 +801,15 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateTestPlanRunForTestSection @Description: This function is a
+	 *  updateTestPlanRunForTestSection @Description: This function is a
 	 *         bug by now ,as metioned in offical document ,so you should use
 	 *         the add_plan_entry intead it
 	 *         http://forum.gurock.com/topic/1584/adding-a-new-test-run-
 	 *         configuration-to-an-existing-entry/ it's a to-do list for
 	 *         testrail team by 2014/8/3 @deprecated @author
 	 *         alterhu2020@gmail.com @param @param runame @param @param
-	 *         sectionid @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         sectionid @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -835,15 +835,15 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateTestPlanRunForCases @Description: This function is a bug by
+	 *  updateTestPlanRunForCases @Description: This function is a bug by
 	 *         now ,as metioned in offical document ,so you should use the
 	 *         add_plan_entry intead it
 	 *         http://forum.gurock.com/topic/1584/adding-a-new-test-run-
 	 *         configuration-to-an-existing-entry/ it's a to-do list for
 	 *         testrail team by 2014/8/3 @deprecated @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         caseids @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         caseids @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -867,9 +867,9 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getTestsInRun @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *  getTestsInRun @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -884,10 +884,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getTestSuite @Description: TODO @author
+	 *  getTestSuite @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         suitename @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         suitename @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -907,10 +907,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getTestSuite @Description: TODO @author
+	 *  getTestSuite @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         suitename @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         suitename @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 
@@ -931,7 +931,7 @@ public class TestRailAPI {
 
 	/**
 	 * @param caseid
-	 * @return
+	 * @return test code
 	 */
 	public long getTestSuiteidByTestCaseId(long caseid) {
 		long suiteid = 0;
@@ -948,10 +948,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: createTestSuite @Description: TODO @author
+	 *  createTestSuite @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param suitename @param @param
-	 *         description @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         description @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -969,10 +969,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateTestSuite @Description: TODO @author
+	 *  updateTestSuite @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param suitename @param @param
-	 *         description @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         description @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -990,10 +990,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: deleteTestSuite @Description: TODO @author
+	 *  deleteTestSuite @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param suitename @param @param
-	 *         description @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         description @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -1013,10 +1013,10 @@ public class TestRailAPI {
 	 * /* without the parent section ,it's at the suite
 	 */
 	/**
-	 * @Title: createTestSection @Description: TODO @author
+	 *  createTestSection @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         sectionname @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         sectionname @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -1038,10 +1038,10 @@ public class TestRailAPI {
 		return this.sectionid;
 	}
 	/*
-	 * @Title: getTestSection @Description: TODO @author
+	 *  getTestSection @Description: TODO @author
 	 * alterhu2020@gmail.com @param @param
-	 * sectionname @param @return @param @throws
-	 * MalformedURLException @param @throws IOException @return boolean return
+	 * sectionname @param @return test code @param @throws
+	 * MalformedURLException @param @throws IOException @return test code boolean return
 	 * type @throws
 	 */
 
@@ -1077,10 +1077,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateTestSection @Description: TODO @author
+	 *  updateTestSection @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         sectionname @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         sectionname @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -1097,10 +1097,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getCaseList @Description: TODO @author
+	 *  getCaseList @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param
-	 *         sectionid @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long[]
+	 *         sectionid @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long[]
 	 *         return type @throws
 	 */
 
@@ -1141,10 +1141,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getTestCase @Description: TODO @author
+	 *  getTestCase @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param casename @param @param
-	 *         sectionid @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         sectionid @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -1164,10 +1164,10 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: getTestCase @Description: TODO @author
+	 *  getTestCase @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param casename @param @param
-	 *         sectionid @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         sectionid @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -1189,11 +1189,11 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: createTestCase @Description: TODO @author
+	 *  createTestCase @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param caseName @param @param
 	 *         sectionId @param @param refs @param @param
-	 *         parameters @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return long
+	 *         parameters @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code long
 	 *         return type @throws
 	 */
 
@@ -1227,11 +1227,11 @@ public class TestRailAPI {
 	}
 
 	/**
-	 * @Title: updateTestCase @Description: TODO @author
+	 *  updateTestCase @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param caseName @param @param
 	 *         caseId @param @param refs @param @param
-	 *         parameters @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         parameters @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 	public boolean updateTestCase(String caseName, CASETYPECODE typeid, PRIORITYCODE priorityid, String refs,
@@ -1271,10 +1271,10 @@ public class TestRailAPI {
 	 * 1 Passed 2 Blocked 3 Untested 4 Retest 5 Failed
 	 */
 	/**
-	 * @Title: runTestCase @Description: TODO @author
+	 *  runTestCase @Description: TODO @author
 	 *         alterhu2020@gmail.com @param @param casename @param @param
-	 *         result @param @param rundescription @param @return @param @throws
-	 *         MalformedURLException @param @throws IOException @return boolean
+	 *         result @param @param rundescription @param @return test code @param @throws
+	 *         MalformedURLException @param @throws IOException @return test code boolean
 	 *         return type @throws
 	 */
 

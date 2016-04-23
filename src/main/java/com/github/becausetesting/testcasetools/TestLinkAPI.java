@@ -14,9 +14,8 @@ package com.github.becausetesting.testcasetools;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 17, 2016 8:58:26 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * @version  1.0.0
+ * @since    JDK 1.8	 
  */
 public class TestLinkAPI {
 

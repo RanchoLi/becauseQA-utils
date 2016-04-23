@@ -38,10 +38,10 @@ import org.dom4j.xpath.DefaultXPath;
  * date: Apr 16, 2016 8:46:32 PM  
  *
  * @author Administrator
- * @version 
+ * @version 1.0.0
  * @since JDK 1.8
- * @see parse: SAXReader
- * @see write: DocumentHelper
+ * @see SAXReader
+
  * 
  */
 public class DOM4JUtils {

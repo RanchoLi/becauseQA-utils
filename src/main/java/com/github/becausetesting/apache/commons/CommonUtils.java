@@ -14,9 +14,8 @@ package com.github.becausetesting.apache.commons;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 17, 2016 8:59:34 PM 
  * @author   Administrator
- * @version  
+ * @version  1.0
  * @since    JDK 1.8
- * @see 	 
  */
 public class CommonUtils {
 

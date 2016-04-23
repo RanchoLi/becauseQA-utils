@@ -22,7 +22,7 @@ public class TemplateUtils {
 	 * @deprecated
 	 * @param templatename
 	 * @param dataModel
-	 * @see template is in src/main/resources
+	 * template is in src/main/resources
 	 */
 	protected void renderResourceContent(String templatename, Object dataModel) {
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -49,7 +49,7 @@ public class TemplateUtils {
 	/**
 	 * @param templatename
 	 * @param dataModel
-	 * @see template is in src/main/resources
+	 *  template is in src/main/resources
 	 */
 	public void renderContent(String templatename, Object dataModel) {
 		String outputPath = templatename + ".html";

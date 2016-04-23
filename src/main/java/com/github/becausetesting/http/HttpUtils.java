@@ -32,9 +32,9 @@ import com.github.becausetesting.json.JSONUtils;
  * Date: 2016年4月16日 下午6:52:01
  * 
  * @author Administrator
- * @version
+ * @version 1.0.0
  * @since JDK 1.8
- * @see
+ * @see {@link HttpClientUtils}
  */
 public class HttpUtils {
 

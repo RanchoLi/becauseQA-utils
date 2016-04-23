@@ -28,9 +28,8 @@ import com.github.becausetesting.properties.PropertyUtils;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 16, 2016 11:07:18 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	
+ * @version  1.0.0
+ * @since    JDK 1.8	
  * 
  *  jtds connection string: 
  *  SQL Server: 
@@ -59,7 +58,7 @@ public class SQLServerUtils {
 	 * driverurl @param @param user @param @param
 	 * password @param @return @return Connection return type @throws
 	 * 
-	 * @see jdbc:jtds:sqlserver://GDCQA4-SQL01/QA4;useNTLMv2=true;domain=nextestate.com;
+	 * jdbc:jtds:sqlserver://GDCQA4-SQL01/QA4;useNTLMv2=true;domain=nextestate.com;
 	 */
 	
 
@@ -84,7 +83,7 @@ public class SQLServerUtils {
 	 * ahu@greendotcorp.com @param @param drivername @param @param
 	 * driverurl @param @param user @param @param
 	 * password @param @return @return Connection return type @throws
-	 * @see useNTLMv2=true;domain=nextestate.com
+	 * useNTLMv2=true;domain=nextestate.com
 	 */
 
 	public void getConnection(String url,String user,String password) {

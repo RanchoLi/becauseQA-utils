@@ -29,22 +29,71 @@ import gherkin.formatter.model.Scenario;
 	private static String cucumberErrorMessage = "";
 	
  */
+/**
+ * ClassName: BecauseCucumberHook  
+ * Function: TODO ADD FUNCTION.  
+ * Reason: TODO ADD REASON 
+ * date: Apr 23, 2016 6:11:20 PM  
+ * @author alterhu2020@gmail.com
+ * @version 1.0.0
+ * @since JDK 1.8
+ */
 public interface BecauseCucumberHook {
 
 	public static Logger logger=Logger.getLogger(BecauseCucumberHook.class);
 	
-	public void beforeRun(); //like create test plan 
-	public void afterRun(); //like close test plan 
+	/**
+	 * beforeRun: like create test plan 
+	 * @author alterhu2020@gmail.com
+	 * @since JDK 1.8
+	 */
+	public void beforeRun(); 
+	/**
+	 * afterRun: like close test plan 
+	 * @author alterhu2020@gmail.com
+	 * @since JDK 1.8
+	 */
+	public void afterRun(); 
 	
 	
+	/**
+	 * beforeEachScenario:before start the cucumber scenario
+	 * @author alterhu2020@gmail.com
+	 * @param scenario
+	 * @since JDK 1.8
+	 */
 	public void beforeEachScenario(Scenario scenario);  //start the selenium 
+	/**
+	 * afterEachScenario: after finished the cucumber scenario
+	 * @author alterhu2020@gmail.com
+	 * @param scenario
+	 * @since JDK 1.8
+	 */
 	public void afterEachScenario(Scenario scenario); // upload the result into test tool
 	
 	
+	/**
+	 * beforeEachFeature: before each cucumber feature is running
+	 * @author alterhu2020@gmail.com
+	 * @param feature
+	 * @since JDK 1.8
+	 */
 	public void beforeEachFeature(Feature feature); // upload the tese cases into test run
 	
+	/**
+	 * setCucumberPropertyFilePath: set the path
+	 * @author alterhu2020@gmail.com
+	 * @return set the cucumber files
+	 * @since JDK 1.8
+	 */
 	public String setCucumberPropertyFilePath(); // set the feature file path	
 
+	/**
+	 * setSeleniumDriver: if user selenium driver or not
+	 * @author alterhu2020@gmail.com
+	 * @return the selenium driver {@link WebDriver}
+	 * @since JDK 1.8
+	 */
 	public WebDriver setSeleniumDriver(); // if needs to use the selenium integration for testing
 	
 }

@@ -35,6 +35,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static cucumber.runtime.Runtime.isPending;
 
+/**
+ * ClassName: BecauseCucumberReporter  
+ * Function: TODO ADD FUNCTION.  
+ * Reason: TODO ADD REASON 
+ * date: Apr 23, 2016 6:11:13 PM  
+ * @author alterhu2020@gmail.com
+ * @version 1.0.0
+ * @since JDK 1.8
+ */
 public class BecauseCucumberReporter implements Reporter, Formatter {
 	private final List<Step> steps = new ArrayList<Step>();
 

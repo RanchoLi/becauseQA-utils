@@ -26,9 +26,8 @@ import jxl.read.biff.BiffException;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 16, 2016 11:19:36 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * @version  1.0.0
+ * @since    JDK 1.8	 
  */
 public class ExcelUtils {
 
@@ -39,9 +38,8 @@ public class ExcelUtils {
 	 * @Title: getInstance
 	 * @Description: TODO
 	 * @author ahu@greendotcorp.com
-	 * @param @return
+	 * @param filename
 	 * @return ExcelUtils return type
-	 * @throws
 	 */
 
 	public static ExcelUtils getInstance(File excelfile) {
@@ -59,17 +57,15 @@ public class ExcelUtils {
 		return INSTANCE;
 	}
 	
-	/**
-	 * @Title: getDataTableRowBasedOnTowParameterValues
-	 * @Description: TODO
-	 * @author alterhu2020@gmail.com
-	 * @param @param sheetname
-	 * @param @param firstparametervalue,secondparametervalue
-	 * @param @return
-	 * @return Map<String,String> return type
-	 * @throws
-	 */
 
+	/**
+	 * getRowdataViaOneColumns: 
+	 * @author alterhu2020@gmail.com
+	 * @param sheetname
+	 * @param firstcolumn
+	 * @return excel values
+	 * @since JDK 1.8
+	 */
 	public Map<String, String> getRowdataViaOneColumns(
 			String sheetname,
 			String firstcolumn) {

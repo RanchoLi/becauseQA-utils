@@ -23,9 +23,8 @@ import java.io.IOException;
  * Date: Apr 17, 2016 8:32:01 PM
  * 
  * @author Administrator
- * @version
+ * @version 1.0.0
  * @since JDK 1.8
- * @see
  */
 public class FileHelper {
 

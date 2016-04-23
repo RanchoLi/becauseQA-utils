@@ -18,9 +18,8 @@ import java.net.UnknownHostException;
  * Reason:	 TODO ADD REASON.  
  * Date:     Apr 16, 2016 10:56:39 PM 
  * @author   Administrator
- * @version  
- * @since    JDK 1.8
- * @see 	 
+ * @version  1.0.0
+ * @since    JDK 1.8	 
  */
 public class HostUtils {
 
