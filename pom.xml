@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<name>commons</name>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.becausetesting</groupId>
 	<artifactId>commons</artifactId>
@@ -33,6 +34,8 @@
 		<jcommander.version>1.48</jcommander.version>
 
 		<!-- plugins dependencies -->
+		<plugin.compiler.version>3.5.1</plugin.compiler.version>
+		<plugin.surefire.version>2.12.4</plugin.surefire.version>
 		
 		<!-- upload to maven central plugins -->
 		<maven-invoker-plugin.version>2.0.0</maven-invoker-plugin.version>
@@ -204,6 +207,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${plugin.compiler.version}</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
 					<source>${java.version}</source>
@@ -212,6 +216,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${plugin.surefire.version}</version>
 				<configuration>
 					<skipTests>false</skipTests>
 					<testFailureIgnore>true</testFailureIgnore>
