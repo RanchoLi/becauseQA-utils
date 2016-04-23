@@ -1,4 +1,4 @@
-                                   **Commons** 
+                                   Commons 
   
 what is it?
 
@@ -66,9 +66,7 @@ and learning java api.
 ## Xml operation(com.github.becausetesting.xml)
 
 
-
- Thank you for using becausetesting commons libraries.
 ------------------------------------------------------------
-
+Thank you for using becausetesting commons libraries.
 
 
