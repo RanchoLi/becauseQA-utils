@@ -8,6 +8,10 @@
 */
 
 package com.github.becausetesting.http;
+
+import java.net.URL;
+import java.util.Map;
+
 /**
  * ClassName:HttpClientUtils  
  * Function: TODO ADD FUNCTION.  
@@ -19,5 +23,7 @@ package com.github.becausetesting.http;
  */
 public class HttpClientUtils {
 
+	
+	
 }
 

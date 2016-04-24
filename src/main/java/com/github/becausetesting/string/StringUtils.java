@@ -19,6 +19,9 @@ public class StringUtils {
 		return s == null || s.trim().length() == 0;
 	}
 
+	private String byte2String(byte[] bytes){
+		return new String(bytes);
+	}
 	public byte[] string2Bytes(String str) {
 		return str.getBytes(Charset.forName("UTF-8"));
 	}

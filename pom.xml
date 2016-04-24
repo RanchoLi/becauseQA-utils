@@ -32,6 +32,7 @@
 		<jexcelapi.version>2.6.12</jexcelapi.version>
 		<json.version>2.6.2</json.version>
 		<jcommander.version>1.48</jcommander.version>
+		
 
 		<!-- plugins dependencies -->
 		<plugin.compiler.version>3.5.1</plugin.compiler.version>
@@ -124,11 +125,8 @@
 			<version>${freemarker.version}</version>
 		</dependency>
 		<!-- A java client library to access Exchange web services -->
-		<dependency>
-			<groupId>com.microsoft.ews-java-api</groupId>
-			<artifactId>ews-java-api</artifactId>
-			<version>${ews.version}</version>
-		</dependency>
+	<!-- <dependency> <groupId>com.microsoft.ews-java-api</groupId> <artifactId>ews-java-api</artifactId> 
+		<version>${ews.version}</version> </dependency> -->
 		<!-- java email -->
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -165,8 +163,7 @@
 			<artifactId>jcommander</artifactId>
 			<version>${jcommander.version}</version>
 		</dependency>
-
-		<!-- selenium tool libraries start -->
+		<!-- selenium and cucumber tool libraries end -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -198,8 +195,9 @@
 			<artifactId>cucumber-java</artifactId>
 			<version>RELEASE</version>
 		</dependency>
+<!-- Autoitx libararies -->
 
-		<!-- selenium and cucumber tool libraries end -->
+		
 
 	</dependencies>
 

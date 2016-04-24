@@ -14,8 +14,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import org.joda.time.LocalDate;
-import org.joda.time.Minutes;
 
 public class TimeUtils {
 
