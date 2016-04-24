@@ -28,9 +28,6 @@ public enum Environment {
 		return configuration;
 	}
 	
-	public void beforeCucumber(){
-		
-	}
 
 	public Configuration getConfiguration() {
 		return configuration;
