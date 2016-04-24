@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,8 +60,6 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 	public Formatter formatter;
 	public boolean isStrict = false;
 
-	// public static String reportClassName=null;
-	public static Class<?> reportClass = null;
 	public static Object reportInstance = null;
 
 	public static String METHOD_BEFORERUN = "beforeRun";
@@ -70,7 +69,9 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 	public static String METHOD_AFTERSCENARIO = "afterEachScenario";
 	public static String METHOD_BEFOREFEATURE = "beforeEachFeature";
 
-	public static String METHOD_PROPERTYFILE = "setCucumberPropertyFilePath";
+	public static String METHOD_CUCUMBERFEATUREPATHS = "setCucumberFeatureFilePaths";
+	public static String METHOD_SETREPORTFORMATS = "setCucumberReportFormatters";
+	public static String METHOD_SETSTEPDEFINITIONS = "setCucumberStepDefinitionPaths";
 
 	public static String METHOD_SETSELENIUMDRIVER = "setSeleniumDriver";
 
@@ -100,70 +101,73 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 		reporter = runtimeOptions.reporter(classLoader);
 		formatter = runtimeOptions.formatter(classLoader);
 		isStrict = runtimeOptions.isStrict();
-		
-		
-		//String string = System.getenv().get("cucumber.options");
 
-		// format the report
-		Object prettyformat = new PluginFactory().create("pretty");
-		Object htmlformat = new PluginFactory().create("html:target/cucumber/cucumber-html-report");
-		Object jsonformat = new PluginFactory().create("json:target/cucumber/cucumber-json-report/cucumber.json");
-		Object junitformat = new PluginFactory().create("junit:target/cucumber/cucumber-junit-report/cucumber.xml");
-		Object testngformat = new PluginFactory().create("testng:target/cucumber/cucumber-testng-report/cucumber.xml");
+		// report formats
+		String[] formatArrays = new String[] { "pretty", "html:target/cucumber/cucumber-html-report",
+				"json:target/cucumber/cucumber-json-report/cucumber.json",
+				"junit:target/cucumber/cucumber-junit-report/cucumber.xml",
+				"testng:target/cucumber/cucumber-testng-report/cucumber.xml",
+				"rerun:target/cucumber/cucumber-failed-report/failed,rerun.txt" };
+		List<String> reportformatList = Arrays.asList(formatArrays);
+		// get the step definition paths
+		String[] stepArrays = new String[] { "classpath:", 
+				"com.github.becausetesting.cucumber.selenium" };	
+		List<String> stepdefinitionList = Arrays.asList(stepArrays);
 
-		Object rerunformat = new PluginFactory()
-				.create("rerun:target/cucumber/cucumber-failed-report/failed,rerun.txt");
-
-		runtimeOptions.addPlugin(prettyformat);
-		runtimeOptions.addPlugin(htmlformat);
-		runtimeOptions.addPlugin(jsonformat);
-		runtimeOptions.addPlugin(junitformat);
-		runtimeOptions.addPlugin(testngformat);
-		runtimeOptions.addPlugin(rerunformat);
-
-		
-		// add our customize steps
-		runtimeOptions.getGlue().add("classpath:"); //any place for the step definiation
-		runtimeOptions.getGlue().add("com.github.becausetesting.cucumber.selenium");
-
-		// feature path defined
+		// the cucumber feature files
+		List<CucumberFeature> cucumberFeatures;
 		List<String> featurePaths = Lists.newArrayList();
 		List<Object> filters = runtimeOptions.getFilters();
-		List<CucumberFeature> cucumberFeatures;
 		String classPackagePath = clazz.getName();
-		classPackagePath=classPackagePath.substring(0, Math.max(0, classPackagePath.lastIndexOf("."))).replace('.', '/');
-		String classPathFeature=MultiLoader.CLASSPATH_SCHEME+classPackagePath;
+		classPackagePath = classPackagePath.substring(0, Math.max(0, classPackagePath.lastIndexOf("."))).replace('.',
+				'/');
+		String classPathFeature = MultiLoader.CLASSPATH_SCHEME + classPackagePath;
 		featurePaths.add(classPathFeature);
-		cucumberFeatures = CucumberFeature.load(resourceLoader, featurePaths, filters);
-		//cucumberFeatures = runtimeOptions.cucumberFeatures(resourceLoader);
-		// the below code for customization behaviours
+		// String string = System.getenv().get("cucumber.options");
 		if (BecauseCucumberHook.class.isAssignableFrom(clazz)) {
 			logger.info("implement the BecauseCucumberHook interface");
-			reportClass = clazz;
-			reportInstance = RefelectionUtils.createContractorInstance(clazz, null);
+			reportInstance = RefelectionUtils.getContractorInstance(clazz, new Object[]{});
 
-			RefelectionUtils.invokeMethod(reportInstance, reportClass, METHOD_BEFORERUN, new Class[] {},
+			RefelectionUtils.getMethod(reportInstance, METHOD_BEFORERUN,
 					new Object[] {});
-
-			Object propertyFile = RefelectionUtils.invokeMethod(reportInstance, reportClass, METHOD_PROPERTYFILE,
-					new Class[] {}, new Object[] {});
-
+			// format the report
+			Object formats = RefelectionUtils.getMethod(reportInstance, METHOD_SETREPORTFORMATS, new Object[] {});
+			if (formats != null) {
+				//reportformatList.clear();
+				reportformatList = (List<String>) formats;
+				PluginFactory pluginFactory = new PluginFactory();
+				for (String format : reportformatList) {
+					Object formatObj = pluginFactory.create(format);
+					runtimeOptions.addPlugin(formatObj);
+				}
+			}
+			// step definition paths
+			Object steps = RefelectionUtils.getMethod(reportInstance, METHOD_SETSTEPDEFINITIONS, new Object[] {});
+			if (steps != null) {
+				//stepdefinitionList.clear();
+				stepdefinitionList = (List<String>) steps;
+				runtimeOptions.getGlue().addAll(stepdefinitionList);
+			}
+			// feature path defined
+			Object propertyFile = RefelectionUtils.getMethod(reportInstance,
+					METHOD_CUCUMBERFEATUREPATHS, new Object[] {});
 			if (propertyFile != null) {
-				featurePaths.add(propertyFile.toString());			
-				cucumberFeatures = CucumberFeature.load(resourceLoader, featurePaths, filters);
+				featurePaths.clear();
+				List<String> features = (List<String>) propertyFile;
+				featurePaths.addAll(features);
+			}
+			
+			logger.info("Begin to start the selenium driver...");
+			Object tempdriver = RefelectionUtils.getMethod(reportInstance,
+					BecauseCucumber.METHOD_SETSELENIUMDRIVER, new Object[] {});
+			if (tempdriver != null) {
+				driver = (WebDriver) tempdriver;
 			}
 
 		} else {
 			logger.warn("Please implements BecauseCucumberHook interface in current Junit Class: " + clazz.getName());
 		}
-
-		// if use the selenium driver
-		logger.info("Begin to start the selenium driver...");
-		Object tempdriver = RefelectionUtils.invokeMethod(reportInstance, reportClass,
-				BecauseCucumber.METHOD_SETSELENIUMDRIVER, null, new Object[] {});
-		if (tempdriver != null) {
-			driver = (WebDriver) tempdriver;
-		}
+		cucumberFeatures = CucumberFeature.load(resourceLoader, featurePaths, filters);
 
 		runtime = createRuntime(resourceLoader, classLoader, runtimeOptions);
 		becauseCucumberReporter = new BecauseCucumberReporter(reporter, formatter, isStrict);
@@ -215,16 +219,16 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 		becauseCucumberReporter.close();
 		runtime.printSummary();
 		// after the execution
-		if (BecauseCucumberHook.class.isAssignableFrom(reportClass)) {
+		if (reportInstance!=null) {
 			// load from the properties file for configuration
-			Object invokeMethod = RefelectionUtils.invokeMethod(reportInstance, reportClass, METHOD_PROPERTYFILE,
-					new Class[] {}, new Object[] {});
+			Object invokeMethod = RefelectionUtils.getMethod(reportInstance,
+					METHOD_CUCUMBERFEATUREPATHS, new Object[] {});
 			if (invokeMethod != null) {
 				// get the property file path
 				String cucumberPath = invokeMethod.toString();
 
 			}
-			RefelectionUtils.invokeMethod(reportInstance, reportClass, METHOD_AFTERRUN, new Class[] {},
+			RefelectionUtils.getMethod(reportInstance, METHOD_AFTERRUN,
 					new Object[] {});
 
 		}

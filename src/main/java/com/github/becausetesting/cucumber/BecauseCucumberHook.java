@@ -1,5 +1,6 @@
 package com.github.becausetesting.cucumber;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
@@ -86,8 +87,36 @@ public interface BecauseCucumberHook {
 	 * @return set the cucumber files
 	 * @since JDK 1.8
 	 */
-	public String setCucumberPropertyFilePath(); // set the feature file path	
+	public List<String> setCucumberFeatureFilePaths(); // set the feature file path	
 
+	/**
+	 * setCucumberReportFormatters use to set different format
+	 * e.g :
+	 *  html:target/cucumber/cucumber-html-report
+	 *  json:target/cucumber/cucumber-json-report/cucumber.json
+	 *  junit:target/cucumber/cucumber-junit-report/cucumber.xml
+	 *  testng:target/cucumber/cucumber-testng-report/cucumber.xml
+	 *  rerun:target/cucumber/cucumber-failed-report/failed,rerun.txt
+	 *  pretty
+	 * 
+	 * @author alterhu2020@gmail.com
+	 * @return
+	 * @since JDK 1.8
+	 */
+	public List<String> setCucumberReportFormatters();
+	
+	/**
+	 * setCucumberStepDefinitionPaths to use to set cucumber step definition path:
+	 * we had set these paths as default path to search the step definition,
+	 * 1. classpath:
+	 * 2. com.github.becausetesting.cucumber.selenium
+	 * so actually you no need to set the step definition path here ,just leave it as empty.
+	 * @author alterhu2020@gmail.com
+	 * @return
+	 * @since JDK 1.8
+	 * @deprecated
+	 */
+	public List<String> setCucumberStepDefinitionPaths();
 	/**
 	 * setSeleniumDriver: if user selenium driver or not
 	 * @author alterhu2020@gmail.com

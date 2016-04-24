@@ -259,10 +259,8 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	public void feature(gherkin.formatter.model.Feature feature) {
 		// beforeEachFeature(feature);
 		Object reportInstance = BecauseCucumber.reportInstance;
-		Class<?> reportClass = BecauseCucumber.reportClass;
 		if (reportInstance != null) {
-			RefelectionUtils.invokeMethod(reportInstance, reportClass, BecauseCucumber.METHOD_BEFOREFEATURE,
-					new Class[] { Feature.class }, feature);
+			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFOREFEATURE, feature);
 		}
 		formatter.feature(feature);
 	}
@@ -322,10 +320,8 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		formatter.startOfScenarioLifeCycle(scenario);
 
 		Object reportInstance = BecauseCucumber.reportInstance;
-		Class<?> reportClass = BecauseCucumber.reportClass;
 		if (reportInstance != null) {
-			RefelectionUtils.invokeMethod(reportInstance, reportClass, BecauseCucumber.METHOD_BEFORESCENARIO,
-					new Class[] { Scenario.class }, scenario);
+			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESCENARIO, scenario);
 		}
 	}
 
@@ -386,10 +382,8 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 				+ endhorizonline);
 
 		Object reportInstance = BecauseCucumber.reportInstance;
-		Class<?> reportClass = BecauseCucumber.reportClass;
 		if (reportInstance != null) {
-			RefelectionUtils.invokeMethod(reportInstance, reportClass, BecauseCucumber.METHOD_AFTERSCENARIO,
-					new Class[] { Scenario.class }, scenario);
+			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_AFTERSCENARIO,scenario);
 		}
 
 	}
