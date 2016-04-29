@@ -19,9 +19,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-
+import com.github.becausetesting.lang.StringUtils;
 import com.github.becausetesting.properties.PropertyUtils;
-import com.github.becausetesting.string.StringUtils;
 
 /**
  * ClassName: EmailUtils  

@@ -17,6 +17,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * ClassName:FileHelper Function: TODO ADD FUNCTION. Reason: TODO ADD REASON.
@@ -28,8 +33,32 @@ import java.io.IOException;
  */
 public class FileHelper {
 
+	public String inputstream2String(InputStream inputStream, String character) throws IOException {
+		if (character != null)
+			return IOUtils.toString(inputStream, character);
+		else{
+			return IOUtils.toString(inputStream);
+		}
+			
+	}
+
+	public List<String> readAllLines(InputStream inputStream) {
+		List<String> lines = null;
+		try {
+			lines = IOUtils.readLines(inputStream);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lines;
+	}
+
+	public static BufferedReader toBufferedReader(Reader reader) {
+		return reader instanceof BufferedReader ? (BufferedReader) reader : new BufferedReader(reader);
+	}
+
 	// read file
-	public String readFile(String filePath) throws IOException {
+	public static String readFile(String filePath) throws IOException {
 		BufferedReader reader = null;
 		String allline = "";
 		try {
@@ -51,7 +80,7 @@ public class FileHelper {
 	}
 
 	// write file
-	public void writeFile(String sourceFile, String destinationFile) {
+	public static void writeFile(String sourceFile, String destinationFile) {
 		BufferedInputStream reader = null;
 		BufferedOutputStream writer = null;
 		try {

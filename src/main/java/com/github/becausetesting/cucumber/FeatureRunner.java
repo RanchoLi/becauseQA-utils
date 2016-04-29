@@ -65,9 +65,7 @@ public class FeatureRunner extends ParentRunner<ParentRunner> {
 
     @Override
     public void run(RunNotifier notifier) {
-    	String path = cucumberFeature.getPath();
-    	//System.out.println("["+this.getClass().getName()+"] Cucumber Feature: "+path); 
-        jUnitReporter.uri(path);
+        jUnitReporter.uri(cucumberFeature.getPath());
         jUnitReporter.feature(cucumberFeature.getGherkinFeature());
         super.run(notifier);
         jUnitReporter.eof();

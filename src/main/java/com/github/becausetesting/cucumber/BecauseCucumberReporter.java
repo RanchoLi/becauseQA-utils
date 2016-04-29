@@ -12,7 +12,6 @@ import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
 
 import org.apache.log4j.Logger;
 import org.junit.internal.runners.model.EachTestNotifier;
@@ -21,13 +20,10 @@ import org.junit.runner.notification.RunNotifier;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.github.becausetesting.reflections.RefelectionUtils;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,32 +31,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static cucumber.runtime.Runtime.isPending;
 
-/**
- * ClassName: BecauseCucumberReporter  
- * Function: TODO ADD FUNCTION.  
- * Reason: TODO ADD REASON 
- * date: Apr 23, 2016 6:11:13 PM  
- * @author alterhu2020@gmail.com
- * @version 1.0.0
- * @since JDK 1.8
- */
 public class BecauseCucumberReporter implements Reporter, Formatter {
-	private final List<Step> steps = new ArrayList<Step>();
+    private final List<Step> steps = new ArrayList<Step>();
 
-	private final Reporter reporter;
-	private final Formatter formatter;
-	private final boolean strict;
+    private final Reporter reporter;
+    private final Formatter formatter;
+    private final boolean strict;
 
-	EachTestNotifier stepNotifier;
-	private ExecutionUnitRunner executionUnitRunner;
-	private RunNotifier runNotifier;
-	EachTestNotifier executionUnitNotifier;
-	private boolean ignoredStep;
-	private boolean inScenarioLifeCycle;
+    EachTestNotifier stepNotifier;
+    private ExecutionUnitRunner executionUnitRunner;
+    private RunNotifier runNotifier;
+    EachTestNotifier executionUnitNotifier;
+    private boolean failedStep;
+    private boolean ignoredStep;
+    private boolean inScenarioLifeCycle;
 
-	
-	private byte[] screenshotAs = new byte[1024];
-	/*
+    
+    /*
 	 * static { try { driver = new RemoteWebDriver(new
 	 * URL("http://127.0.0.1:4444/wd/hub"), DesiredCapabilities.firefox()); }
 	 * catch (MalformedURLException e) { // TODO Auto-generated catch block
@@ -68,7 +55,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	 */
 	private static Logger logger = Logger.getLogger(BecauseCucumberReporter.class);
 	private static Result result;
-	
+
 	public static AtomicInteger failedStepsCount;
 	public static AtomicInteger skippedStepsCount;
 	public static AtomicInteger undefinedStepsCount;
@@ -80,12 +67,9 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	public static AtomicInteger passScenariosCount;
 
 	private static String cucumberErrorMessage = "";
+	private byte[] screenshotAs = new byte[1024];
 
-	public BecauseCucumberReporter(Reporter reporter, Formatter formatter, boolean strict) {
-		this.reporter = reporter;
-		this.formatter = formatter;
-		this.strict = strict;
-
+	private void myBecauseCucumberReporter() {
 		// define the step and scenarios counters
 		failedStepsCount = new AtomicInteger(0);
 		skippedStepsCount = new AtomicInteger(0);
@@ -97,266 +81,52 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		undefinedScenariosCount = new AtomicInteger(0);
 		passScenariosCount = new AtomicInteger(0);
 
-		
-
 	}
 
-	
-
-	/**
-	 * startExecutionUnit: 
-	 * @author alterhu2020@gmail.com
-	 * @param executionUnitRunner the runner from junit.
-	 * @param runNotifier the notfier from junit.
-	 * @since JDK 1.8
-	 */
-	public void startExecutionUnit(ExecutionUnitRunner executionUnitRunner, RunNotifier runNotifier) {
-		this.executionUnitRunner = executionUnitRunner;
-		this.runNotifier = runNotifier;
-		this.stepNotifier = null;
-		this.ignoredStep = false;
-
-		executionUnitNotifier = new EachTestNotifier(runNotifier, executionUnitRunner.getDescription());
-		executionUnitNotifier.fireTestStarted();
-
-	}
-
-	public void finishExecutionUnit() {
-		if (ignoredStep) {
-			executionUnitNotifier.fireTestIgnored();
-		}
-		executionUnitNotifier.fireTestFinished();
-	}
-
-	public void match(Match match) {
-		Step runnerStep = fetchAndCheckRunnerStep();
-		Description description = executionUnitRunner.describeChild(runnerStep);
-		stepNotifier = new EachTestNotifier(runNotifier, description);
-		reporter.match(match);
-	}
-
-	private Step fetchAndCheckRunnerStep() {
-		Step scenarioStep = steps.remove(0);
-		Step runnerStep = executionUnitRunner.getRunnerSteps().remove(0);
-		if (!scenarioStep.getName().equals(runnerStep.getName())) {
-			throw new CucumberException(
-					"Expected step: \"" + scenarioStep.getName() + "\" got step: \"" + runnerStep.getName() + "\"");
-		}
-		return runnerStep;
-	}
-
-	@Override
-	public void embedding(String mimeType, byte[] data) {
-		reporter.embedding(mimeType, data);
-	}
-
-	@Override
-	public void write(String text) {
-		reporter.write(text);
-	}
-
-	public void result(Result result) {
-		BecauseCucumberReporter.result = result;
-
-		Throwable error = result.getError();
-		if (Result.SKIPPED == result) {
-			stepNotifier.fireTestIgnored();
-
-			skippedStepsCount.incrementAndGet();
-			// this.embedding("image/png", screenshotAs);
-		} else if (isPendingOrUndefined(result)) {
-			addFailureOrIgnoreStep(result);
-
-			undefinedStepsCount.incrementAndGet();
-			// this.embedding("image/png", screenshotAs);
-		} else {
-			if (stepNotifier != null) {
-				// Should only fireTestStarted if not ignored
-				stepNotifier.fireTestStarted();
-				if (error != null) {
-					stepNotifier.addFailure(error);
-
-					failedStepsCount.incrementAndGet();
-					// this.embedding("image/png", screenshotAs);
-
-				} else {
-					
-					runNotifier.fireTestFinished(Description.createTestDescription(result.getClass(), result.getStatus()));
-					passStepsCount.incrementAndGet();
-					//runNotifier.fireTestRunFinished(new org.junit.runner.Result());
-				}
-				stepNotifier.fireTestFinished();
-			}
-			if (error != null) {
-				executionUnitNotifier.addFailure(error);
-			}
-		}
-		if (steps.isEmpty()) {
-			// We have run all of our steps. Set the stepNotifier to null so
-			// that
-			// if an error occurs in an After block, it's reported against the
-			// scenario
-			// instead (via executionUnitNotifier).
-			stepNotifier = null;
-		}
-		reporter.result(result);
-	}
-
-	private boolean isPendingOrUndefined(Result result) {
-		Throwable error = result.getError();
-		return Result.UNDEFINED == result || isPending(error);
-	}
-
-	private void addFailureOrIgnoreStep(Result result) {
-		if (strict) {
-			stepNotifier.fireTestStarted();
-			addFailure(result);
-			stepNotifier.fireTestFinished();
-		} else {
-			ignoredStep = true;
-			stepNotifier.fireTestIgnored();
-		}
-	}
-
-	private void addFailure(Result result) {
-
-		Throwable error = result.getError();
-		if (error == null) {
-			error = new PendingException();
-		}
-		stepNotifier.addFailure(error);
-		executionUnitNotifier.addFailure(error);
-	}
-
-	@Override
-	public void before(Match match, Result result) {
-		// logger.info(this.getClass().getName()+",Before scenrios
-		// "+result.getStatus());
-		handleHook(result);
-		reporter.before(match, result);
-	}
-
-	@Override
-	public void after(Match match, Result result) {
-		// logger.info(this.getClass().getName()+",after scenarios
-		// "+result.getStatus());
-		reporter.after(match, result);
-		handleHook(result);
-	}
-
-	private void handleHook(Result result) {
-		if (result.getStatus().equals(Result.FAILED)) {
-			executionUnitNotifier.addFailure(result.getError());
-		}
-	}
-
-	@Override
-	public void uri(String uri) {
-		formatter.uri(uri);
-	}
-
-	@Override
-	public void feature(gherkin.formatter.model.Feature feature) {
-		// beforeEachFeature(feature);
+	private void myfeature(Feature feature) {
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
 			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFOREFEATURE, feature);
 		}
-		formatter.feature(feature);
 	}
 
-	@Override
-	public void background(Background background) {
-		formatter.background(background);
-	}
-
-	@Override
-	public void scenario(Scenario scenario) {
-		formatter.scenario(scenario);
-	}
-
-	@Override
-	public void scenarioOutline(ScenarioOutline scenarioOutline) {
-		formatter.scenarioOutline(scenarioOutline);
-	}
-
-	@Override
-	public void examples(Examples examples) {
-		formatter.examples(examples);
-	}
-
-	@Override
-	public void step(Step step) {
-		formatter.step(step);
-		if (inScenarioLifeCycle) {
-			steps.add(step);
-		}
-	}
-
-	@Override
-	public void eof() {
-		formatter.eof();
-	}
-
-	@Override
-	public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
-		formatter.syntaxError(state, event, legalEvents, uri, line);
-	}
-
-	@Override
-	public void done() {
-		formatter.done();
-		steps.clear();
-	}
-
-	@Override
-	public void close() {
-		formatter.close();
-	}
-
-	@Override
-	public void startOfScenarioLifeCycle(Scenario scenario) {
-		inScenarioLifeCycle = true;
-		formatter.startOfScenarioLifeCycle(scenario);
-
+	private void mystartOfScenarioLifeCycle(Scenario scenario) {
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
 			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESCENARIO, scenario);
 		}
 	}
 
-	@Override
-	public void endOfScenarioLifeCycle(Scenario scenario) {
-		formatter.endOfScenarioLifeCycle(scenario);
-		inScenarioLifeCycle = false;
+	private void myendOfScenarioLifeCycle(Scenario scenario) {
 		// upload the cucumber steps result into test case tool
-		
 		cucumberErrorMessage = result.getErrorMessage();
 		Throwable error = result.getError();
 
 		if (Result.SKIPPED == result) {
 			skippedScenariosCount.incrementAndGet();
-			//this.embedding("image/png", screenshotAs);
+			// this.embedding("image/png", screenshotAs);
 		} else if (isPendingOrUndefined(result)) {
 			undefinedScenariosCount.incrementAndGet();
-			//this.embedding("image/png", screenshotAs);
+			// this.embedding("image/png", screenshotAs);
 		} else {
 			if (error != null) {
 				failedScenariosCount.incrementAndGet();
-				
-				WebDriver driver = BecauseCucumber.driver;	
-				if(driver!=null){
+
+				WebDriver driver = BecauseCucumber.driver;
+				if (driver != null) {
 					RemoteWebDriver remoteWebDriver = (RemoteWebDriver) driver;
 					String currentUrl = remoteWebDriver.getCurrentUrl();
 					Capabilities capabilities = remoteWebDriver.getCapabilities();
-					String platform="Platform: "+capabilities.getBrowserName()+","+capabilities.getPlatform().toString();
+					String platform = "Platform: " + capabilities.getBrowserName() + ","
+							+ capabilities.getPlatform().toString();
 					screenshotAs = remoteWebDriver.getScreenshotAs(OutputType.BYTES);
-//					cucumber.api.Scenario scenario2=(cucumber.api.Scenario) scenario;	
-					this.write("Scenario failed,Page Url: "+currentUrl+","+platform+",at "+LocalDateTime.now());
-					this.embedding("image/png",screenshotAs);
-				
+					// cucumber.api.Scenario scenario2=(cucumber.api.Scenario)
+					// scenario;
+					this.write(
+							"Scenario failed,Page Url: " + currentUrl + "," + platform + ",at " + LocalDateTime.now());
+					this.embedding("image/png", screenshotAs);
+
 				}
-				
 
 			} else {
 				passScenariosCount.incrementAndGet();
@@ -383,12 +153,217 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
-			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_AFTERSCENARIO,scenario);
+			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_AFTERSCENARIO, scenario);
 		}
-
 	}
 
+	
+	
+	
+    public BecauseCucumberReporter(Reporter reporter, Formatter formatter, boolean strict) {
+        this.reporter = reporter;
+        this.formatter = formatter;
+        this.strict = strict;
+        myBecauseCucumberReporter();
+    }
 
+    public void startExecutionUnit(ExecutionUnitRunner executionUnitRunner, RunNotifier runNotifier) {
+        this.executionUnitRunner = executionUnitRunner;
+        this.runNotifier = runNotifier;
+        this.stepNotifier = null;
+        this.failedStep = false;
+        this.ignoredStep = false;
 
+        executionUnitNotifier = new EachTestNotifier(runNotifier, executionUnitRunner.getDescription());
+        executionUnitNotifier.fireTestStarted();
+    }
 
+    public void finishExecutionUnit() {
+        if (ignoredStep && !failedStep) {
+            executionUnitNotifier.fireTestIgnored();
+        }
+        executionUnitNotifier.fireTestFinished();
+    }
+
+    public void match(Match match) {
+        Step runnerStep = fetchAndCheckRunnerStep();
+        Description description = executionUnitRunner.describeChild(runnerStep);
+        stepNotifier = new EachTestNotifier(runNotifier, description);
+        reporter.match(match);
+    }
+
+    private Step fetchAndCheckRunnerStep() {
+        Step scenarioStep = steps.remove(0);
+        Step runnerStep = executionUnitRunner.getRunnerSteps().remove(0);
+        if (!scenarioStep.getName().equals(runnerStep.getName())) {
+            throw new CucumberException("Expected step: \"" + scenarioStep.getName() + "\" got step: \"" + runnerStep.getName() + "\"");
+        }
+        return runnerStep;
+    }
+
+    @Override
+    public void embedding(String mimeType, byte[] data) {
+        reporter.embedding(mimeType, data);
+    }
+
+    @Override
+    public void write(String text) {
+        reporter.write(text);
+    }
+
+    public void result(Result result) {
+    	BecauseCucumberReporter.result=result;
+        Throwable error = result.getError();
+      
+        if (Result.SKIPPED == result) {
+        	skippedStepsCount.incrementAndGet();
+            stepNotifier.fireTestIgnored();
+        } else if (isPendingOrUndefined(result)) {
+        	undefinedStepsCount.incrementAndGet();
+            addFailureOrIgnoreStep(result);
+        } else {
+            if (stepNotifier != null) {
+                //Should only fireTestStarted if not ignored
+                stepNotifier.fireTestStarted();
+                if (error != null) {
+                	failedStepsCount.incrementAndGet();
+                    stepNotifier.addFailure(error);
+                }else{
+                	passStepsCount.incrementAndGet();
+                }
+                stepNotifier.fireTestFinished();
+            }
+            if (error != null) {
+                failedStep = true;
+                executionUnitNotifier.addFailure(error);
+            }
+        }
+        if (steps.isEmpty()) {
+            // We have run all of our steps. Set the stepNotifier to null so that
+            // if an error occurs in an After block, it's reported against the scenario
+            // instead (via executionUnitNotifier).
+            stepNotifier = null;
+        }
+        reporter.result(result);
+    }
+
+    private boolean isPendingOrUndefined(Result result) {
+        Throwable error = result.getError();
+        return Result.UNDEFINED == result || isPending(error);
+    }
+
+    private void addFailureOrIgnoreStep(Result result) {
+        if (strict) {
+            stepNotifier.fireTestStarted();
+            addFailure(result);
+            stepNotifier.fireTestFinished();
+        } else {
+            ignoredStep = true;
+            stepNotifier.fireTestIgnored();
+        }
+    }
+
+    private void addFailure(Result result) {
+
+        Throwable error = result.getError();
+        if (error == null) {
+            error = new PendingException();
+        }
+        failedStep = true;
+        stepNotifier.addFailure(error);
+        executionUnitNotifier.addFailure(error);
+    }
+
+    @Override
+    public void before(Match match, Result result) {
+        handleHook(result);
+        reporter.before(match, result);
+    }
+
+    @Override
+    public void after(Match match, Result result) {
+        handleHook(result);
+        reporter.after(match, result);
+    }
+
+    private void handleHook(Result result) {
+        if (result.getStatus().equals(Result.FAILED) || (strict && isPending(result.getError()))) {
+            executionUnitNotifier.addFailure(result.getError());
+        } else if (isPending(result.getError())) {
+            ignoredStep = true;
+        }
+    }
+
+    @Override
+    public void uri(String uri) {
+        formatter.uri(uri);
+    }
+
+    @Override
+    public void feature(gherkin.formatter.model.Feature feature) {
+    	myfeature(feature);
+        formatter.feature(feature);
+    }
+
+    @Override
+    public void background(Background background) {
+        formatter.background(background);
+    }
+
+    @Override
+    public void scenario(Scenario scenario) {
+        formatter.scenario(scenario);
+    }
+
+    @Override
+    public void scenarioOutline(ScenarioOutline scenarioOutline) {
+        formatter.scenarioOutline(scenarioOutline);
+    }
+
+    @Override
+    public void examples(Examples examples) {
+        formatter.examples(examples);
+    }
+
+    @Override
+    public void step(Step step) {
+        if (inScenarioLifeCycle) {
+            steps.add(step);
+        }
+        formatter.step(step);
+    }
+
+    @Override
+    public void eof() {
+        formatter.eof();
+    }
+
+    @Override
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+        formatter.syntaxError(state, event, legalEvents, uri, line);
+    }
+
+    @Override
+    public void done() {
+        formatter.done();
+    }
+
+    @Override
+    public void close() {
+        formatter.close();
+    }
+
+    @Override
+    public void startOfScenarioLifeCycle(Scenario scenario) {
+        inScenarioLifeCycle = true;
+        formatter.startOfScenarioLifeCycle(scenario);
+        mystartOfScenarioLifeCycle(scenario);
+    }
+
+    @Override
+    public void endOfScenarioLifeCycle(Scenario scenario) {
+        formatter.endOfScenarioLifeCycle(scenario);
+        inScenarioLifeCycle = false;
+        myendOfScenarioLifeCycle(scenario);
+    }
 }

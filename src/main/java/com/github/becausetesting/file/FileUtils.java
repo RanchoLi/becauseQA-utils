@@ -56,13 +56,55 @@ public class FileUtils {
 
 	}
 
-	public void deleteFileorDirectory(File filePath) {
-		if (filePath.exists()) {
+	/**
+	 * @param filePath delete file or folder path.
+	 */
+	public void deleteFileorFolder(File filePath) {
+		if (filePath.exists() && filePath.isFile()) {
+			filePath.delete();
+		} else {
+			File[] listFiles = filePath.listFiles();
+			if (listFiles.length >= 1) {
+				for (int k = 0; k < listFiles.length; k++) {
+					listFiles[k].delete();
+				}
+			}
 			filePath.delete();
 		}
 	}
 
-	public boolean copy(String sourceFile, String destinationPath) {
+	/**
+	 * @param sourceFileFolder the dll in resource folder.
+	 * @param libname the dll name without suffix.
+	 * @return the dll temp folder
+	 */
+	public static String copyDll(String sourceFileFolder, String libname) {
+		String tempdllpath = System.getProperty("java.io.tmpdir");
+		String mapLibraryName = System.mapLibraryName(libname);
+		String destationfile = tempdllpath+ mapLibraryName;
+
+		String useSourcePath = null;
+		if (sourceFileFolder.endsWith(File.separator)) {
+			useSourcePath = sourceFileFolder + mapLibraryName;
+		} else {
+			useSourcePath = sourceFileFolder + File.separator + mapLibraryName;
+		}
+
+		try {
+			InputStream resourceAsStream = FileUtils.class.getResourceAsStream(useSourcePath);
+			FileOutputStream fileOutputStream = new FileOutputStream(destationfile);
+			copy(resourceAsStream, fileOutputStream);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+
+		}
+
+		return destationfile;
+	}
+
+	public static boolean copy(String sourceFile, String destinationPath) {
 		File file = new File(sourceFile);
 		if (file.exists()) {
 			String filename = file.getName();
@@ -77,17 +119,23 @@ public class FileUtils {
 		}
 	}
 
-	public static long copy(InputStream input, OutputStream output) throws IOException {
+	public static long copy(InputStream input, OutputStream output) {
 		long count = 0;
 		int length = 0;
 		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-		while ((length = input.read(buffer))!=-1) {
-			output.write(buffer, 0, length);
-			count += length;
+		try {
+			while ((length = input.read(buffer)) != -1) {
+				output.write(buffer, 0, length);
+				count += length;
+			}
+			output.flush();
+			output.close();
+			input.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		output.flush();
-		output.close();
-		input.close();
+
 		return count;
 	}
 
@@ -101,7 +149,7 @@ public class FileUtils {
 				FileOutputStream fs = new FileOutputStream(destinationPath);
 				byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 				int length = 0;
-				
+
 				while ((length = inStream.read(buffer)) != -1) {
 					bytesum += length;
 					fs.write(buffer, 0, length);
@@ -109,7 +157,7 @@ public class FileUtils {
 				fs.flush();
 				fs.close();
 				inStream.close();
-				
+
 			} catch (FileNotFoundException e) {
 
 				// TODO Auto-generated catch block
@@ -124,7 +172,7 @@ public class FileUtils {
 
 		}
 		return bytesum;
-		
+
 	}
 
 	public List<File> listFilePath(String filePath, String... filter) {

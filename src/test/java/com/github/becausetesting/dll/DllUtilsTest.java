@@ -8,11 +8,11 @@ import org.junit.Test;
 
 public class DllUtilsTest {
 
-	private DllUtils dllUtils;
+	//private DllUtils dllUtils;
 
 	@Before
 	public void setUp() throws Exception {
-		dllUtils = new DllUtils();
+	//	dllUtils = new DllUtils();
 		
 	}
 
@@ -23,7 +23,7 @@ public class DllUtilsTest {
 	@Test
 	public void testLoadDll() {
 		String path = DllUtils.class.getClassLoader().getResource("jtds/x64/SSO").getPath();
-		dllUtils.loadDll("mtlmauth", path);
+		DllUtils.loadDll("mtlmauth", path);
 	}
 
 }

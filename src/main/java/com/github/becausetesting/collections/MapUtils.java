@@ -8,6 +8,13 @@
 */
 
 package com.github.becausetesting.collections;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 /**
  * ClassName:MapUtils  
  * Function: TODO ADD FUNCTION.  
@@ -20,6 +27,16 @@ package com.github.becausetesting.collections;
 public class MapUtils {
 
 	
+	
+	public void iteratorMap(){
+		Map<String,String> mapobj=new HashMap<>();
+		Set<Entry<String,String>> entrySet = mapobj.entrySet();
+		
+		Iterator<Entry<String, String>> iterator = entrySet.iterator();
+		
+		Set<String> keySet = mapobj.keySet();
+		
+	}
 	
 }
 

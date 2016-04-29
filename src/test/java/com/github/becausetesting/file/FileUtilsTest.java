@@ -40,9 +40,9 @@ public class FileUtilsTest {
 	public void test() {
 		String pathname = "samplefile.txt";
 		fileUtils.createFile(new File(pathname));
-		fileUtils.deleteFileorDirectory(new File(pathname));
+		fileUtils.deleteFileorFolder(new File(pathname));
 
-		fileUtils.copy("D:\\Downloads\\OpenLiveWriterSetup.exe", "E:\\Softwares");
+		FileUtils.copy("D:\\Downloads\\OpenLiveWriterSetup.exe", "E:\\Softwares");
 
 		List<File> listFilePath = fileUtils.listFilePath("E:\\Softwares", ".exe");
 

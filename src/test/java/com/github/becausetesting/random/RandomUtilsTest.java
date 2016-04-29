@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.becausetesting.lang.RandomUtils;
+
 public class RandomUtilsTest {
 
 	private RandomUtils RandomUtilsTest;

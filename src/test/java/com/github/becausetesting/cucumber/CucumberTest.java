@@ -22,7 +22,67 @@ import gherkin.formatter.model.Scenario;
 
 
 @RunWith(BecauseCucumber.class)
-@CucumberOptions(plugin = {"pretty", "html:target/cucumberhtml"},monochrome=true)
-public class CucumberTest{
+@CucumberOptions(plugin = {"pretty", "html:target/cucumberhtml"})
+public class CucumberTest implements BecauseCucumberHook{
+
+	@Override
+	public void beforeRun() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterRun() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beforeEachScenario(Scenario scenario) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterEachScenario(Scenario scenario) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beforeEachFeature(Feature feature) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<String> setCucumberFeatureFilePaths() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> setCucumberTags() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> setCucumberReportFormatters() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> setCucumberStepDefinitionPaths() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebDriver setSeleniumDriver() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

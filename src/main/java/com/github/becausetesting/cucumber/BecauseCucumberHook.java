@@ -82,14 +82,6 @@ public interface BecauseCucumberHook {
 	public void beforeEachFeature(Feature feature); // upload the tese cases into test run
 	
 	/**
-	 * setCucumberPropertyFilePath: set the path
-	 * @author alterhu2020@gmail.com
-	 * @return set the cucumber files
-	 * @since JDK 1.8
-	 */
-	public List<String> setCucumberFeatureFilePaths(); // set the feature file path	
-
-	/**
 	 * setCucumberReportFormatters use to set different format
 	 * e.g :
 	 *  html:target/cucumber/cucumber-html-report
@@ -117,6 +109,19 @@ public interface BecauseCucumberHook {
 	 * @deprecated
 	 */
 	public List<String> setCucumberStepDefinitionPaths();
+	/**
+	 * setCucumberPropertyFilePath: set the path
+	 * @author alterhu2020@gmail.com
+	 * @return set the cucumber files
+	 * @since JDK 1.8
+	 */
+	public List<String> setCucumberFeatureFilePaths(); // set the feature file path	
+	
+	/**
+	 * @return the cucumber tags you specified.
+	 */
+	public List<String> setCucumberTags();
+
 	/**
 	 * setSeleniumDriver: if user selenium driver or not
 	 * @author alterhu2020@gmail.com

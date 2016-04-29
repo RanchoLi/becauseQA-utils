@@ -35,7 +35,7 @@ public class HttpsCert {
 	
 
 
-	/**
+	/**Disable Certificate Validation,add the self-signed certificate to your JVM truststore
 	 * ignoreCert: ignore the cert
 	 * @author alterhu2020@gmail.com
 	 * @since JDK 1.8

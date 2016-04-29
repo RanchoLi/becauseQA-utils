@@ -17,8 +17,6 @@
 //
 package net.sourceforge.jtds.util;
 
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,9 +25,10 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 
-
 import com.github.becausetesting.dll.DllUtils;
 import com.github.becausetesting.file.FileUtils;
+import com.github.becausetesting.host.HostUtils;
+import com.github.becausetesting.host.HostUtils.OSType;
 import com.github.becausetesting.regexp.RegexpUtils;
 
 import net.sourceforge.jtds.jdbc.Driver;
@@ -89,40 +88,25 @@ public class SSPIJNIClient {
 	private native byte[] prepareSSOSubmit(byte[] buf, long size);
 
 	static {
-		try {
-			//I/O Error: SSO Failed: Native SSPI library not loaded 
-			// System.loadLibrary("ntlmauth");
-			String osname = System.getProperty("os.name");
-			String osarch = System.getProperty("os.arch");
-			String tempdllpath = System.getProperty("java.io.tmpdir");
 
-			String ntlmfile="ntlmauth";
-			RegexpUtils regexpUtils = new RegexpUtils();
-			boolean iswindows = regexpUtils.validate(osname, "^Windows.*");
-			String shortpath = "";
+		// I/O Error: SSO Failed: Native SSPI library not loaded
+		// System.loadLibrary("ntlmauth");
 
-			boolean is32bit = regexpUtils.validate(osarch, "^x86$");
-			boolean is64bit = regexpUtils.validate(osarch, "^amd64$");
-			if (is32bit) {
-				shortpath = "/jtds/x86/SSO/"+ntlmfile+".dll";
-			}
-			if (is64bit) {
-				shortpath = "/jtds/x64/SSO/"+ntlmfile+".dll";
-			}
-			
-			InputStream ssofile =SSPIJNIClient.class.getResourceAsStream(shortpath);
-			// copy the file to local host
-			String destationfile=tempdllpath+File.separator+ntlmfile+".dll";
-			FileOutputStream output = new FileOutputStream(destationfile);
-			
-			FileUtils.copy(ssofile, output);
-			new DllUtils().loadDll(tempdllpath, ntlmfile);
-
-			SSPIJNIClient.libraryLoaded = true;
-
-		} catch (UnsatisfiedLinkError | IOException err) {
-			Logger.println("Unable to load library: " + err);
+		String ntlmfile = "ntlmauth";
+		String shortpath = "";
+		OSType platform = HostUtils.getPlatform();
+		String osBit = HostUtils.getOSBit();
+		if (osBit.contains("32bit")) {
+			shortpath = "/jtds/x86/SSO/";
 		}
+		if (osBit.contains("64bit")) {
+			shortpath = "/jtds/x64/SSO/";
+		}
+
+		DllUtils.loadDll(shortpath, ntlmfile);
+
+		SSPIJNIClient.libraryLoaded = true;
+
 	}
 
 	/**
@@ -132,12 +116,13 @@ public class SSPIJNIClient {
 		// empty constructor
 	}
 
-	
 	/**
-	 * getInstance:  get SSPIJNIClient object.
+	 * getInstance: get SSPIJNIClient object.
+	 * 
 	 * @author alterhu2020@gmail.com
 	 * @return SSPIJNIClient object.
-	 * @throws Exception any exception.
+	 * @throws Exception
+	 *             any exception.
 	 * @since JDK 1.8
 	 */
 	public static synchronized SSPIJNIClient getInstance() throws Exception {
@@ -181,7 +166,7 @@ public class SSPIJNIClient {
 	 * @throws Exception
 	 *             if an error occurs during the call or the SSPI client is
 	 *             uninitialized
-	 *@return the whole byte array.
+	 * @return the whole byte array.
 	 */
 	public byte[] invokePrepareSSORequest() throws Exception {
 		if (!initialized) {
@@ -193,7 +178,9 @@ public class SSPIJNIClient {
 	/**
 	 * Calls <code>#prepareSSOSubmit(byte[], long)</code> to prepare the NTLM
 	 * TYPE-3 message.
-	 *@param buf the buffer byte object.
+	 * 
+	 * @param buf
+	 *            the buffer byte object.
 	 * @throws Exception
 	 *             if an error occurs during the call or the SSPI client is
 	 *             uninitialized

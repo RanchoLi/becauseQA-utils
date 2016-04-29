@@ -19,8 +19,8 @@
 		<!-- above properties should never be changed -->
 		<java.version>1.8</java.version>
 		<build.plugins.plugin.version>3.1</build.plugins.plugin.version>
-		
-		
+
+
 		<!-- dependencies -->
 		<junit.version>4.12</junit.version>
 		<log4j.version>2.5</log4j.version>
@@ -32,12 +32,14 @@
 		<jexcelapi.version>2.6.12</jexcelapi.version>
 		<json.version>2.6.2</json.version>
 		<jcommander.version>1.48</jcommander.version>
-		
+		<jacob.version>1.14.3</jacob.version>
+		<httpclient.version>4.5</httpclient.version>
+
 
 		<!-- plugins dependencies -->
 		<plugin.compiler.version>3.5.1</plugin.compiler.version>
 		<plugin.surefire.version>2.12.4</plugin.surefire.version>
-		
+
 		<!-- upload to maven central plugins -->
 		<maven-invoker-plugin.version>2.0.0</maven-invoker-plugin.version>
 		<maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
@@ -45,11 +47,11 @@
 		<maven-source-plugin.version>3.0.0</maven-source-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 		<nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
-		
-		
+
+
 
 	</properties>
-	
+
 	<licenses>
 		<license>
 			<name>Apache 2</name>
@@ -125,8 +127,8 @@
 			<version>${freemarker.version}</version>
 		</dependency>
 		<!-- A java client library to access Exchange web services -->
-	<!-- <dependency> <groupId>com.microsoft.ews-java-api</groupId> <artifactId>ews-java-api</artifactId> 
-		<version>${ews.version}</version> </dependency> -->
+		<!-- <dependency> <groupId>com.microsoft.ews-java-api</groupId> <artifactId>ews-java-api</artifactId> 
+			<version>${ews.version}</version> </dependency> -->
 		<!-- java email -->
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -195,9 +197,24 @@
 			<artifactId>cucumber-java</artifactId>
 			<version>RELEASE</version>
 		</dependency>
-<!-- Autoitx libararies -->
+		<!-- Autoitx libararies -->
+		<dependency>
+			<groupId>net.sf.jacob-project</groupId>
+			<artifactId>jacob</artifactId>
+			<version>${jacob.version}</version>
+		</dependency>
+		<!-- httpclient libraries -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-win</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
 
-		
 
 	</dependencies>
 
@@ -224,7 +241,7 @@
 
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>integration</id>
@@ -311,6 +328,9 @@
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+						<excludePackageNames>*.becausetesting.*</excludePackageNames>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>

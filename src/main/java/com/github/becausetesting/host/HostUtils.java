@@ -11,19 +11,24 @@ package com.github.becausetesting.host;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
+
+import com.sun.jna.Platform;
 
 /**
- * ClassName:HostUtils  
- * Function: TODO ADD FUNCTION.  
- * Reason:	 TODO ADD REASON.  
- * Date:     Apr 16, 2016 10:56:39 PM 
- * @author   Administrator
- * @version  1.0.0
- * @since    JDK 1.8	 
+ * ClassName:HostUtils Function: TODO ADD FUNCTION. Reason: TODO ADD REASON.
+ * Date: Apr 16, 2016 10:56:39 PM
+ * 
+ * @author Administrator
+ * @version 1.0.0
+ * @since JDK 1.8
  */
 public class HostUtils {
 
-	
+	public enum OSType {
+		Windows, MacOS, Linux, Other
+	};
+
 	public static String getShortHostName() {
 
 		String hostname = null;
@@ -71,7 +76,7 @@ public class HostUtils {
 	}
 
 	/**
-	 * get the current JAVA version in the host
+	 * @deprecated get the current JAVA version in the host
 	 * 
 	 * @return String
 	 */
@@ -80,27 +85,61 @@ public class HostUtils {
 		return jretype;
 	}
 
+	// cached result of OS detection
+	protected static OSType detectedOS;
+
+	/**
+	 * detect the operating system from the os.name System property and cache
+	 * the result
+	 * 
+	 * @returns - the operating system detected
+	 */
+	public static OSType getPlatform() {
+		if (detectedOS == null) {
+			String OS = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+			if ((OS.indexOf("mac") >= 0) || (OS.indexOf("darwin") >= 0)) {
+				detectedOS = OSType.MacOS;
+			} else if (OS.indexOf("win") >= 0) {
+				detectedOS = OSType.Windows;
+			} else if (OS.indexOf("nux") >= 0) {
+				detectedOS = OSType.Linux;
+			} else {
+				detectedOS = OSType.Other;
+			}
+		}
+		return detectedOS;
+
+	}
+
+	public static boolean isWindows() {
+		return Platform.isWindows();
+	}
+
+	public static boolean is64Bit() {
+		return Platform.is64Bit();
+	}
+
 	/**
 	 * get the os type ,like 32 bit or 64 bit, this is only can be used in
 	 * windows
 	 * 
 	 * @return String
 	 */
-	public static String getOSType() {
+	public static String getOSBit() {
 		// SystemEnvironment env =SystemEnvironment.getSystemEnvironment();
 		// final String envArch = env.getOsArchitecture();
 		String arch = System.getProperty("os.arch");
-		String ostype = System.getenv("PROCESSOR_ARCHITEW6432");
+		String processorType = System.getenv("PROCESSOR_ARCHITEW6432");
 		// String ostype=System.getProperty("os.arch");
 		// logger.info("The os original type is : " + ostype);
-		if (ostype != null) {
-			if (ostype.contains("64")) {
+		if (arch != null) {
+			if (arch.contains("64")) {
 				return "64bit";
 			} else {
 				return "32bit";
 			}
 		} else {
-			return arch;
+			return processorType;
 		}
 		// return "";
 
@@ -129,4 +168,3 @@ public class HostUtils {
 	}
 
 }
-

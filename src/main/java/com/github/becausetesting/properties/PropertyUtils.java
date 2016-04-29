@@ -36,6 +36,11 @@ public class PropertyUtils {
 		return resourceBundle.getString(key);
 	}
 
+	public static String setBundleString(String key,String value){
+		return resourceBundle.getString(key);// ????
+	}
+
+	
 	//**********************using resourcebundle********************************************
 	
 	
