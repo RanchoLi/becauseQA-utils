@@ -34,6 +34,7 @@
 		<jcommander.version>1.48</jcommander.version>
 		<jacob.version>1.14.3</jacob.version>
 		<httpclient.version>4.5</httpclient.version>
+		<mysql.version>5.1.9</mysql.version>
 
 
 		<!-- plugins dependencies -->
@@ -146,6 +147,7 @@
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
 			<version>${jexcelapi.version}</version>
+
 		</dependency>
 		<!-- jdbc connection -->
 		<dependency>
@@ -213,6 +215,13 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
 			<version>${httpclient.version}</version>
+		</dependency>
+
+		<!-- db dependencies -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
 		</dependency>
 
 
@@ -329,7 +338,7 @@
 							</execution>
 						</executions>
 						<configuration>
-						<excludePackageNames>*.becausetesting.*</excludePackageNames>
+							<excludePackageNames>*.becausetesting.*</excludePackageNames>
 						</configuration>
 					</plugin>
 					<plugin>

@@ -31,7 +31,10 @@ public class JSONUtils {
 	private static Gson gson;
 	static{
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gson = gsonBuilder.setPrettyPrinting().serializeNulls().create();
+		gson = gsonBuilder
+				.setPrettyPrinting()
+				.setDateFormat("yyyy-MM-dd")
+				.serializeNulls().create();
 	}
 	
 	/**
@@ -41,22 +44,22 @@ public class JSONUtils {
 	 * @return  the return string.
 	 * @since JDK 1.8
 	 */
-	public String fromObject(Object jsonElement){
+	public static String fromObject(Object jsonElement){
 		return gson.toJson(jsonElement);
 	}
 	
-	public <T> T toJson(String json,Class<T> classOfT){
+	public static <T> T toJson(String json,Class<T> classOfT){
 		return gson.fromJson(json, classOfT);
 	}
 	
-	public JsonElement toJsonElementParse(String json){
+	public static JsonElement toJsonElementParse(String json){
 		JsonParser parser=new JsonParser();
 		JsonElement JsonElement= parser.parse(json);
 		//JsonElement jsonElement = gson.fromJson(json, JsonElement.class);
 		//JsonArray jsonArray = jsonElement.getAsJsonArray();
 		return JsonElement;
 	}
-	public JsonElement toJsonElement(String json){
+	public static JsonElement toJsonElement(String json){
 		
 		JsonElement jsonElement = gson.fromJson(json, JsonElement.class);
 		//JsonObject jsonObject = jsonElement.getAsJsonObject();

@@ -8,13 +8,14 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateModelException;
 
 public class TemplateUtils {
 
@@ -27,48 +28,37 @@ public class TemplateUtils {
 	 * @return the freemarker Configuration Object
 	 * @since JDK 1.8
 	 */
-	public static Configuration initializeFreemarkerConfiguration() {
-		if (configuration != null) {
+	private static Configuration initializeFreemarkerConfiguration() {
+		if (configuration == null) {
 			configuration = new Configuration(Configuration.VERSION_2_3_23);
 			configuration.setDefaultEncoding("UTF-8");
 			configuration.setAutoFlush(true);
-			configuration.setTemplateUpdateDelayMilliseconds(5000);
+			configuration.setTemplateUpdateDelayMilliseconds(5000);// load from the cache
 			configuration.setLocalizedLookup(true);
 
+			configuration.setIncompatibleImprovements(Configuration.VERSION_2_3_23);
+			
 			configuration.setNumberFormat("computer");
 			configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 			configuration.setLogTemplateExceptions(false);
+			
+			//global share variables
+			HashMap<Object, Object> shareVariables = new HashMap<>();
+			shareVariables.put("Author", "Alter Hu");
+			try {
+				configuration.setSharedVaribles(shareVariables);
+				//Template caching
+				configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:20, soft:250");
+			} catch (TemplateModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TemplateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		}
 		return configuration;
-	}
-
-	/**
-	 * @deprecated
-	 * @param templatename
-	 *            template short name.
-	 * @param dataModel
-	 *            the freemarker data model. template is in src/main/resources
-	 */
-	protected void renderResourceContent(String templatename, Object dataModel) {
-		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-		File templateFolder = new File(path + File.separator + "templates");
-		File outputFolder = new File(path);
-		String outputPath = outputFolder.getAbsolutePath() + File.separator + templatename + ".html";
-		try {
-			initializeFreemarkerConfiguration();
-			configuration.setTemplateLoader(new FileTemplateLoader(templateFolder, true));
-			Template template = configuration.getTemplate(templatename + ".jtl");
-			FileWriter writer = new FileWriter(outputPath);
-			template.process(dataModel, writer);
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TemplateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	/**
@@ -79,20 +69,48 @@ public class TemplateUtils {
 	 */
 	public void renderContent(String templatename, Object dataModel) {
 		String outputPath = templatename + ".html";
+		renderContent(templatename, outputPath, dataModel);
+
+	}
+
+	/**
+	 * @param templatename
+	 *            the template name.
+	 * @param dataModel
+	 *            the freemarker object. template is in src/main/resources
+	 */
+	public void renderContent(String templatename, String filePath, Object dataModel) {
+		// String outputPath = templatename + ".html";
+		ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(getClass().getClassLoader(), "templates");
+		renderContent(classTemplateLoader, templatename, filePath, dataModel);
+
+	}
+
+	/**
+	 * @param templateLoader
+	 *            FileTemplateLoader StringTemplateLoader for testing
+	 *            URLTemplateLoader ClassTemplateLoader WebappTemplateLoader
+	 * @param templatename
+	 * @param filePath
+	 * @param dataModel
+	 */
+	public void renderContent(TemplateLoader templateLoader, String templatename, String filePath, Object dataModel) {
+		// String outputPath = templatename + ".html";
 		try {
 			initializeFreemarkerConfiguration();
-			configuration.setTemplateLoader(new ClassTemplateLoader(getClass().getClassLoader(), "templates"));
+			configuration.setTemplateLoader(templateLoader);
 			// configuration.setTemplateLoader(new
 			// FileTemplateLoader(templateFolder));
 			Template template = configuration.getTemplate(templatename + ".ftl");
 
 			Writer out = new OutputStreamWriter(System.out);
 			template.process(dataModel, out);
-			out.close();
-
-			FileWriter writer = new FileWriter(outputPath);
-			template.process(dataModel, writer);
-			writer.close();
+			//out.close();
+			if (filePath != null) {
+				FileWriter writer = new FileWriter(filePath);
+				template.process(dataModel, writer);
+				//writer.close();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -113,11 +131,44 @@ public class TemplateUtils {
 	 * @throws IOException
 	 *             io exception for template.
 	 */
-	public void rendText(String templatename, Map<String, Object> result) throws TemplateException, IOException {
+	public void rendMap(String templatename, Map<String, Object> result) throws TemplateException, IOException {
 		String outputPath = templatename + ".html";
+		rendMap(templatename, outputPath, result);
+	}
+
+	/**
+	 * @param templatename
+	 *            template name.
+	 * @param result
+	 *            the data model object.
+	 * @throws TemplateException
+	 *             template exception.
+	 * @throws IOException
+	 *             io exception for template.
+	 */
+	public void rendMap(String templatename, String filePath, Map<String, Object> result)
+			throws TemplateException, IOException {
+		ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(getClass().getClassLoader(), "templates");
+		rendMap(classTemplateLoader, templatename, filePath, result);
+
+	}
+
+	/**
+	 * @param templatename
+	 *            template name.
+	 * @param result
+	 *            the data model object.
+	 * @throws TemplateException
+	 *             template exception.
+	 * @throws IOException
+	 *             io exception for template.
+	 */
+	public void rendMap(TemplateLoader templateLoader, String templatename, String filePath, Map<String, Object> result)
+			throws TemplateException, IOException {
+
 		try {
 			initializeFreemarkerConfiguration();
-			configuration.setTemplateLoader(new ClassTemplateLoader(getClass().getClassLoader(), "templates"));
+			configuration.setTemplateLoader(templateLoader);
 			Template template = configuration.getTemplate(templatename + ".ftl");
 
 			Map<String, Object> rootMap = new HashMap<String, Object>();
@@ -125,11 +176,12 @@ public class TemplateUtils {
 
 			Writer out = new OutputStreamWriter(System.out);
 			template.process(rootMap, out);
-			out.close();
-
-			FileWriter writer = new FileWriter(outputPath);
-			template.process(rootMap, writer);
-			writer.close();
+			//out.close();
+			if (filePath != null) {
+				FileWriter writer = new FileWriter(filePath);
+				template.process(rootMap, writer);
+				//writer.close();
+			}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -38,12 +38,12 @@ public class EmailUtils {
 	private MimeMultipart multipart;
 	private BodyPart bodypart;
 
-	static {
-		PropertyUtils.setResourceBundle(emailfile);
-	}
+
 
 	public boolean sendEmail(String from, String to, String subject, String bodycontent) {
 
+		PropertyUtils.setResourceBundle(emailfile);
+		
 		String host = PropertyUtils.getBundleString("smtp.host");
 		String port = PropertyUtils.getBundleString("smtp.port");
 		String user = PropertyUtils.getBundleString("smtp.username");

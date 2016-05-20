@@ -141,7 +141,7 @@ public class TestRailAPI {
 			httpUtils.setHeaders(headers);
 			String response = httpUtils.getResponse();
 			if (response != "") {
-				responsetext = new JSONUtils().toJsonElement(response);
+				responsetext = JSONUtils.toJsonElement(response);
 			}
 
 		} catch (MalformedURLException e) {
@@ -167,7 +167,7 @@ public class TestRailAPI {
 			httpUtils.postJsonData(data);
 			String response = httpUtils.getResponse();
 			if (response != "") {
-				responsetext = new JSONUtils().toJsonElement(response);
+				responsetext = JSONUtils.toJsonElement(response);
 			}
 
 		} catch (MalformedURLException e) {

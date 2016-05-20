@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:Decrypt>
+         <!--Optional:-->
+         <tem:value>I\%&#8222;oC3V/F</tem:value>
+      </tem:Decrypt>
+   </soapenv:Body>
+</soapenv:Envelope>

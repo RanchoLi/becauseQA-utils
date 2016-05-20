@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.beust.jcommander.JCommander;
 public class CommandLineArgsTest {
 
+	
 	private JCommander jCommander;
 
 	@Before
@@ -23,6 +24,8 @@ public class CommandLineArgsTest {
 	public void test() {
 		CommandLineArgs parameters = new CommandLineArgs();
 		jCommander = new JCommander(parameters);
+//		jCommander=new JCommander()
+		
 		try {
 
 			jCommander.setProgramName(CommandLineArgsTest.class.getSimpleName());

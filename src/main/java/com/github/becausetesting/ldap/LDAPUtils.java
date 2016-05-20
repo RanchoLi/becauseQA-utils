@@ -44,7 +44,7 @@ public class LDAPUtils {
 	private static DirContext ctx;
 	private static SearchControls search;
 	private static String baseDomainName="";
-	private static String baseFilter ="&(|(objectClasses=person)(objectClass=inetOrgPerson)(objectClass=user))";
+	private static String baseFilter ="&((|(objectCategory=Person)(objectClass=inetOrgPerson)(objectClass=User)))";
 
 
 	/**
@@ -72,6 +72,7 @@ public class LDAPUtils {
 			env.put(Context.SECURITY_PRINCIPAL,user);
 			env.put(Context.SECURITY_CREDENTIALS, password);
 		}else{
+			//"none", "simple", "strong".
 			env.put(Context.SECURITY_AUTHENTICATION, "none");
 		}
 		try {
@@ -171,7 +172,7 @@ public class LDAPUtils {
 		String emailAddress = null;
 		String user = System.getProperty("user.name");
 		// String filter = "(mail=" + user + "))";
-		String filter = "(&(samaccountname=" + user + "))"; // ?????String filter = "(&(sn=" + user + "))";
+		String filter = "(samaccountname=" + user + ")"; // ?????String filter = "(&(sn=" + user + "))";
 		Attributes attributes = searchPerson(filter);
 		if (attributes == null) {
 			logger.warn("No attributes find for current filter: " + filter);
@@ -194,7 +195,7 @@ public class LDAPUtils {
 	 */
 	public static boolean searchByUserNameAndAuthenticate(String user, String pwd) {
 		boolean success = false;
-		String filter = "(&(cn="+user+"))";
+		String filter = "(samaccountname="+user+")"; //samaccountname
 	
 		Attributes attributes = searchPerson(filter);
 		if (attributes == null) {

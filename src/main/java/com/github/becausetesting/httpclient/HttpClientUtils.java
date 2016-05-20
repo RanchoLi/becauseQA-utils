@@ -78,6 +78,7 @@ import org.apache.log4j.Logger;
 import com.github.becausetesting.apache.commons.IOUtils;
 import com.github.becausetesting.apache.commons.StringUtils;
 import com.github.becausetesting.collections.MultiValueMap;
+import com.github.becausetesting.http.HttpsCert;
 import com.github.becausetesting.httpclient.bean.Auth;
 import com.github.becausetesting.httpclient.bean.BasicAuth;
 import com.github.becausetesting.httpclient.bean.CookiesStore;
@@ -107,7 +108,7 @@ public class HttpClientUtils {
 
 	private static final Logger logger = Logger.getLogger(HttpClientUtils.class.getName());
 
-	private CloseableHttpClient httpClient;
+	private static CloseableHttpClient httpClient;
 	public static HttpResponse httpResponse;
 	public static Response response;
 
@@ -118,8 +119,9 @@ public class HttpClientUtils {
 	 * / https://github.com/wiztools/rest-client/blob/master/restclient-lib/src/
 	 * main/java/org/wiztools/restclient/HTTPClientRequestExecuter.java
 	 */
-	public Response getResponse(Request request) throws IOException {
+	public static Response getResponse(Request request) throws IOException {
 		response = new Response();
+		//HttpsCert.ignoreCert();
 		// Create all the builder objects:
 		final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
@@ -202,92 +204,101 @@ public class HttpClientUtils {
 		}
 		proxy.release();
 
-		// HTTP Authentication
-		CredentialsProvider credsProvider = new BasicCredentialsProvider();
-		Auth auth = request.getAuth();
-		AuthCache authCache = null;
-		List<String> authPrefs = new ArrayList<>();
-		if (auth != null && auth instanceof BasicAuth) {
-			authPrefs.add(AuthSchemes.BASIC);
-			BasicAuth basicAuth = (BasicAuth) auth;
-			// new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
-			// AuthScope.ANY_REALM,AuthScope.ANY_SCHEME)
-			credsProvider.setCredentials(AuthScope.ANY,
-					new UsernamePasswordCredentials(basicAuth.getUsername(), basicAuth.getPassword()));
-			httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
-
-			// preemptive mode:
-			if (basicAuth.isPreemptive()) {
-				authCache = new BasicAuthCache();
-				AuthSchemeBase authScheme = auth instanceof BasicAuth ? new BasicScheme() : new DigestScheme();
-				// Generate BASIC scheme object and add it to the local
-				// auth cache
-				authCache.put(new HttpHost(urlHost, urlPort, urlProtocol), authScheme);
-				// Add AuthCache to the execution context ,in future you can use
-				// this stored credentail in HttpContext
-				httpClientContext.setAuthCache(authCache);
-			}
-		}
-		// NTLM:
-		else if (auth != null && auth instanceof NTLMAuth) {
-			authPrefs.add(AuthSchemes.NTLM);
-			NTLMAuth a = (NTLMAuth) auth;
-			String uid = a.getUsername();
-			String pwd = new String(a.getPassword());
-
-			credsProvider.setCredentials(AuthScope.ANY, new NTCredentials(uid, pwd, a.getWorkstation(), a.getDomain()));
-			httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
-		}
-		// Digest auth
-		else if (auth != null && auth instanceof DigestAuth) {
-			authPrefs.add(AuthSchemes.DIGEST);
-			DigestAuth basicAuth = (DigestAuth) auth;
-			// new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
-			// AuthScope.ANY_REALM,AuthScope.ANY_SCHEME)
-			credsProvider.setCredentials(AuthScope.ANY,
-					new UsernamePasswordCredentials(basicAuth.getUsername(), basicAuth.getPassword()));
-			httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
-
-			// preemptive mode:
-			if (basicAuth.isPreemptive()) {
-				authCache = new BasicAuthCache();
-				AuthSchemeBase authScheme = auth instanceof DigestAuth ? new DigestScheme() : new BasicScheme();
-				// Generate BASIC scheme object and add it to the local
-				// auth cache
-				authCache.put(new HttpHost(urlHost, urlPort, urlProtocol), authScheme);
-				// Add AuthCache to the execution context ,in future you can use
-				// this stored credentail in HttpContext
-				// httpClientContext = HttpClientContext.create();
-				httpClientContext.setAuthCache(authCache);
-				// httpContext = httpClientContext;
-			}
-		}
-
-		requestConfigBuilder.setTargetPreferredAuthSchemes(authPrefs);
-		// Credentials credentials =
-		// credsProvider.getCredentials(AuthScope.ANY);
-		// String usernamepassword = credentials.getUserPrincipal().getName();
-		// logger.info("Credential User: " + usernamepassword);
-		// Authorization Header Authentication:
-		// OAuth2 use this method Add the AuthorizationHeaderAuth a =
-		// (AuthorizationHeaderAuth) auth; for OAuth
-		if (auth != null) {
-			String authHeader = auth.getAuthorizationHeaderValue();
-			if (StringUtils.isNotEmpty(authHeader)) {
-				Header header = new BasicHeader("Authorization", authHeader);
-				requestBuilder.addHeader(header);
-			}
-		}
-
 		// Get request headers
+		boolean createAuthorizationHeader = true;
 		MultiValueMap<String, String> headerdata = request.getHeaders();
 		for (String key : headerdata.keySet()) {
+			if (key.equals("Authorization")) {
+				createAuthorizationHeader = false;
+			}
 			for (String value : headerdata.get(key)) {
 				Header header = new BasicHeader(key, value);
 				requestBuilder.addHeader(header);
 			}
 		}
 
+		// HTTP Authentication header
+		if (createAuthorizationHeader) {
+			CredentialsProvider credsProvider = new BasicCredentialsProvider();
+			Auth auth = request.getAuth();
+			AuthCache authCache = null;
+			List<String> authPrefs = new ArrayList<>();
+			if (auth != null && auth instanceof BasicAuth) {
+				authPrefs.add(AuthSchemes.BASIC);
+				BasicAuth basicAuth = (BasicAuth) auth;
+				// new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
+				// AuthScope.ANY_REALM,AuthScope.ANY_SCHEME)
+				credsProvider.setCredentials(AuthScope.ANY,
+						new UsernamePasswordCredentials(basicAuth.getUsername(), basicAuth.getPassword()));
+				httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+
+				// preemptive mode:
+				if (basicAuth.isPreemptive()) {
+					authCache = new BasicAuthCache();
+					AuthSchemeBase authScheme = auth instanceof BasicAuth ? new BasicScheme() : new DigestScheme();
+					// Generate BASIC scheme object and add it to the local
+					// auth cache
+					authCache.put(new HttpHost(urlHost, urlPort, urlProtocol), authScheme);
+					// Add AuthCache to the execution context ,in future you can
+					// use
+					// this stored credentail in HttpContext
+					httpClientContext.setAuthCache(authCache);
+				}
+			}
+			// NTLM:
+			else if (auth != null && auth instanceof NTLMAuth) {
+				authPrefs.add(AuthSchemes.NTLM);
+				NTLMAuth a = (NTLMAuth) auth;
+				String uid = a.getUsername();
+				String pwd = new String(a.getPassword());
+
+				credsProvider.setCredentials(AuthScope.ANY,
+						new NTCredentials(uid, pwd, a.getWorkstation(), a.getDomain()));
+				httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+			}
+			// Digest auth
+			else if (auth != null && auth instanceof DigestAuth) {
+				authPrefs.add(AuthSchemes.DIGEST);
+				DigestAuth basicAuth = (DigestAuth) auth;
+				// new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
+				// AuthScope.ANY_REALM,AuthScope.ANY_SCHEME)
+				credsProvider.setCredentials(AuthScope.ANY,
+						new UsernamePasswordCredentials(basicAuth.getUsername(), basicAuth.getPassword()));
+				httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+
+				// preemptive mode:
+				if (basicAuth.isPreemptive()) {
+					authCache = new BasicAuthCache();
+					AuthSchemeBase authScheme = auth instanceof DigestAuth ? new DigestScheme() : new BasicScheme();
+					// Generate BASIC scheme object and add it to the local
+					// auth cache
+					authCache.put(new HttpHost(urlHost, urlPort, urlProtocol), authScheme);
+					// Add AuthCache to the execution context ,in future you can
+					// use
+					// this stored credentail in HttpContext
+					// httpClientContext = HttpClientContext.create();
+					httpClientContext.setAuthCache(authCache);
+					// httpContext = httpClientContext;
+				}
+			}
+
+			requestConfigBuilder.setTargetPreferredAuthSchemes(authPrefs);
+			// Credentials credentials =
+			// credsProvider.getCredentials(AuthScope.ANY);
+			// String usernamepassword =
+			// credentials.getUserPrincipal().getName();
+			// logger.info("Credential User: " + usernamepassword);
+			// Authorization Header Authentication:
+			// OAuth2 use this method Add the AuthorizationHeaderAuth a =
+			// (AuthorizationHeaderAuth) auth; for OAuth
+			if (auth != null) {
+				String authHeader = auth.getAuthorizationHeaderValue();
+				if (StringUtils.isNotEmpty(authHeader)) {
+					Header header = new BasicHeader("Authorization", authHeader);
+					requestBuilder.addHeader(header);
+				}
+			}
+		}
 		// Cookies
 		// Set cookie policy:
 		requestConfigBuilder.setCookieSpec(CookieSpecs.DEFAULT);
@@ -434,14 +445,19 @@ public class HttpClientUtils {
 
 		// How to handle redirects:
 		boolean followRedirect = request.isFollowRedirect();
-		requestConfigBuilder.setRedirectsEnabled(followRedirect);  // Default is true,but still not work for POST,DELETE,only for GET
+		requestConfigBuilder.setRedirectsEnabled(followRedirect); // Default is
+																	// true,but
+																	// still not
+																	// work for
+																	// POST,DELETE,only
+																	// for GET
 		// LaxRedirectStrategy will automatically redirect HEAD, GET, and POST
-		// requests. For a stricter implementation, use DefaultRedirectStrategy.(GET,HEAD)
-	    httpClientBuilder.setRedirectStrategy(new LaxRedirectStrategy());
+		// requests. For a stricter implementation, use
+		// DefaultRedirectStrategy.(GET,HEAD)
+		httpClientBuilder.setRedirectStrategy(new LaxRedirectStrategy());
 		// httpClientBuilder.setRedirectStrategy(new DefaultRedirectStrategy());
-		
-		
-		//requestConfigBuilder.setConnectTimeout(connectTimeout);
+
+		// requestConfigBuilder.setConnectTimeout(connectTimeout);
 		// Now Execute:
 		RequestConfig rc = requestConfigBuilder.build();
 		requestBuilder.setConfig(rc);
@@ -467,7 +483,6 @@ public class HttpClientUtils {
 			}
 			finalURI = redirectURIs.get(redirectURIs.size() - 1);
 		}
-		
 
 		response.setExecutionTime(endTime - startTime);
 		response.setStatusCode(httpResponse.getStatusLine().getStatusCode());

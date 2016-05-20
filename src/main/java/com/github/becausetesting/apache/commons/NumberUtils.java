@@ -224,6 +224,7 @@ public class NumberUtils {
           return defaultValue;
       }     
       try {
+    	  
           return Float.parseFloat(str);
       } catch (final NumberFormatException nfe) {
           return defaultValue;

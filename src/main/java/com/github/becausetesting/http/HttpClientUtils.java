@@ -240,8 +240,6 @@ public class HttpClientUtils {
 		return httpResponse;
 	}
 
-	public void setHttpClient(CloseableHttpClient httpClient) {
-		this.httpClient = httpClient;
-	}
+
 
 }

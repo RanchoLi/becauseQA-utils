@@ -126,7 +126,7 @@ public class HttpUtils {
 		try {
 			OutputStream outputStream = connection.getOutputStream();
 			JSONUtils jsonUtils = new JSONUtils();
-			byte[] bytes = jsonUtils.fromObject(data).getBytes("UTF-8");
+			byte[] bytes = JSONUtils.fromObject(data).getBytes("UTF-8");
 			
 			outputStream.write(bytes);
 			outputStream.flush();

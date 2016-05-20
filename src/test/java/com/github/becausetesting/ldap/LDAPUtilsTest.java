@@ -31,9 +31,9 @@ public class LDAPUtilsTest {
 	@Before
 	public void setUp() throws Exception {
 		//ldapUtils = new LDAPUtils();
-		String server="ldap://ldapclient.com:389/dc=test,dc=com";
-		String username=null;
-		String password=null;
+		String server="ldap://gdcad01.nextestate.com/DC=NEXTESTATE,DC=COM";
+		String username="ahu";
+		String password="gu.chan-102633";
 		LDAPUtils.getContext(server, username, password);
 	}
 
@@ -45,7 +45,7 @@ public class LDAPUtilsTest {
 
 	@Test
 	public void testSearchByUserNameAndAuthenticate() {
-		LDAPUtils.searchByUserNameAndAuthenticate("testuser1", "pwd");
+		LDAPUtils.searchByUserNameAndAuthenticate("ahu", "gu.chan-102633");
 	}
 
 	@Test
