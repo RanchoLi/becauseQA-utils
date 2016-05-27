@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -39,6 +40,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.github.becausetesting.properties.PropertiesUtils;
+
 /*
  * Class Generate from Cucumber Tool
  * 
@@ -56,8 +59,19 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BaseSteps {
 
-	public static RemoteWebDriver driver = SeleniumCore.driver;
-	public static final Logger log = Logger.getLogger(BaseSteps.class);
+	public static RemoteWebDriver driver;
+	public static final Logger log = LogManager.getLogger(BaseSteps.class);
+
+	/**
+	 * @Title: visitPage @Description: TODO @author
+	 *         ahu@greendotcorp.com @param @param params1 @return void return
+	 *         type @throws
+	 */
+
+	public void visitPage(String params1) {
+		driver = SeleniumCore.driver;
+		driver.get(params1);
+	}
 
 	/**
 	 * @Title: highLight @Description: TODO @author
@@ -518,7 +532,7 @@ public class BaseSteps {
 	 *         type @throws
 	 */
 
-	public void waitForSeconds(int s) {
+	public static void waitForSeconds(int s) {
 		// throw new PendingException();
 		// int seconds=Integer.parseInt(s);
 		try {
@@ -532,10 +546,11 @@ public class BaseSteps {
 	/**
 	 * @return the WebDriverWait element.
 	 */
-	protected WebDriverWait waitforElement(){
+	protected WebDriverWait waitforElement() {
 		WebDriverWait webDriverWait = new WebDriverWait(driver, SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME);
 		return webDriverWait;
 	}
+
 	/**
 	 * @Title: waitForSeconds @Description: TODO @author
 	 *         ahu@greendotcorp.com @param @param e @return void return
@@ -604,16 +619,15 @@ public class BaseSteps {
 	public List<WebElement> waitForStableElements(final By locator, Object page) {
 		// resolve the pagefactory issue
 		pageElementsRelocatored(page);
-		return waitforElement()
-				.until(new ExpectedCondition<List<WebElement>>() {
-					public List<WebElement> apply(WebDriver d) {
-						try {
-							return d.findElements(locator);
-						} catch (StaleElementReferenceException ex) {
-							return null;
-						}
-					}
-				});
+		return waitforElement().until(new ExpectedCondition<List<WebElement>>() {
+			public List<WebElement> apply(WebDriver d) {
+				try {
+					return d.findElements(locator);
+				} catch (StaleElementReferenceException ex) {
+					return null;
+				}
+			}
+		});
 	}
 
 	/**
@@ -1320,7 +1334,7 @@ public class BaseSteps {
 
 		boolean presentFlag = false;
 
-		try {			
+		try {
 			Alert alert = waitforElement().until(ExpectedConditions.alertIsPresent());
 			// Check the presence of alert
 			// Alert alert = driver.switchTo().alert();

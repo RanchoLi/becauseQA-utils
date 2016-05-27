@@ -10,8 +10,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Beta;
 import org.openqa.selenium.By;
@@ -80,7 +82,7 @@ public class RemoteWebDriverEx extends RemoteWebDriver {
 	 * 
 	 * 2016/03/07 Alter: Add the use exising session for testing
 	 */
-	private static final Logger logger = Logger.getLogger(RemoteWebDriverEx.class.getName());
+	private static final Logger logger = LogManager.getLogger(RemoteWebDriverEx.class.getName());
 	private Level level = Level.FINE;
 
 	private ErrorHandler errorHandler = new ErrorHandler();
@@ -196,7 +198,7 @@ public class RemoteWebDriverEx extends RemoteWebDriver {
 	}
 
 	private void init(Capabilities desiredCapabilities, Capabilities requiredCapabilities) {
-		logger.addHandler(LoggingHandler.getInstance());
+		//logger.addHandler(LoggingHandler.getInstance());
 
 		converter = new JsonToWebElementConverter(this);
 		executeMethod = new RemoteExecuteMethod(this);
@@ -516,16 +518,16 @@ public class RemoteWebDriverEx extends RemoteWebDriver {
 		}
 		switch (when) {
 		case BEFORE:
-			logger.log(level, "Executing: " + commandName + " " + text);
+			logger.info( "Executing: " + commandName + " " + text);
 			break;
 		case AFTER:
-			logger.log(level, "Executed: " + text);
+			logger.info("Executed: " + text);
 			break;
 		case EXCEPTION:
-			logger.log(level, "Exception: " + text);
+			logger.info("Exception: " + text);
 			break;
 		default:
-			logger.log(level, text);
+			logger.info( text);
 			break;
 		}
 	}

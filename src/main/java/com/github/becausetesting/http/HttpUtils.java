@@ -28,8 +28,7 @@ import com.github.becausetesting.encrypt.Base64Utils;
 import com.github.becausetesting.json.JSONUtils;
 
 /**
- * ClassName:HttpUtils 
- * Date: 2016年4月16日 下午6:52:01
+ * ClassName:HttpUtils Date: 2016年4月16日 下午6:52:01
  * 
  * @author Administrator
  * @version 1.0.0
@@ -37,9 +36,9 @@ import com.github.becausetesting.json.JSONUtils;
  */
 public class HttpUtils {
 
-	private HttpURLConnection connection;
+	private static HttpURLConnection connection;
 
-	public String getRequest(URL url,Map<String, String> headers) throws IOException {
+	public static String getRequest(URL url, Map<String, String> headers) throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, "GET");
 		setHeaders(headers);
@@ -47,8 +46,17 @@ public class HttpUtils {
 		return response;
 
 	}
+	public static InputStream getResponse(URL url, Map<String, String> headers) throws IOException {
+		HttpsCert.ignoreCert();
+		getConnection(url, "GET");
+		setHeaders(headers);
+		InputStream response = getResponseStream();
+		return response;
 
-	public String postRequest(URL url,Map<String, String> headers, Map<String, Object> data) throws IOException {
+	}
+
+	public static String postRequest(URL url, Map<String, String> headers, Map<String, Object> data)
+			throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, "POST");
 		setHeaders(headers);
@@ -58,12 +66,11 @@ public class HttpUtils {
 
 	}
 
-	public void getConnection(URL url, String method) {
+	public static void getConnection(URL url, String method) {
 		// HttpURLConnection connection = null;
 		try {
-			
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			this.connection = connection;
+
+			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod(method);
 			// connection.setDoOutput(true);
 			// connection.setDoInput(true);
@@ -71,28 +78,33 @@ public class HttpUtils {
 
 			connection.setConnectTimeout(50000);
 			connection.setReadTimeout(6000);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void setHeaders(Map<String, String> headers) {
-		for (String key : headers.keySet()) {
-			String value = headers.get(key);
-			connection.setRequestProperty(key, value);
+	public static void setHeaders(Map<String, String> headers) {
+		if (headers != null) {
+			for (String key : headers.keySet()) {
+				String value = headers.get(key);
+				connection.setRequestProperty(key, value);
+			}
 		}
-
 	}
+
 	/**
-	 * setAuthorizationHeader: 
+	 * setAuthorizationHeader:
+	 * 
 	 * @author alterhu2020@gmail.com
-	 * @param username username.
-	 * @param password password.
+	 * @param username
+	 *            username.
+	 * @param password
+	 *            password.
 	 * @since JDK 1.8
 	 */
-	public void setAuthorizationHeader(String username, String password) {
-		//Base64Utils base64 = new Base64Utils();
+	public static void setAuthorizationHeader(String username, String password) {
+		// Base64Utils base64 = new Base64Utils();
 		String userpass = username + ":" + password;
 		String basicAuth = Base64Utils.encryptBasic(userpass);
 		Map<String, String> header = new HashMap<>();
@@ -100,10 +112,10 @@ public class HttpUtils {
 		setHeaders(header);
 	}
 
-	public void postData(Map<String, Object> data) {
+	private static void postData(Map<String, Object> data) {
 		connection.setDoOutput(true);
 		try {
-			OutputStream outputStream = this.connection.getOutputStream();
+			OutputStream outputStream = connection.getOutputStream();
 			StringBuffer sb = new StringBuffer();
 			for (String key : data.keySet()) {
 				Object parametervalue = data.get(key);
@@ -121,13 +133,14 @@ public class HttpUtils {
 
 		}
 	}
-	public void postJsonData(Object data) {
+
+	public static void postJsonData(Object data) {
 		connection.setDoOutput(true);
 		try {
 			OutputStream outputStream = connection.getOutputStream();
 			JSONUtils jsonUtils = new JSONUtils();
 			byte[] bytes = JSONUtils.fromObject(data).getBytes("UTF-8");
-			
+
 			outputStream.write(bytes);
 			outputStream.flush();
 			outputStream.close();
@@ -139,12 +152,7 @@ public class HttpUtils {
 		}
 	}
 
-	
-
-	public String getResponse(){
-		StringBuilder sb = new StringBuilder();
-		BufferedReader reader = null;
-
+	public static InputStream getResponseStream() {
 		int responseCode = 0;
 		try {
 			responseCode = connection.getResponseCode();
@@ -153,6 +161,7 @@ public class HttpUtils {
 		}
 
 		InputStream inputStream = null;
+
 		try {
 			inputStream = connection.getInputStream();
 			if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -160,20 +169,38 @@ public class HttpUtils {
 				if (inputStream != null) {
 					throw new Exception("Http Response Inputstream,response code : " + responseCode);
 				}
-			} else {
-				reader = new BufferedReader(new InputStreamReader(inputStream));
-				String tempLine = null;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return inputStream;
+
+	}
+
+	public static String getResponse() {
+		StringBuilder sb = new StringBuilder();
+		BufferedReader reader = null;
+
+		InputStream responseStream = getResponseStream();
+		if (responseStream != null) {
+			reader = new BufferedReader(new InputStreamReader(responseStream));
+			String tempLine = null;
+			try {
 				while ((tempLine = reader.readLine()) != null) {
 					sb.append(tempLine + System.getProperty("line.separator"));
 				}
 				reader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
 
-		} 
 		return sb.toString();
 	}
 }

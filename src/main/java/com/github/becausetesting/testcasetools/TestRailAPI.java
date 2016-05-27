@@ -1,5 +1,8 @@
 package com.github.becausetesting.testcasetools;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.Character.UnicodeScript;
 import java.net.MalformedURLException;
@@ -16,21 +19,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.OutputType;
+
+import com.github.becausetesting.apache.commons.FileUtils;
+import com.github.becausetesting.apache.commons.IOUtils;
+import com.github.becausetesting.apache.commons.NumberUtils;
+import com.github.becausetesting.cucumber.selenium.SeleniumCore;
 import com.github.becausetesting.http.HttpUtils;
 import com.github.becausetesting.http.HttpsCert;
 import com.github.becausetesting.json.JSONUtils;
+import com.github.becausetesting.testcasetools.TestRailAPI.ResultStatusCode;
 import com.github.becausetesting.time.TimeUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-
-
 /**
- * ClassName: TestRailAPI  
- * Function: TODO ADD FUNCTION.  
- * Reason: TODO ADD REASON 
- * date: Apr 23, 2016 7:13:20 PM  
+ * ClassName: TestRailAPI Function: TODO ADD FUNCTION. Reason: TODO ADD REASON
+ * date: Apr 23, 2016 7:13:20 PM
+ * 
  * @author alterhu2020@gmail.com
  * @version 1.0.0
  * @since JDK 1.8
@@ -42,6 +50,7 @@ public class TestRailAPI {
 		URGENT_TEST(5), MUST_TEST(4), SHOULD_TEST(3), TEST_IF_TIME(2), DONOT_TEST(1);
 
 		private int prioritycode;
+
 		PRIORITYCODE(int prioritycode) {
 			this.prioritycode = prioritycode;
 		}
@@ -53,6 +62,7 @@ public class TestRailAPI {
 		AUTOMATED(1), FUNCTIONALITY(2), PERFORMANCE(3), REGRESSION(4), USABILITY(5), OTHER(6), MANUAL_TEST(7);
 
 		private int typecode;
+
 		CASETYPECODE(int typecode) {
 			this.typecode = typecode;
 		}
@@ -60,19 +70,36 @@ public class TestRailAPI {
 	}
 
 	// the result code in test rail
-		public enum RESULTCODE {
-			PASSED(1,"Automated Passed"), BLOCKED(2,"Automated Blocked"), UNTESTED(3,"Automated Untested"), RETEST(4,"Automated Retest"), FAILED(5,"Automated Failed");
+	public enum ResultStatusCode {
+		PASSED(6, "Automated Passed"), BLOCKED(2, "Automated Blocked"), UNTESTED(3, "Automated Untested"), RETEST(4,
+				"Automated Retest"), FAILED(7, "Automated Failed");
 
-			private int resultcode;
-			private String result;
-			RESULTCODE(int resultcode,String result) {
-				this.resultcode = resultcode;
-				this.result=result;
-			}
+		private int resultcode;
+		private String result;
 
+		ResultStatusCode(int resultcode, String result) {
+			this.setResultcode(resultcode);
+			this.setResult(result);
 		}
 
-		
+		public int getResultcode() {
+			return resultcode;
+		}
+
+		public void setResultcode(int resultcode) {
+			this.resultcode = resultcode;
+		}
+
+		public String getResult() {
+			return result;
+		}
+
+		public void setResult(String result) {
+			this.result = result;
+		}
+
+	}
+
 	private String base_Url = null;
 	private String user = null;
 	private String password = null;
@@ -88,14 +115,17 @@ public class TestRailAPI {
 	public long sectionid = 0;
 	private long caseid = 0;
 
-	private HttpUtils httpUtils;
+	public static List<Long> caseList = new ArrayList<Long>();
 
 	/**
 	 * Creates a new instance of TestRailAPI.
 	 *
-	 * @param baseurl testrail url.
-	 * @param username testrail username.
-	 * @param password testrail password.
+	 * @param baseurl
+	 *            testrail url.
+	 * @param username
+	 *            testrail username.
+	 * @param password
+	 *            testrail password.
 	 */
 	public TestRailAPI(String baseurl, String username, String password) {
 		this.setBase_Url(baseurl);
@@ -118,28 +148,28 @@ public class TestRailAPI {
 		this.setPassword("qa_test_automation");
 	}
 
-	
 	/**
-	 * getRequest: 
+	 * getRequest:
+	 * 
 	 * @author alterhu2020@gmail.com
-	 * @param url testrail api uri.
+	 * @param url
+	 *            testrail api uri.
 	 * @return the response content.
 	 * @since JDK 1.8
 	 */
 	private Object getRequest(String url) {
 		HttpsCert.ignoreCert();
-		httpUtils = new HttpUtils();
 		URL parseurl;
 		Object responsetext = null;
 
 		try {
 			parseurl = new URL(this.getBase_Url() + url);
-			httpUtils.getConnection(parseurl, "GET");
+			HttpUtils.getConnection(parseurl, "GET");
 			Map<String, String> headers = new HashMap<>();
 			headers.put("Content-Type", "application/json");
-			httpUtils.setAuthorizationHeader(this.getUser(), this.getPassword());
-			httpUtils.setHeaders(headers);
-			String response = httpUtils.getResponse();
+			HttpUtils.setAuthorizationHeader(this.getUser(), this.getPassword());
+			HttpUtils.setHeaders(headers);
+			String response = HttpUtils.getResponse();
 			if (response != "") {
 				responsetext = JSONUtils.toJsonElement(response);
 			}
@@ -153,19 +183,18 @@ public class TestRailAPI {
 
 	private Object postRequest(String url, Object data) {
 		HttpsCert.ignoreCert();
-		httpUtils = new HttpUtils();
 		URL parseurl = null;
 		Object responsetext = null;
 
 		try {
 			parseurl = new URL(this.getBase_Url() + url);
-			httpUtils.getConnection(parseurl, "GET");
+			HttpUtils.getConnection(parseurl, "POST");
 			Map<String, String> headers = new HashMap<>();
 			headers.put("Content-Type", "application/json");
-			httpUtils.setAuthorizationHeader(this.getUser(), this.getPassword());
-			httpUtils.setHeaders(headers);
-			httpUtils.postJsonData(data);
-			String response = httpUtils.getResponse();
+			HttpUtils.setAuthorizationHeader(this.user, this.password);
+			HttpUtils.setHeaders(headers);
+			HttpUtils.postJsonData(data);
+			String response = HttpUtils.getResponse();
 			if (response != "") {
 				responsetext = JSONUtils.toJsonElement(response);
 			}
@@ -177,7 +206,6 @@ public class TestRailAPI {
 		return responsetext;
 	}
 
-	
 	public boolean getProjectByName(String projectname) {
 		boolean findproject = false;
 		String url = "get_projects";
@@ -198,8 +226,6 @@ public class TestRailAPI {
 		return findproject;
 	}
 
-	
-
 	public List<JsonObject> getPriorities() {
 		List<JsonObject> prioritieslist = new ArrayList<JsonObject>();
 		JsonArray priorities = (JsonArray) getRequest("get_priorities");
@@ -210,10 +236,9 @@ public class TestRailAPI {
 	}
 
 	/**
-	 *  getProjectConfiguration @Description: TODO @author
-	 *         alterhu2020@gmail.com @param @throws
-	 *         MalformedURLException @param @throws IOException @return test code void
-	 *         return type @throws
+	 * getProjectConfiguration @Description: TODO @author
+	 * alterhu2020@gmail.com @param @throws MalformedURLException @param @throws
+	 * IOException @return test code void return type @throws
 	 */
 
 	public void getProjectConfiguration() {
@@ -226,8 +251,6 @@ public class TestRailAPI {
 		 * 
 		 */
 	}
-
-	
 
 	public long createProject(String projectname, String description) {
 		String newurl = "add_project";
@@ -243,7 +266,6 @@ public class TestRailAPI {
 
 	}
 
-
 	public long updateProject(String projectname, String description) {
 
 		String newurl = String.format("update_project/%d", this.projectid);
@@ -258,8 +280,6 @@ public class TestRailAPI {
 		return this.projectid;
 
 	}
-
-
 
 	public boolean getUserID() {
 		boolean finduser = false;
@@ -278,7 +298,6 @@ public class TestRailAPI {
 		return finduser;
 	}
 
-	
 	public boolean getMilestone(String milestonename) {
 		boolean findmilestone = false;
 		String url = String.format("get_milestones/%d", this.projectid);
@@ -295,7 +314,6 @@ public class TestRailAPI {
 		return findmilestone;
 	}
 
-
 	public boolean getLatestMilestone() {
 		boolean findmilestone = false;
 		String url = String.format("get_milestones/%d", this.projectid);
@@ -311,7 +329,6 @@ public class TestRailAPI {
 		return findmilestone;
 	}
 
-	
 	public long createMilestone(String milestonename, String description, String duedate) {
 
 		String newmilestone = String.format("add_milestone/%d", this.projectid);
@@ -334,8 +351,6 @@ public class TestRailAPI {
 		return this.milestoneid;
 	}
 
-	
-
 	public long updateMilestone(String milestonename, String description, String duedate) {
 
 		String newmilestone = String.format("update_milestone/%d", this.milestoneid);
@@ -356,8 +371,6 @@ public class TestRailAPI {
 		// return true;
 		return this.milestoneid;
 	}
-
-
 
 	public boolean getTestPlan(String planname) {
 		boolean iscreated = false;
@@ -382,32 +395,7 @@ public class TestRailAPI {
 		// return iscreated;
 	}
 
-	public boolean getPlanEntry(String testsuitname) {
-		boolean iscreated = false;
-		boolean testSuite = getTestSuite(testsuitname);
-		if (testSuite) {
-			String url = String.format("get_plan/%s", this.planid);
-			JsonObject plan = (JsonObject) getRequest(url);
-			JsonArray entries = (JsonArray) plan.get("entries");
-			for (int k = 0; k < entries.size(); k++) {
-				JsonObject runs = (JsonObject) entries.get(k);
-
-				JsonArray runarray = (JsonArray) runs.get("runs");
-				for (int j = 0; j < runarray.size(); j++) {
-					JsonObject run = (JsonObject) runarray.get(j);
-					long findsuiteid = run.get("suite_id").getAsLong();
-					if (findsuiteid == this.suiteid) {
-						iscreated = true;
-						this.runid = run.get("id").getAsLong();
-						break;
-					}
-				}
-			}
-		}
-		return iscreated;
-	}
-
-	public boolean getPlanEntryName(String entryname) {
+	public boolean getPlanEntry(String entryname) {
 		boolean iscreated = false;
 		// boolean testSuite = getTestSuite(testsuitname);
 		String url = String.format("get_plan/%s", this.planid);
@@ -457,24 +445,6 @@ public class TestRailAPI {
 		return iscreated;
 	}
 
-	public boolean addPlanEntry(String testsuitname) {
-		boolean iscreated = false;
-		boolean testSuite = getTestSuite(testsuitname);
-		if (testSuite) {
-			String url = String.format("add_plan_entry/%s", this.planid);
-
-			HashMap<String, Object> postData = new HashMap<String, Object>();
-			postData.put("suite_id", this.suiteid);
-			postData.put("name", testsuitname);
-			postData.put("include_all", false);
-			JsonObject planruns = (JsonObject) postRequest(url, postData);
-
-			this.runid = planruns.get("id").getAsLong();
-			iscreated = true;
-		}
-		return iscreated;
-	}
-
 	public boolean addPlanEntry(long suiteid) {
 		boolean iscreated = false;
 		String testSuite = getTestSuite(suiteid);
@@ -483,43 +453,56 @@ public class TestRailAPI {
 		HashMap<String, Object> postData = new HashMap<String, Object>();
 		postData.put("suite_id", suiteid);
 		postData.put("name", testSuite);
+		postData.put("assignedto_id", this.userid);
 		postData.put("include_all", false);
 		JsonObject planruns = (JsonObject) postRequest(url, postData);
+		JsonArray runarray = (JsonArray) planruns.get("runs");
+		for (int j = 0; j < runarray.size(); j++) {
+			JsonObject run = (JsonObject) runarray.get(j);
+			long findsuiteid = run.get("suite_id").getAsLong();
+			if (findsuiteid == suiteid) {
+				iscreated = true;
+				this.runid = run.get("id").getAsLong();
+				this.entryid = run.get("entry_id").getAsString();
+				break;
+			}
+		}
 
+		iscreated = true;
+
+		return iscreated;
+	}
+
+	public long addPlanEntry() {
+		String runurl = String.format("add_plan_entry/%d", this.planid);
+		Map<String, Object> arguments = new HashMap<String, Object>();
+		arguments.put("suite_id", this.suiteid);
+
+		arguments.put("assignedto_id", userid);
+		arguments.put("include_all", true);
+
+		JsonObject planruns = (JsonObject) postRequest(runurl, arguments);
 		this.runid = planruns.get("id").getAsLong();
-		iscreated = true;
+		// this.entryid=planruns.get("id");
+		return this.runid;
 
-		return iscreated;
 	}
 
-	public boolean addPlanEntry(long suiteid, List<Integer> configs) {
+	public boolean addPlanEntry(long suiteid, long caseid, String testPlanRunName) {
 		boolean iscreated = false;
-		String testSuite = getTestSuite(suiteid);
+		// clear the old case ids in other runs
+		caseList.clear();
 		String url = String.format("add_plan_entry/%s", this.planid);
 
 		HashMap<String, Object> postData = new HashMap<String, Object>();
 		postData.put("suite_id", suiteid);
-		postData.put("name", testSuite);
+		postData.put("name", testPlanRunName);
+		caseList.add(caseid);
+		postData.put("case_ids", caseList);
 		postData.put("assignedto_id", this.userid);
-		postData.put("include_all", true);
-		/*
-		 * postData.put("config_ids", configs); List<Long> caselist=new
-		 * ArrayList<Long>(); caselist.add(caseid); postData.put("case_ids",
-		 * caselist);
-		 * 
-		 * 
-		 * 
-		 * JsonObject data=new JsonObject();
-		 * 
-		 * data.put("include_all", true); // data.put("case_ids", caselist);
-		 * data.put("config_ids", configs);
-		 * 
-		 * List<JsonObject> runlist=new ArrayList<JsonObject>();
-		 * runlist.add(data); postData.put("runs", runlist);
-		 */
+		postData.put("include_all", false);
 
 		JsonObject planruns = (JsonObject) postRequest(url, postData);
-
 		JsonArray runarray = (JsonArray) planruns.get("runs");
 		for (int j = 0; j < runarray.size(); j++) {
 			JsonObject run = (JsonObject) runarray.get(j);
@@ -537,62 +520,18 @@ public class TestRailAPI {
 		return iscreated;
 	}
 
-	public boolean addPlanEntryforName(long suiteid, String name, List<Integer> configs) {
-		boolean iscreated = false;
-		// String testSuite = getTestSuite(suiteid);
-		String url = String.format("add_plan_entry/%s", this.planid);
-
-		HashMap<String, Object> postData = new HashMap<String, Object>();
-		postData.put("suite_id", suiteid);
-		postData.put("name", name);
-		postData.put("assignedto_id", this.userid);
-		postData.put("include_all", true);
-		/*
-		 * postData.put("config_ids", configs); List<Long> caselist=new
-		 * ArrayList<Long>(); caselist.add(caseid); postData.put("case_ids",
-		 * caselist);
-		 * 
-		 * 
-		 * 
-		 * JsonObject data=new JsonObject();
-		 * 
-		 * data.put("include_all", true); // data.put("case_ids", caselist);
-		 * data.put("config_ids", configs);
-		 * 
-		 * List<JsonObject> runlist=new ArrayList<JsonObject>();
-		 * runlist.add(data); postData.put("runs", runlist);
-		 */
-
-		JsonObject planruns = (JsonObject) postRequest(url, postData);
-
-		JsonArray runarray = (JsonArray) planruns.get("runs");
-		for (int j = 0; j < runarray.size(); j++) {
-			JsonObject run = (JsonObject) runarray.get(j);
-			long findsuiteid = run.get("suite_id").getAsLong();
-			if (findsuiteid == suiteid) {
-				iscreated = true;
-				this.runid = run.get("id").getAsLong();
-				this.entryid = run.get("entry_id").getAsString();
-				break;
-			}
-		}
-
-		iscreated = true;
-
-		return iscreated;
-	}
-
-	public boolean updatePlanEntryForCase(long suiteid, List<Long> caselist) {
+	public boolean updatePlanEntry(long suiteid, long caseid) {
 		boolean isupdate = false;
 		String url = String.format("update_plan_entry/%s/%s", this.planid, this.entryid);
-
 		HashMap<String, Object> postData = new HashMap<String, Object>();
 		// postData.put("assignedto_id", this.userid);
 		postData.put("include_all", false);
 		postData.put("assignedto_id", this.userid);
-
-		postData.put("case_ids", caselist);
-
+		boolean hasCaseId = caseList.contains(caseid);
+		if (!hasCaseId) {
+			caseList.add(caseid);
+		}
+		postData.put("case_ids", caseList);
 		JsonObject planruns = (JsonObject) postRequest(url, postData);
 
 		JsonArray runarray = (JsonArray) planruns.get("runs");
@@ -602,6 +541,7 @@ public class TestRailAPI {
 			if (findsuiteid == suiteid) {
 				isupdate = true;
 				this.runid = run.get("id").getAsLong();
+				this.entryid = run.get("entry_id").getAsString();
 				break;
 			}
 		}
@@ -609,21 +549,22 @@ public class TestRailAPI {
 		return isupdate;
 	}
 
-	
 	public long createTestPlan(String planname) {
+		return createTestPlan(planname, this.milestoneid);
+	}
+
+	public long createTestPlan(String planname, long milestoneid) {
 
 		String planurl = String.format("add_plan/%s", this.projectid);
 		HashMap<String, Object> postData = new HashMap<String, Object>();
 		postData.put("name", planname);
-		postData.put("milestone_id", this.milestoneid);
+		postData.put("milestone_id", milestoneid);
 		JsonObject newplan = (JsonObject) postRequest(planurl, postData);
 		this.planid = newplan.get("id").getAsLong();
 		// return true;
 		return this.planid;
 
 	}
-
-	
 
 	public long updateTestPlan(String planname) {
 
@@ -639,7 +580,6 @@ public class TestRailAPI {
 
 	}
 
-	
 	public void closeTestPlan(String planname) {
 		String url = String.format("get_plans/%d", this.projectid);
 		JsonArray plans = (JsonArray) getRequest(url);
@@ -648,16 +588,17 @@ public class TestRailAPI {
 			JsonObject plan = (JsonObject) plans.get(k);
 			if (plan.get("name").getAsString().toLowerCase().contains(planname.toLowerCase().trim())) {
 				// &&((Boolean)plan.get("is_completed"))){
-				String closeurl = String.format("close_plan/%s", plan.get("id").getAsString());
-				postRequest(closeurl, new JsonObject()).toString();
-				// System.out.println(response);
-				break;
+				boolean isCompleted = plan.get("is_completed").getAsBoolean();
+				if (!isCompleted) {
+					String closeurl = String.format("close_plan/%s", plan.get("id").getAsString());
+					postRequest(closeurl, new JsonObject()).toString();
+					// System.out.println(response);
+					break;
+				}
 			}
 		}
 		// return false;
 	}
-
-
 
 	public boolean getTestRun(String runame) {
 		boolean findrun = false;
@@ -683,87 +624,6 @@ public class TestRailAPI {
 		return findrun;
 	}
 
-
-	public long createTestPlanRunForSuite() {
-		String runurl = String.format("add_plan_entry/%d", this.planid);
-		Map<String, Object> arguments = new HashMap<String, Object>();
-		arguments.put("suite_id", this.suiteid);
-
-		arguments.put("assignedto_id", userid);
-		arguments.put("include_all", true);
-
-		JsonObject planruns = (JsonObject) postRequest(runurl, arguments);
-
-		this.runid = planruns.get("id").getAsLong();
-		// this.entryid=planruns.get("id");
-		return this.runid;
-
-	}
-
-	public long createTestPlanRunForSection(String runame) {
-		String runurl = String.format("add_plan_entry/%d", this.planid);
-		Map<String, Object> arguments = new HashMap<String, Object>();
-
-		arguments.put("name", runame);
-		arguments.put("suite_id", this.suiteid);
-
-		arguments.put("assignedto_id", userid);
-		arguments.put("include_all", false);
-		long[] cases = getTestCaseIds(this.sectionid);
-
-		arguments.put("case_ids", cases);
-
-		JsonObject planruns = (JsonObject) postRequest(runurl, arguments);
-
-		this.runid = planruns.get("id").getAsLong();
-		// this.entryid=planruns.get("id");
-		return this.runid;
-
-	}
-
-	
-	public boolean updateTestPlanRunForTestSection(String runame, long sectionid) {
-
-		// getTestRun(runame);
-		String runurl = String.format("update_plan_entry/%d/%s", this.planid, this.entryid);
-		Map<String, Object> arguments = new HashMap<String, Object>();
-		// arguments.put("suite_id", this.suiteid);
-		arguments.put("name", runame);
-		arguments.put("assignedto_id", this.userid);
-		arguments.put("include_all", false);
-
-		long[] cases = getTestCaseIds(sectionid);
-
-		arguments.put("case_ids", cases);
-
-		JsonObject planruns = (JsonObject) postRequest(runurl, arguments);
-		if (planruns != null) {
-			return true;
-		}
-		return false;
-	}
-
-	
-	public boolean updateTestPlanRunForCases(long[] caseids) {
-
-		// getTestRun(runame);
-		String runurl = String.format("update_plan_entry/%d/%d", this.planid, this.entryid);
-		Map<String, Object> arguments = new HashMap<String, Object>();
-		// arguments.put("suite_id", this.suiteid);
-
-		// arguments.put("assignedto_id", userid);
-		arguments.put("include_all", false);
-
-		arguments.put("case_ids", caseids);
-
-		JsonObject planruns = (JsonObject) postRequest(runurl, arguments);
-		if (planruns != null) {
-			return true;
-		}
-		return false;
-	}
-
-	
 	public boolean getTestsInRun() {
 		boolean hastests = false;
 		String url = String.format("get_tests/%d", this.runid);
@@ -774,7 +634,6 @@ public class TestRailAPI {
 		return hastests;
 	}
 
-	
 	public boolean getTestSuite(String suitename) {
 		boolean iscreated = false;
 		String url = String.format("get_suites/%s", this.projectid);
@@ -790,7 +649,6 @@ public class TestRailAPI {
 		return iscreated;
 	}
 
-	
 	public String getTestSuite(long suiteid) {
 		String suitename = null;
 		String url = String.format("get_suites/%s", this.projectid);
@@ -806,7 +664,6 @@ public class TestRailAPI {
 		return suitename;
 	}
 
-
 	public long getTestSuiteidByTestCaseId(long caseid) {
 		long suiteid = 0;
 		String url = String.format("get_case/%d", caseid);
@@ -821,7 +678,6 @@ public class TestRailAPI {
 
 	}
 
-	
 	public long createTestSuite(String suitename, String description) {
 
 		String newsuiteurl = String.format("add_suite/%s", this.projectid);
@@ -834,8 +690,6 @@ public class TestRailAPI {
 
 		return this.suiteid;
 	}
-
-	
 
 	public long updateTestSuite(String suitename, String description) {
 
@@ -850,7 +704,6 @@ public class TestRailAPI {
 		return this.suiteid;
 	}
 
-	
 	public long deleteTestSuite(String suitename) {
 
 		getTestSuite(suitename);
@@ -861,8 +714,6 @@ public class TestRailAPI {
 
 		return this.suiteid;
 	}
-
-	
 
 	public long createTestSection(String... sectionnames) {
 		// parse the section strin
@@ -882,11 +733,10 @@ public class TestRailAPI {
 		return this.sectionid;
 	}
 	/*
-	 *  getTestSection @Description: TODO @author
-	 * alterhu2020@gmail.com @param @param
-	 * sectionname @param @return test code @param @throws
-	 * MalformedURLException @param @throws IOException @return test code boolean return
-	 * type @throws
+	 * getTestSection @Description: TODO @author
+	 * alterhu2020@gmail.com @param @param sectionname @param @return test
+	 * code @param @throws MalformedURLException @param @throws
+	 * IOException @return test code boolean return type @throws
 	 */
 
 	public boolean getTestSection(String... sectionnames) {
@@ -920,7 +770,6 @@ public class TestRailAPI {
 
 	}
 
-	
 	public long updateTestSection(String sectionname) {
 		String newsectionurl = String.format("update_section/%d", this.sectionid);
 		HashMap<String, Object> postData = new HashMap<String, Object>();
@@ -932,8 +781,6 @@ public class TestRailAPI {
 
 		return this.sectionid;
 	}
-
-	
 
 	public long[] getTestCaseIds(long sectionid) {
 		String url = String.format("get_cases/%s&suite_id=%s&section_id=%d", this.projectid, this.suiteid, sectionid);
@@ -956,22 +803,16 @@ public class TestRailAPI {
 
 	}
 
-	public boolean getTestCase(long caseid) {
-		boolean findcase = false;
+	public String getTestCase(long caseid) {
+		String testcaseName = null;
 		String url = String.format("get_case/%d", caseid);
 		JsonObject caseobject = (JsonObject) getRequest(url);
-
 		if (caseobject != null) {
-			long newcaseid = caseobject.get("id").getAsLong();
-			if (newcaseid != 0l) {
-				findcase = true;
-			}
+			testcaseName = caseobject.get("title").getAsString();
 		}
-		return findcase;
+		return testcaseName;
 
 	}
-
-	
 
 	public long getTestCase(String casename, long sectionid) {
 		long caseid = 0;
@@ -988,7 +829,6 @@ public class TestRailAPI {
 
 	}
 
-	
 	public long getTestCase(String casename) {
 		long caseid = 0;
 		String url = String.format("get_cases/%s&suite_id=%s&section_id=%d", this.projectid, this.suiteid,
@@ -1006,7 +846,6 @@ public class TestRailAPI {
 
 	}
 
-	
 	public long createTestCase(String caseName, CASETYPECODE typeid, PRIORITYCODE priorityid, String refs,
 			HashMap<String, Object> parameters) {
 		long newcaseid = 0;
@@ -1031,11 +870,18 @@ public class TestRailAPI {
 				newcaseid = newcase.get("id").getAsLong();
 			}
 		}
-		this.caseid=newcaseid;
+		this.caseid = newcaseid;
 		return newcaseid;
 	}
 
-	
+	/**
+	 * @param caseName
+	 * @param typeid
+	 * @param priorityid
+	 * @param refs
+	 * @param parameters
+	 * @return true or false
+	 */
 	public boolean updateTestCase(String caseName, CASETYPECODE typeid, PRIORITYCODE priorityid, String refs,
 			HashMap parameters) {
 		boolean hadupdated = false;
@@ -1068,22 +914,78 @@ public class TestRailAPI {
 		return hadupdated;
 
 	}
-	
 
-	public boolean addTestResultForTestRun(LocalDateTime start,RESULTCODE status, String version,
-			String rundescription) {
+	/**
+	 * Before you add the test result you need to create a new test plan firstly
+	 * we need the test plan id
+	 * 
+	 * @param testPlanRunName
+	 *            test plan name
+	 * @param caseid
+	 * @param elapseMilliSeconds
+	 * @param status
+	 * @param version
+	 * @param rundescription
+	 * @param screenshotPaths
+	 * @return return true add the result sucessfully or failed as false
+	 */
+	public boolean addTestCaseRunResult(String testPlanRunName, long caseid, long elapseMilliSeconds,
+			ResultStatusCode status, String version, String rundescription, String screenshotsDirUrl) {
+		long testsuiteid = getTestSuiteidByTestCaseId(caseid);
+		boolean planEntry = getPlanEntry(testPlanRunName);
+		// get the testsuite id for this test case
+		if (!planEntry) {
+			addPlanEntry(testsuiteid, caseid, testPlanRunName);
+		}
+		updatePlanEntry(testsuiteid, caseid);
 		if (this.runid != 0 && this.userid != 0) {
-			String url = String.format("add_result_for_case/%d/%d", this.runid, this.caseid);
+			String url = String.format("add_result_for_case/%d/%d", this.runid, caseid);
 			HashMap<String, Object> postData = new HashMap<String, Object>();
-
-			postData.put("status_id", status.resultcode);
+			int resultcode = status.getResultcode();
+			String result = status.getResult();
+			postData.put("status_id", resultcode);
 			postData.put("assignedto_id", this.userid);
-			rundescription+="\n  >*This test has been marked as***"+status.result+"***";
-			postData.put("comment", rundescription);
-			long times = new TimeUtils().dateDiff(TimeUtils.UNIT.SECONDS, start, LocalDateTime.now());
-			postData.put("elapsed", times+"s");
-			postData.put("version", version);
+			String reason = "\n\n***Reason***\nAny occurred error screneshot as following:\n";
 
+			if (resultcode != 6) {
+				String testCaseName = getTestCase(caseid);
+				String replacedTestCaseName = testCaseName.replaceAll("[\"/\\\\:\\*\\?<>\\|]", "").replaceAll(" ", "_");
+				int length=replacedTestCaseName.length();
+				if(length>90){
+					length=90;
+				}
+				replacedTestCaseName=replacedTestCaseName.substring(0, length);
+				String screenshotFileName = version + "_" + replacedTestCaseName + "_" + caseid + "_" + System.nanoTime()
+						+ ".png";
+				String screenshotSubFilePath = "/target/screenshots/" + screenshotFileName;
+				String projectScreenshotPath = System.getProperty("user.dir") + screenshotSubFilePath;
+				String attachmentScreenshotPath = screenshotsDirUrl + screenshotSubFilePath;
+				
+				if (SeleniumCore.driver != null) {
+					byte[] screenshotAs = SeleniumCore.driver.getScreenshotAs(OutputType.BYTES);
+					FileOutputStream fileOutputStream = null;
+					try {
+						File screenshotFileSavedPath = new File(projectScreenshotPath);
+						File parent = screenshotFileSavedPath.getParentFile();
+						if (!parent.exists() && !parent.mkdirs()) {
+							throw new IllegalStateException("Couldn't create dir: " + parent);
+						}
+						fileOutputStream = new FileOutputStream(screenshotFileSavedPath);
+						IOUtils.write(screenshotAs, fileOutputStream);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+					reason += "![](" + attachmentScreenshotPath + ")\n";
+
+				}
+			}
+			rundescription = "\n> This test has been marked as ***" + result + "***.\n\n" + rundescription + reason;
+			postData.put("comment", rundescription);
+			String seconds = NumberUtils.divideNumber(elapseMilliSeconds, 1000);
+
+			postData.put("elapsed", seconds + "s");
+			postData.put("version", version);
 			JsonObject runresult = (JsonObject) postRequest(url, postData);
 			if (runresult != null) {
 				return true;

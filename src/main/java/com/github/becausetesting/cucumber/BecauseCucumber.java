@@ -14,7 +14,8 @@ import cucumber.runtime.model.CucumberFeature;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
@@ -22,6 +23,7 @@ import org.junit.runners.model.InitializationError;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.github.becausetesting.cucumber.selenium.SeleniumCore;
 import com.github.becausetesting.reflections.RefelectionUtils;
 import com.google.common.collect.Lists;
 
@@ -50,7 +52,7 @@ import java.util.List;
  */
 public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 
-	private static final Logger logger = Logger.getLogger(BecauseCucumber.class);
+	private static final Logger logger = LogManager.getLogger(BecauseCucumber.class);
 	private final List<FeatureRunner> children = new ArrayList<FeatureRunner>();
 
 	private final Runtime runtime;
@@ -73,10 +75,6 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 	public static String METHOD_SETREPORTFORMATS = "setCucumberReportFormatters";
 	public static String METHOD_SETSTEPDEFINITIONS = "setCucumberStepDefinitionPaths";
 	public static String METHOD_SETCUCUMBERTAGS = "setCucumberTags";
-
-	public static String METHOD_SETSELENIUMDRIVER = "setSeleniumDriver";
-
-	public static WebDriver driver;
 
 	/**
 	 * Constructor called by JUnit.
@@ -130,6 +128,7 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 
 			RefelectionUtils.getMethod(reportInstance, METHOD_BEFORERUN, new Object[] {});
 			// format the report
+			// RemoteWebDriver driver = SeleniumCore.driver;
 			Object formats = RefelectionUtils.getMethod(reportInstance, METHOD_SETREPORTFORMATS, new Object[] {});
 			if (formats != null) {
 				// reportformatList.clear();
@@ -152,18 +151,12 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 			}
 
 			// feature scenario tags
-			Object tagsObj = RefelectionUtils.getMethod(reportInstance, METHOD_SETCUCUMBERTAGS,
-					new Object[] {});
+			Object tagsObj = RefelectionUtils.getMethod(reportInstance, METHOD_SETCUCUMBERTAGS, new Object[] {});
 			if (tagsObj != null) {
-				List<String> tags = (List<String>) tagsObj;
-				filters.addAll(tags);
-			}
-
-			logger.info("Begin to start the selenium driver...");
-			Object tempdriver = RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_SETSELENIUMDRIVER,
-					new Object[] {});
-			if (tempdriver != null) {
-				driver = (WebDriver) tempdriver;
+				String tags = (String) tagsObj;
+				if (!tags.equals("")) {
+					filters.add(tags);
+				}
 			}
 
 		} else {

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Iterator;
@@ -47,7 +48,7 @@ import org.dom4j.xpath.DefaultXPath;
 public class DOM4JUtils {
 
 	private String xmlfile;
-	private Document document=null;
+	private static Document document=null;
 	
 	
 	public DOM4JUtils(String xmlfile){
@@ -62,6 +63,19 @@ public class DOM4JUtils {
 			
 		}
 	}
+	
+	public DOM4JUtils(InputStream inputStream){
+		try {
+			//document = reader.read(new ByteArrayInputStream(xml.getBytes("UTF-8")));
+			document=new SAXReader().read(inputStream);
+		} catch (DocumentException e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+	}
+	
 	public DOM4JUtils(URL url){
 		try {
 			document=new SAXReader().read(url);

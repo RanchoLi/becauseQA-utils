@@ -24,33 +24,33 @@ public class TimeUtils {
 		YEAR, MONTH, WEEK, DAYS, HOURS, MINUTES, SECONDS, NANOSECONDS;
 	}
 
-	public LocalDateTime getCurrentTime() {
+	public static LocalDateTime getCurrentTime() {
 		return LocalDateTime.now();
 	}
 
-	public LocalDateTime ofDateTime(int year, int month, int day) {
+	public static LocalDateTime ofDateTime(int year, int month, int day) {
 		return LocalDateTime.of(year, month, day, 0, 0);
 	}
 	
-	public LocalDateTime ofDateTime(Instant instant){
+	public static LocalDateTime ofDateTime(Instant instant){
 		LocalDateTime ofInstant = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
 		return ofInstant;
 	}
 
-	public String dateTimeString(LocalDateTime date, String pattern) {
+	public static String dateTimeString(LocalDateTime date, String pattern) {
 		return date.format(DateTimeFormatter.ofPattern(pattern));
 	}
 
-	public LocalDateTime string2DateTime(String datetime, String pattern) {
+	public static LocalDateTime string2DateTime(String datetime, String pattern) {
 		return LocalDateTime.parse(datetime, DateTimeFormatter.ofPattern(pattern));
 	}
 	
-	public long getSeconds(LocalDateTime dateTime){
+	public static long getSeconds(LocalDateTime dateTime){
 		//long epochSecond = dateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
 		long epochSecond = dateTime.atZone(ZoneOffset.UTC).toEpochSecond();
 		return epochSecond;
 	}
-	public Instant toInstant(LocalDateTime dateTime){
+	public static Instant toInstant(LocalDateTime dateTime){
 		Instant instant = dateTime.toInstant(ZoneOffset.UTC);
 		return instant;
 	}
@@ -64,7 +64,7 @@ public class TimeUtils {
 	 * @return the return string week.
 	 * @since JDK 1.8
 	 */
-	public String whichdayOfWeek(LocalDateTime datetime) {
+	public static String whichdayOfWeek(LocalDateTime datetime) {
 		String displayName = datetime.getDayOfWeek().getDisplayName(TextStyle.FULL_STANDALONE, Locale.CHINA);
 		return displayName;
 	}
@@ -79,7 +79,7 @@ public class TimeUtils {
 	 * @return localdatetime object.
 	 * @since JDK 1.8
 	 */
-	public LocalDateTime dateAdd(UNIT unit, long amount, LocalDateTime dateTime) {
+	public static LocalDateTime dateAdd(UNIT unit, long amount, LocalDateTime dateTime) {
 		LocalDateTime localDateTime = LocalDateTime.now();
 		switch (unit) {
 		case YEAR:
@@ -113,7 +113,7 @@ public class TimeUtils {
 		return localDateTime;
 	}
 
-	public long dateDiff(UNIT unit, LocalDateTime start, LocalDateTime end) {
+	public static long dateDiff(UNIT unit, LocalDateTime start, LocalDateTime end) {
 		long amount = 0l;
 		//Duration between = Duration.between(start, end);
 		switch (unit) {

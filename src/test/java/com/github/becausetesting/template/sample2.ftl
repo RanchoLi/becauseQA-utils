@@ -43,7 +43,7 @@ get value is: ${mapObj['mytestpasswordkey']}
 <#assign testmap={"key1":"keyvalue1","key2":"keyvalue2"}/>
 <#assign keys=testmap?keys/>
 <#list keys as key>
- key:${key}: ${testmap[key]}
+key:${key}: ${testmap[key]}
 </#list>
 
 </body>

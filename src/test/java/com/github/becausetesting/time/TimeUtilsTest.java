@@ -17,10 +17,10 @@ import com.github.becausetesting.time.TimeUtils.UNIT;
 
 public class TimeUtilsTest {
 
-	private TimeUtils time;
+	//private TimeUtils time;
 	@Before
 	public void setUp() throws Exception {
-		time=new TimeUtils();
+		//time=new TimeUtils();
 	}
 
 	@After
@@ -29,29 +29,29 @@ public class TimeUtilsTest {
 
 	@Test
 	public void testGetCurrentTime() {
-		LocalDateTime currentTime = time.getCurrentTime();
+		LocalDateTime currentTime = TimeUtils.getCurrentTime();
 		System.out.println(currentTime);
 	}
 
 	@Test
 	public void testDateTimeString() {
-		String dateTimeString = time.dateTimeString(LocalDateTime.now(), "yyyy/MM/dd HH:mm:ss:n");
+		String dateTimeString = TimeUtils.dateTimeString(LocalDateTime.now(), "yyyy/MM/dd HH:mm:ss:n");
 		System.out.println(dateTimeString);
 	}
 
 	@Test
 	public void testString2DateTime() {
-		LocalDateTime string2DateTime = time.string2DateTime(LocalDateTime.now().toString(), "yyyy-MM-dd'T'HH:mm:ss.SSS");
+		LocalDateTime string2DateTime = TimeUtils.string2DateTime(LocalDateTime.now().toString(), "yyyy-MM-dd'T'HH:mm:ss.SSS");
 		System.out.println(string2DateTime);
 	}
 
 	@Test
 	public void testWhichdayOfWeek() {
-		String whichdayOfWeek = time.whichdayOfWeek(LocalDateTime.now());
+		String whichdayOfWeek = TimeUtils.whichdayOfWeek(LocalDateTime.now());
 		LocalDateTime now = LocalDateTime.now();
 		
 		LocalDateTime plus = now.plus(-1, ChronoUnit.YEARS);
-		long dateDiff = time.dateDiff(UNIT.DAYS,plus, now);
+		long dateDiff = TimeUtils.dateDiff(UNIT.DAYS,plus, now);
 		
 		
 		System.out.println(whichdayOfWeek);

@@ -47,8 +47,8 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
-import com.github.becausetesting.application.Environment;
 
 /**
  * ClassName:HttpClientUtils Function: TODO ADD FUNCTION. Reason: TODO ADD
@@ -57,10 +57,11 @@ import com.github.becausetesting.application.Environment;
  * @author Administrator
  * @version 1.0.0
  * @since JDK 1.8
+ * @deprecated
  */
 public class HttpClientUtils {
 
-	private static Logger logger = Logger.getLogger(HttpClientUtils.class);
+	private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(HttpClientUtils.class);
 	
 	private static CloseableHttpClient httpClient=null;
 	private static HttpResponse httpResponse=null;

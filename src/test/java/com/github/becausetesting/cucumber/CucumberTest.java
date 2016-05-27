@@ -18,11 +18,12 @@ import cucumber.api.java.en.Given;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
 import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
 
 
 @RunWith(BecauseCucumber.class)
-@CucumberOptions(plugin = {"pretty", "html:target/cucumberhtml"})
+@CucumberOptions(plugin = {"pretty", "html:target/cucumber/cucumber-html-report"})
 public class CucumberTest implements BecauseCucumberHook{
 
 	@Override
@@ -43,11 +44,7 @@ public class CucumberTest implements BecauseCucumberHook{
 		
 	}
 
-	@Override
-	public void afterEachScenario(Scenario scenario) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public void beforeEachFeature(Feature feature) {
@@ -62,7 +59,7 @@ public class CucumberTest implements BecauseCucumberHook{
 	}
 
 	@Override
-	public List<String> setCucumberTags() {
+	public String setCucumberTags() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -79,10 +76,11 @@ public class CucumberTest implements BecauseCucumberHook{
 		return null;
 	}
 
+	
 	@Override
-	public WebDriver setSeleniumDriver() {
+	public void afterEachScenario(Scenario scenario, Result result) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 	
 }

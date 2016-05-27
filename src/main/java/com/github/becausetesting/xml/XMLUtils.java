@@ -19,6 +19,8 @@ package com.github.becausetesting.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -30,6 +32,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * ClassName: XMLUtils Function: TODO ADD FUNCTION. Reason: TODO ADD REASON(可选).
+ * 
  * @author Administrator
  * @version 1.0.0
  * @since JDK 1.8
@@ -40,18 +43,21 @@ public class XMLUtils {
 	 * Parse: the xml document
 	 *
 	 * @author Administrator
-	 * @param xmlfile xml file to parse.
-	 * @param nodename the node name to find.
+	 * @param xmlfile
+	 *            xml file to parse.
+	 * @param nodename
+	 *            the node name to find.
 	 * @since JDK 1.8
 	 */
-	public void SAXParse(File xmlfile, String nodename) {
+	public static List<String> SAXParse(File xmlfile, String nodename) {
+		List<String> result = null;
 		try {
 			XMLParser parser = new XMLParser(nodename);
 			SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
 			saxParser.parse(xmlfile, parser);
-			
-			parser.getResult();
-			
+
+			result = parser.getResult();
+
 		} catch (ParserConfigurationException e) {
 
 			// TODO Auto-generated catch block
@@ -68,14 +74,53 @@ public class XMLUtils {
 			e.printStackTrace();
 
 		}
+		return result;
 
 	}
 
-	public class XMLParser extends DefaultHandler {
+	/**
+	 * Parse: the xml document
+	 *
+	 * @author Administrator
+	 * @param xmlfile
+	 *            xml file to parse.
+	 * @param nodename
+	 *            the node name to find.
+	 * @since JDK 1.8
+	 */
+	public static List<String> SAXParse(String url, String nodename) {
+		List<String> result = null;
+		try {
+			XMLParser parser = new XMLParser(nodename);
+			SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+			saxParser.parse(url, parser);
+
+			result = parser.getResult();
+
+		} catch (ParserConfigurationException e) {
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (SAXException e) {
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (IOException e) {
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+		return result;
+	}
+
+	public static class XMLParser extends DefaultHandler {
 
 		private String nodename;
-		private boolean findnode=false;
-		private StringBuilder builder;
+		private boolean findnode = false;
+		private List<String> builder=new ArrayList();
 
 		public XMLParser(String nodename) {
 			this.nodename = nodename;
@@ -95,7 +140,6 @@ public class XMLUtils {
 			// TODO Auto-generated method stub
 			if (nodename.equalsIgnoreCase(qName)) {
 				findnode = true;
-				builder=new StringBuilder();
 			}
 		}
 
@@ -108,11 +152,12 @@ public class XMLUtils {
 		public void characters(char[] ch, int start, int length) throws SAXException {
 
 			// TODO Auto-generated method stub
-			String nodevalue = new String(ch,start,length);
-			builder.append(nodevalue);
+			if (findnode) {
+				String nodevalue = new String(ch, start, length);
+				builder.add(nodevalue);
+			}
 		}
 
-		
 		/**
 		 * TODO
 		 * 
@@ -124,11 +169,10 @@ public class XMLUtils {
 
 			// TODO find this node then exit parse the document
 			if (nodename.equalsIgnoreCase(qName)) {
-				findnode=false;
+				findnode = false;
 			}
 		}
 
-		
 		/**
 		 * TODO.
 		 * 
@@ -140,8 +184,7 @@ public class XMLUtils {
 			// TODO Auto-generated method stub
 			super.endDocument();
 		}
-		
-		
+
 		/**
 		 * getResult:
 		 *
@@ -149,8 +192,8 @@ public class XMLUtils {
 		 * @return String
 		 * @since JDK 1.8
 		 */
-		public String getResult(){
-			return builder.toString();
+		public List<String> getResult() {
+			return builder;
 		}
 	}
 }

@@ -20,7 +20,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import com.github.becausetesting.lang.StringUtils;
-import com.github.becausetesting.properties.PropertyUtils;
+import com.github.becausetesting.properties.PropertiesUtils;
 
 /**
  * ClassName: EmailUtils  
@@ -42,12 +42,12 @@ public class EmailUtils {
 
 	public boolean sendEmail(String from, String to, String subject, String bodycontent) {
 
-		PropertyUtils.setResourceBundle(emailfile);
+		PropertiesUtils.setResource(emailfile);
 		
-		String host = PropertyUtils.getBundleString("smtp.host");
-		String port = PropertyUtils.getBundleString("smtp.port");
-		String user = PropertyUtils.getBundleString("smtp.username");
-		String password = PropertyUtils.getBundleString("smtp.password");
+		String host = PropertiesUtils.getString("smtp.host");
+		String port = PropertiesUtils.getString("smtp.port");
+		String user = PropertiesUtils.getString("smtp.username");
+		String password = PropertiesUtils.getString("smtp.password");
 
 		// set these values into properties
 		Properties prop = new Properties();

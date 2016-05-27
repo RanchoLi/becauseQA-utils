@@ -73,7 +73,9 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.becausetesting.apache.commons.IOUtils;
 import com.github.becausetesting.apache.commons.StringUtils;
@@ -95,7 +97,7 @@ import com.github.becausetesting.httpclient.bean.RequestEntitySimple;
 import com.github.becausetesting.httpclient.bean.RequestEntityString;
 import com.github.becausetesting.httpclient.bean.SSLRequest;
 import com.github.becausetesting.httpclient.bean.SSLRequest.SSLHostnameVerifier;
-import com.github.becausetesting.properties.PropertyUtils;
+import com.github.becausetesting.properties.PropertiesUtils;
 
 import freemarker.template.utility.StringUtil;
 
@@ -106,7 +108,7 @@ public class HttpClientUtils {
 		GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE;
 	}
 
-	private static final Logger logger = Logger.getLogger(HttpClientUtils.class.getName());
+	private static final Logger log = LogManager.getLogger(HttpClientUtils.class.getName());
 
 	private static CloseableHttpClient httpClient;
 	public static HttpResponse httpResponse;
@@ -177,10 +179,9 @@ public class HttpClientUtils {
 		requestBuilder.setVersion(protocolVersion);
 
 		// Set request timeout (default 1 minute--60000 milliseconds)
-		String path = HttpClientUtils.class.getResource("/httpclient.properties").getPath();
-		File httpclientFile = new File(path);
-		PropertyUtils.setResourceBundle(httpclientFile);
-		String timeout = PropertyUtils.getBundleString("DEFAULT_TIMEOUT_MILLIS");
+		String httpclientFile = "httpclient.properties";
+		PropertiesUtils.setBundle(httpclientFile);
+		String timeout = PropertiesUtils.getBundleString("DEFAULT_TIMEOUT_MILLIS");
 		requestConfigBuilder.setConnectionRequestTimeout(Integer.parseInt(timeout));
 
 		// Create an HttpClient with the ThreadSafeClientConnManager.
@@ -463,7 +464,7 @@ public class HttpClientUtils {
 		requestBuilder.setConfig(rc);
 		HttpUriRequest httpUriRequest = requestBuilder.build();
 		if (!WinHttpClients.isWinAuthAvailable()) {
-			logger.error("Integrated Win auth is not supported!!!");
+			log.error("Integrated Win auth is not supported!!!");
 		} else {
 			httpClient = WinHttpClients.createDefault();
 		}

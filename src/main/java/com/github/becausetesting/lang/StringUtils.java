@@ -19,23 +19,23 @@ public class StringUtils {
 		return s == null || s.trim().length() == 0;
 	}
 
-	private String byte2String(byte[] bytes){
+	private static String byte2String(byte[] bytes){
 		return new String(bytes);
 	}
-	public byte[] string2Bytes(String str) {
+	public static byte[] string2Bytes(String str) {
 		return str.getBytes(Charset.forName("UTF-8"));
 	}
 
-	public char[] String2Array(String str) {
+	public static char[] String2Array(String str) {
 		return str.toCharArray();
 	}
 
-	public String stringFormat(String str, String format) {
+	public static String stringFormat(String str, String format) {
 		return String.format(format, str);
 	}
 
 	
-	public String getRandomString(int len) {
+	public static String getRandomString(int len) {
 		String result = "";
 		String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; // 9
 		int n = alphabet.length(); // 10
@@ -46,7 +46,7 @@ public class StringUtils {
 
 	}
 
-	public List<String> split(String str, String seperate) {
+	public static List<String> split(String str, String seperate) {
 		List<String> list=new ArrayList<String>();
 		StringTokenizer stringTokenizer = new StringTokenizer(str, seperate);
 		int count = 0;

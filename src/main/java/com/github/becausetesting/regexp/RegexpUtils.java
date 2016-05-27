@@ -23,17 +23,17 @@ import java.util.regex.Pattern;
  */
 public class RegexpUtils {
 
-	private Pattern pattern;
-	private Matcher matcher;
+	private static Pattern pattern;
+	private static Matcher matcher;
 	
-	public boolean validate(final String inputtester,String patterns) {
+	public static boolean validate(final String inputtester,String patterns) {
 		pattern=Pattern.compile(patterns, Pattern.DOTALL);
 		matcher = pattern.matcher(inputtester);
 		return matcher.matches();
 
 	}
 
-	public String validateString(final String inputtester,String patterns) {
+	public static String validateString(final String inputtester,String patterns) {
 		pattern=Pattern.compile(patterns, Pattern.DOTALL);
 		matcher = pattern.matcher(inputtester);
 		String matchedstr = "";

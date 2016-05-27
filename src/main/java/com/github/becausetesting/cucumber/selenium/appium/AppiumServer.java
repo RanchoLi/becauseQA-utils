@@ -17,10 +17,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.OS;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.github.becausetesting.command.CommandUtils;
 
@@ -39,7 +41,7 @@ public class AppiumServer implements IMobileServer {
     private final File _nodeExecutableFilePath;
     private final File _appiumJavaScriptFilePath;
     private final ServerArguments _serverArguments;
-    private final static Logger LOGGER = Logger.getLogger(AppiumServer.class.getName());
+    private final static Logger LOGGER = LogManager.getLogger(AppiumServer.class.getName());
     
     /*
      * add the path variables
@@ -177,7 +179,7 @@ public class AppiumServer implements IMobileServer {
 
         try {
             if (silentMode == false) {
-                LOGGER.log(Level.INFO, "Checking to see if a server instance is running or not ...");
+                LOGGER.info( "Checking to see if a server instance is running or not ...");
             }
 
             String serverIPAddress = _serverArguments.get(AppiumCommonArgs.IP_ADDRESS).toString();
@@ -195,7 +197,7 @@ public class AppiumServer implements IMobileServer {
         } catch (java.net.ConnectException ex) {
             return false;
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "An exception was thrown.", ex);
+            LOGGER.error("An exception was thrown.", ex);
         }
         return false;
     }
@@ -225,14 +227,14 @@ public class AppiumServer implements IMobileServer {
                 throw new UnsupportedOperationException("Not supported yet for this operating system...");
             }
 
-            LOGGER.log(Level.INFO, "Stopping the server with the command: {0}",
+            LOGGER.info( "Stopping the server with the command: {0}",
                     String.join(" ", stopServerCommand));
             String stopServerOutput = CommandUtils.runCommandUsingJavaRuntime(stopServerCommand, true);
-            LOGGER.log(Level.INFO, "Server stopping output: {0}", stopServerOutput);
+            LOGGER.info("Server stopping output: {0}", stopServerOutput);
         } catch (UnsupportedOperationException ex) {
             throw ex;
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "An exception was thrown.", ex);
+            LOGGER.error( "An exception was thrown.", ex);
         }
     }
 
@@ -266,7 +268,7 @@ public class AppiumServer implements IMobileServer {
             }
 
             // create the command line to be executed
-            LOGGER.log(Level.INFO, "Server is starting...");
+            LOGGER.info("Server is starting...");
             CommandLine cmdLine = CommandUtils.createCommandLine(
                     _nodeExecutableFilePath.getAbsolutePath(),
                     new String[]{_appiumJavaScriptFilePath.getAbsolutePath()},
@@ -299,17 +301,17 @@ public class AppiumServer implements IMobileServer {
                     throw new ServerTimeoutException(FileUtils.readFileToString(
                             processOutputError, "UTF8"), timeoutInMilliseonds);
                 }
-                LOGGER.log(Level.INFO, "Server has not started yet. Trying again in one second...");
+                LOGGER.info("Server has not started yet. Trying again in one second...");
                 Thread.sleep(1000);
             }
 
-            LOGGER.log(Level.INFO, "Server has been started successfully.");
+            LOGGER.info("Server has been started successfully.");
         } catch (ServerTimeoutException ex) {
             throw ex;
         } catch (InvalidServerFileException ex) {
             throw ex;
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, "An exception was thrown.", ex);
+            LOGGER.error( "An exception was thrown.", ex);
         }
     }
 

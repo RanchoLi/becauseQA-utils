@@ -72,8 +72,7 @@ public class DllUtils {
 
 	protected void viewJavaLibraries() {
 		String property = System.getProperty("java.library.path");
-		StringUtils stringUtils = new StringUtils();
-		List<String> seperateStr = stringUtils.split(property, ";");
+		List<String> seperateStr = StringUtils.split(property, ";");
 		System.out.println("------java.library.path------");
 		for (String str : seperateStr) {
 			System.out.println(str);

@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.log4j.Logger;
 
 import com.github.becausetesting.apache.commons.StringUtils;
-import com.github.becausetesting.properties.PropertyUtils;
+import com.github.becausetesting.properties.PropertiesUtils;
 
 public class ProxyConfig {
 
@@ -35,18 +35,18 @@ public class ProxyConfig {
     
     private void init() {
 
-        _proxy.setEnabled(Boolean.valueOf(PropertyUtils.getBundleString(PROP_PREFIX + "is_enabled")));
-        _proxy.setHost(PropertyUtils.getBundleString(PROP_PREFIX + "host"));
+        _proxy.setEnabled(Boolean.valueOf(PropertiesUtils.getBundleString(PROP_PREFIX + "is_enabled")));
+        _proxy.setHost(PropertiesUtils.getBundleString(PROP_PREFIX + "host"));
         { // Port:
-            final String portStr = PropertyUtils.getBundleString(PROP_PREFIX + "port");
+            final String portStr = PropertiesUtils.getBundleString(PROP_PREFIX + "port");
             if(StringUtils.isNotEmpty(portStr)) {
                 _proxy.setPort(Integer.parseInt(portStr));
             }
         }
-        _proxy.setAuthEnabled(Boolean.valueOf(PropertyUtils.getBundleString(PROP_PREFIX + "is_auth_enabled")));
-        _proxy.setUsername(PropertyUtils.getBundleString(PROP_PREFIX + "username"));
+        _proxy.setAuthEnabled(Boolean.valueOf(PropertiesUtils.getBundleString(PROP_PREFIX + "is_auth_enabled")));
+        _proxy.setUsername(PropertiesUtils.getBundleString(PROP_PREFIX + "username"));
         { // Password:
-            final String pwdStr = PropertyUtils.getBundleString(PROP_PREFIX + "password");
+            final String pwdStr = PropertiesUtils.getBundleString(PROP_PREFIX + "password");
             if(StringUtils.isNotEmpty(pwdStr)) {
                 _proxy.setPassword(pwdStr.toCharArray());
             }

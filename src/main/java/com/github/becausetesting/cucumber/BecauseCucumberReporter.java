@@ -13,7 +13,9 @@ import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
@@ -22,6 +24,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.github.becausetesting.cucumber.selenium.SeleniumCore;
 import com.github.becausetesting.reflections.RefelectionUtils;
 
 import java.time.LocalDateTime;
@@ -53,7 +56,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	 * catch (MalformedURLException e) { // TODO Auto-generated catch block
 	 * e.printStackTrace(); } }
 	 */
-	private static Logger logger = Logger.getLogger(BecauseCucumberReporter.class);
+	private static Logger logger = LogManager.getLogger(BecauseCucumberReporter.class);
 	private static Result result;
 
 	public static AtomicInteger failedStepsCount;
@@ -83,21 +86,21 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
 	}
 
-	private void myfeature(Feature feature) {
+	private void becauseCucumberFeature(Feature feature) {
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
 			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFOREFEATURE, feature);
 		}
 	}
 
-	private void mystartOfScenarioLifeCycle(Scenario scenario) {
+	private void becauseCucumberStartOfScenarioLifeCycle(Scenario scenario) {
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
 			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESCENARIO, scenario);
 		}
 	}
 
-	private void myendOfScenarioLifeCycle(Scenario scenario) {
+	private void becauseCucumberEndOfScenarioLifeCycle(Scenario scenario) {
 		// upload the cucumber steps result into test case tool
 		cucumberErrorMessage = result.getErrorMessage();
 		Throwable error = result.getError();
@@ -112,7 +115,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 			if (error != null) {
 				failedScenariosCount.incrementAndGet();
 
-				WebDriver driver = BecauseCucumber.driver;
+				WebDriver driver = SeleniumCore.driver;
 				if (driver != null) {
 					RemoteWebDriver remoteWebDriver = (RemoteWebDriver) driver;
 					String currentUrl = remoteWebDriver.getCurrentUrl();
@@ -153,7 +156,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
-			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_AFTERSCENARIO, scenario);
+			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_AFTERSCENARIO, scenario,result);
 		}
 	}
 
@@ -301,7 +304,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
     @Override
     public void feature(gherkin.formatter.model.Feature feature) {
-    	myfeature(feature);
+    	becauseCucumberFeature(feature);
         formatter.feature(feature);
     }
 
@@ -357,13 +360,13 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
     public void startOfScenarioLifeCycle(Scenario scenario) {
         inScenarioLifeCycle = true;
         formatter.startOfScenarioLifeCycle(scenario);
-        mystartOfScenarioLifeCycle(scenario);
+        becauseCucumberStartOfScenarioLifeCycle(scenario);
     }
 
     @Override
     public void endOfScenarioLifeCycle(Scenario scenario) {
         formatter.endOfScenarioLifeCycle(scenario);
         inScenarioLifeCycle = false;
-        myendOfScenarioLifeCycle(scenario);
+        becauseCucumberEndOfScenarioLifeCycle(scenario);
     }
 }

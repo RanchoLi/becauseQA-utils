@@ -3,7 +3,9 @@ package com.github.becausetesting.cucumber;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import com.github.becausetesting.reflections.RefelectionUtils;
@@ -11,6 +13,7 @@ import com.github.becausetesting.reflections.RefelectionUtils;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
 import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
 /*
  * 
@@ -41,7 +44,7 @@ import gherkin.formatter.model.Scenario;
  */
 public interface BecauseCucumberHook {
 
-	public static Logger logger=Logger.getLogger(BecauseCucumberHook.class);
+	public static Logger log=LogManager.getLogger(BecauseCucumberHook.class);
 	
 	/**
 	 * beforeRun: like create test plan 
@@ -70,7 +73,7 @@ public interface BecauseCucumberHook {
 	 * @param scenario the parameter for cucumber scenario.
 	 * @since JDK 1.8
 	 */
-	public void afterEachScenario(Scenario scenario); // upload the result into test tool
+	public void afterEachScenario(Scenario scenario,Result result); // upload the result into test tool
 	
 	
 	/**
@@ -100,8 +103,8 @@ public interface BecauseCucumberHook {
 	/**
 	 * setCucumberStepDefinitionPaths to use to set cucumber step definition path:
 	 * we had set these paths as default path to search the step definition,
-	 * 1. classpath:
-	 * 2. com.github.becausetesting.cucumber.selenium
+	 * <p>1. classpath:</p>
+	 * <p>2. com.github.becausetesting.cucumber.selenium</p>
 	 * so actually you no need to set the step definition path here ,just leave it as empty.
 	 * @author alterhu2020@gmail.com
 	 * @return
@@ -118,16 +121,13 @@ public interface BecauseCucumberHook {
 	public List<String> setCucumberFeatureFilePaths(); // set the feature file path	
 	
 	/**
+	 * Set the cucumber tags you need to run in feature file, 
+	 * tags is just another parameter in the cucumber options annotation.
+	 *  We can also pass multiple tags as values separated by commas if we need so.
 	 * @return the cucumber tags you specified.
 	 */
-	public List<String> setCucumberTags();
+	public String setCucumberTags();
 
-	/**
-	 * setSeleniumDriver: if user selenium driver or not
-	 * @author alterhu2020@gmail.com
-	 * @return the selenium driver {@link WebDriver}
-	 * @since JDK 1.8
-	 */
-	public WebDriver setSeleniumDriver(); // if needs to use the selenium integration for testing
+	
 	
 }

@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,21 +34,22 @@ public class TemplateUtils {
 			configuration = new Configuration(Configuration.VERSION_2_3_23);
 			configuration.setDefaultEncoding("UTF-8");
 			configuration.setAutoFlush(true);
-			configuration.setTemplateUpdateDelayMilliseconds(5000);// load from the cache
+			configuration.setTemplateUpdateDelayMilliseconds(5000);// load from
+																	// the cache
 			configuration.setLocalizedLookup(true);
 
 			configuration.setIncompatibleImprovements(Configuration.VERSION_2_3_23);
-			
+
 			configuration.setNumberFormat("computer");
 			configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 			configuration.setLogTemplateExceptions(false);
-			
-			//global share variables
+
+			// global share variables
 			HashMap<Object, Object> shareVariables = new HashMap<>();
 			shareVariables.put("Author", "Alter Hu");
 			try {
 				configuration.setSharedVaribles(shareVariables);
-				//Template caching
+				// Template caching
 				configuration.setSetting(Configuration.CACHE_STORAGE_KEY, "strong:20, soft:250");
 			} catch (TemplateModelException e) {
 				// TODO Auto-generated catch block
@@ -56,7 +58,7 @@ public class TemplateUtils {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+
 		}
 		return configuration;
 	}
@@ -67,7 +69,7 @@ public class TemplateUtils {
 	 * @param dataModel
 	 *            the freemarker object. template is in src/main/resources
 	 */
-	public void renderContent(String templatename, Object dataModel) {
+	public static void renderContent(String templatename, Object dataModel) {
 		String outputPath = templatename + ".html";
 		renderContent(templatename, outputPath, dataModel);
 
@@ -79,9 +81,11 @@ public class TemplateUtils {
 	 * @param dataModel
 	 *            the freemarker object. template is in src/main/resources
 	 */
-	public void renderContent(String templatename, String filePath, Object dataModel) {
+	public static void renderContent(String templatename, String filePath, Object dataModel) {
 		// String outputPath = templatename + ".html";
-		ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(getClass().getClassLoader(), "templates");
+		URL resource = TemplateUtils.class.getClassLoader().getResource("/templates/email.jtl");
+		ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(TemplateUtils.class.getClassLoader(),
+				"/templates/");
 		renderContent(classTemplateLoader, templatename, filePath, dataModel);
 
 	}
@@ -94,22 +98,26 @@ public class TemplateUtils {
 	 * @param filePath
 	 * @param dataModel
 	 */
-	public void renderContent(TemplateLoader templateLoader, String templatename, String filePath, Object dataModel) {
+	public static void renderContent(TemplateLoader templateLoader, String templatename, String filePath,
+			Object dataModel) {
 		// String outputPath = templatename + ".html";
 		try {
 			initializeFreemarkerConfiguration();
 			configuration.setTemplateLoader(templateLoader);
 			// configuration.setTemplateLoader(new
 			// FileTemplateLoader(templateFolder));
-			Template template = configuration.getTemplate(templatename + ".ftl");
+			if (!templatename.endsWith(".ftl")) {
+				templatename = templatename + ".ftl";
+			}
+			Template template = configuration.getTemplate(templatename);
 
-			Writer out = new OutputStreamWriter(System.out);
-			template.process(dataModel, out);
-			//out.close();
+			// Writer out = new OutputStreamWriter(System.out);
+			// template.process(dataModel, out);
+			// out.close();
 			if (filePath != null) {
 				FileWriter writer = new FileWriter(filePath);
 				template.process(dataModel, writer);
-				//writer.close();
+				// writer.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -131,7 +139,7 @@ public class TemplateUtils {
 	 * @throws IOException
 	 *             io exception for template.
 	 */
-	public void rendMap(String templatename, Map<String, Object> result) throws TemplateException, IOException {
+	public static void rendMap(String templatename, Map<String, Object> result) throws TemplateException, IOException {
 		String outputPath = templatename + ".html";
 		rendMap(templatename, outputPath, result);
 	}
@@ -146,9 +154,10 @@ public class TemplateUtils {
 	 * @throws IOException
 	 *             io exception for template.
 	 */
-	public void rendMap(String templatename, String filePath, Map<String, Object> result)
+	public static void rendMap(String templatename, String filePath, Map<String, Object> result)
 			throws TemplateException, IOException {
-		ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(getClass().getClassLoader(), "templates");
+		ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(TemplateUtils.class.getClassLoader(),
+				"templates");
 		rendMap(classTemplateLoader, templatename, filePath, result);
 
 	}
@@ -163,24 +172,27 @@ public class TemplateUtils {
 	 * @throws IOException
 	 *             io exception for template.
 	 */
-	public void rendMap(TemplateLoader templateLoader, String templatename, String filePath, Map<String, Object> result)
-			throws TemplateException, IOException {
+	public static void rendMap(TemplateLoader templateLoader, String templatename, String filePath,
+			Map<String, Object> result) throws TemplateException, IOException {
 
 		try {
 			initializeFreemarkerConfiguration();
 			configuration.setTemplateLoader(templateLoader);
-			Template template = configuration.getTemplate(templatename + ".ftl");
+			if (!templatename.endsWith(".ftl")) {
+				templatename = templatename + ".ftl";
+			}
+			Template template = configuration.getTemplate(templatename);
 
 			Map<String, Object> rootMap = new HashMap<String, Object>();
 			rootMap.put("self", result);
 
-			Writer out = new OutputStreamWriter(System.out);
-			template.process(rootMap, out);
-			//out.close();
+			// Writer out = new OutputStreamWriter(System.out);
+			// template.process(rootMap, out);
+			// out.close();
 			if (filePath != null) {
 				FileWriter writer = new FileWriter(filePath);
 				template.process(rootMap, writer);
-				//writer.close();
+				// writer.close();
 			}
 
 		} catch (IOException e) {

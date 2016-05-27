@@ -19,6 +19,7 @@ package com.github.becausetesting.apache.commons;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -1599,5 +1600,18 @@ public class NumberUtils {
      */
     public static int compare(byte x, byte y) {
         return x-y;
+    }
+    
+    
+    /**divide two numbers:http://blog.csdn.net/evatian/article/details/4398016
+     * @param number1
+     * @param number2
+     * @return the double value you want to see
+     */
+    public static String divideNumber(long number1,long number2){
+    	DecimalFormat df=new DecimalFormat("###.0");
+    	double result=(double)number1/(double)number2;
+    	String format = df.format(result);
+    	return format;
     }
 }

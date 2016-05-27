@@ -54,7 +54,7 @@ public class TemplateUtilsTest {
 		dataModel.setUsername("altertesting");
 
 		
-		templateUtils.renderContent(fileTemplateLoader, "sample", locationPath, dataModel);
+		TemplateUtils.renderContent(fileTemplateLoader, "sample", locationPath, dataModel);
 
 	}
 
@@ -95,7 +95,7 @@ public class TemplateUtilsTest {
 		hashMap.put("mytestpasswordkey", "testpasword");
 		mapObject.put("mapkey", hashMap);
 		
-		templateUtils.rendMap(fileTemplateLoader, "sample2", locationPath, mapObject);
+		TemplateUtils.rendMap(fileTemplateLoader, "sample2", locationPath, mapObject);
 
 	}
 
