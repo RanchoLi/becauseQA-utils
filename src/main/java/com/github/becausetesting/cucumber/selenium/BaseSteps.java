@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -60,7 +59,7 @@ import com.github.becausetesting.properties.PropertiesUtils;
 public class BaseSteps {
 
 	public static RemoteWebDriver driver;
-	public static final Logger log = LogManager.getLogger(BaseSteps.class);
+	public static final Logger log = Logger.getLogger(BaseSteps.class);
 
 	/**
 	 * @Title: visitPage @Description: TODO @author

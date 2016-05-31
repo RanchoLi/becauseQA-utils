@@ -9,9 +9,7 @@
 
 package com.github.becausetesting.cucumber.selenium;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * ClassName:RecoveryScenario
@@ -29,7 +27,7 @@ public class RecoveryScenario implements Thread.UncaughtExceptionHandler {
 
 	// private WebDriver driver;
 
-	private static Logger logger = LogManager.getLogger(RecoveryScenario.class);
+	private static Logger logger = Logger.getLogger(RecoveryScenario.class);
 
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {

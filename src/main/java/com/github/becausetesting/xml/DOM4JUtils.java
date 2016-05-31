@@ -9,6 +9,7 @@
 
 package com.github.becausetesting.xml;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -55,12 +56,15 @@ public class DOM4JUtils {
 		this.xmlfile=xmlfile;
 		try {
 			//document = reader.read(new ByteArrayInputStream(xml.getBytes("UTF-8")));
-			document=new SAXReader().read(new File(xmlfile));
+			document=new SAXReader().read(new ByteArrayInputStream(xmlfile.getBytes("UTF-8")));
 		} catch (DocumentException e) {
 			
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

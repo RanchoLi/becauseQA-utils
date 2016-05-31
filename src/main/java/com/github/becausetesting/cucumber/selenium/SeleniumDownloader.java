@@ -9,8 +9,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.github.becausetesting.apache.commons.FileUtils;
 import com.github.becausetesting.apache.commons.IOUtils;
@@ -21,7 +20,7 @@ import com.sun.jna.Platform;
 
 public class SeleniumDownloader {
 
-	private static Logger logger = LogManager.getLogger(SeleniumDownloader.class);
+	private static Logger logger = Logger.getLogger(SeleniumDownloader.class);
 	
 	private static String SELENIUM_URL = "https://selenium-release.storage.googleapis.com/";
 	private static String CHROME_DRIVER_URL = "https://chromedriver.storage.googleapis.com/";

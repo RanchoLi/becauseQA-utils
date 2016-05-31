@@ -4,15 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -40,7 +40,7 @@ import io.appium.java_client.remote.MobileCapabilityType;
 
 public class SeleniumCore {
 
-	private static Logger logger = LogManager.getLogger(SeleniumCore.class);
+	private static Logger logger = Logger.getLogger(SeleniumCore.class);
 	private static SeleniumServer seleniumServer;
 	private static AppiumServer appiumServer;
 
@@ -145,12 +145,13 @@ public class SeleniumCore {
 			// start the web driver
 			if (servername.trim().equalsIgnoreCase("localhost") || servername.trim().equalsIgnoreCase("127.0.0.1")) {
 				startSeleniumServer();
-				if(useSession){
-					System.err.println("As Selenium standalone start from existing thread ,you need to run thread from command line:");
-					System.err.println("java -jar "+SeleniumDownloader.seleniumstandaloneName
-							+" -trustAllSSLCertificates -browserSessionReuse -debug"
-							+" -Dwebdriver.chrome.driver="+SeleniumDownloader.chromedriverFilePath
-							+" -Dwebdriver.ie.driver="+SeleniumDownloader.iedriverFilePath);
+				if (useSession) {
+					System.err.println(
+							"As Selenium standalone start from existing page session ,you need to run thread from command line:");
+					System.err.println("java -jar " + SeleniumDownloader.seleniumstandaloneName
+							+ " -trustAllSSLCertificates -browserSessionReuse -debug" + " -Dwebdriver.chrome.driver="
+							+ SeleniumDownloader.chromedriverFilePath + " -Dwebdriver.ie.driver="
+							+ SeleniumDownloader.iedriverFilePath);
 				}
 			}
 			try {
@@ -477,7 +478,7 @@ public class SeleniumCore {
 	}
 
 	private static void startSeleniumServer() {
-		String[] args = new String[2];
+		List<String> args = new ArrayList<String>();
 
 		// RemoteControlLauncher had deprecated from 2.49.0
 		// RemoteControlLauncher.class totally removed from
@@ -489,14 +490,13 @@ public class SeleniumCore {
 		String userdir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"
 				+ File.separator + "resources";
 		SeleniumDownloader.downloadSeleniumResources(userdir);
-		
-		
-		String iedriver = System.getProperty("webdriver.ie.driver");		
+
+		String iedriver = System.getProperty("webdriver.ie.driver");
 		if (iedriver == null) {
 			SeleniumDownloader.downloadIEDriverResources(userdir);
 			// ClassLoader loader = SeleniumCore.class.getClassLoader();
 			String iedriverPath = userdir + File.separator + "IEDriverServer.exe";
-			args[0] = "-Dwebdriver.ie.driver=" + iedriverPath;
+			args.add("-Dwebdriver.ie.driver=" + iedriverPath);
 			// System.setProperty("webdriver.ie.driver", iedriverPath);
 			logger.info("Set IE Driver in this location:" + iedriverPath);
 		}
@@ -512,14 +512,14 @@ public class SeleniumCore {
 			} else {
 				chromedriverPath = userdir + File.separator + "chromedriver";
 			}
-			args[1] = "-Dwebdriver.chrome.driver=" + chromedriverPath;
+			args.add("-Dwebdriver.chrome.driver=" + chromedriverPath);
 			// System.setProperty("webdriver.chrome.driver",
 			// chromedriverPath);
 			logger.info("Chrome Driver location: " + chromedriverPath);
 			logger.info("webdriver.chrome.driver is:" + System.getProperty("webdriver.chrome.driver"));
 		}
 
-		RemoteControlConfiguration rcc = SeleniumServer.parseLauncherOptions(args);
+		RemoteControlConfiguration rcc = SeleniumServer.parseLauncherOptions(args.toArray(new String[args.size()]));
 		rcc.setPort(RemoteControlConfiguration.DEFAULT_PORT);
 		rcc.setTrustAllSSLCertificates(true);
 		rcc.setCaptureLogsOnQuit(true);
@@ -535,7 +535,7 @@ public class SeleniumCore {
 			logger.info("Start selenium remote server with configuration: " + rcc);
 		} catch (java.net.BindException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 			logger.warn("Selenium Server already started before: " + rcc);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

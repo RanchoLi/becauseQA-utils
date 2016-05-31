@@ -11,9 +11,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Beta;
 import org.openqa.selenium.By;
@@ -82,7 +80,7 @@ public class RemoteWebDriverEx extends RemoteWebDriver {
 	 * 
 	 * 2016/03/07 Alter: Add the use exising session for testing
 	 */
-	private static final Logger logger = LogManager.getLogger(RemoteWebDriverEx.class.getName());
+	private static final Logger logger = Logger.getLogger(RemoteWebDriverEx.class.getName());
 	private Level level = Level.FINE;
 
 	private ErrorHandler errorHandler = new ErrorHandler();

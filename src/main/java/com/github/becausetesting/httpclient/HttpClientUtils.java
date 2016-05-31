@@ -73,9 +73,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.github.becausetesting.apache.commons.IOUtils;
 import com.github.becausetesting.apache.commons.StringUtils;
@@ -108,7 +106,7 @@ public class HttpClientUtils {
 		GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE;
 	}
 
-	private static final Logger log = LogManager.getLogger(HttpClientUtils.class.getName());
+	private static final Logger log = Logger.getLogger(HttpClientUtils.class.getName());
 
 	private static CloseableHttpClient httpClient;
 	public static HttpResponse httpResponse;

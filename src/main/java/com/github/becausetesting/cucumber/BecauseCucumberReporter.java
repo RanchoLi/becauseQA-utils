@@ -13,9 +13,7 @@ import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
@@ -56,7 +54,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	 * catch (MalformedURLException e) { // TODO Auto-generated catch block
 	 * e.printStackTrace(); } }
 	 */
-	private static Logger logger = LogManager.getLogger(BecauseCucumberReporter.class);
+	private static Logger logger = Logger.getLogger(BecauseCucumberReporter.class);
 	private static Result result;
 
 	public static AtomicInteger failedStepsCount;

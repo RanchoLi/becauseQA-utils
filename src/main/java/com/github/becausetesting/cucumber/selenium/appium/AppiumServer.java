@@ -21,8 +21,7 @@ import java.util.logging.Level;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.OS;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.github.becausetesting.command.CommandUtils;
 
@@ -41,7 +40,7 @@ public class AppiumServer implements IMobileServer {
     private final File _nodeExecutableFilePath;
     private final File _appiumJavaScriptFilePath;
     private final ServerArguments _serverArguments;
-    private final static Logger LOGGER = LogManager.getLogger(AppiumServer.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(AppiumServer.class.getName());
     
     /*
      * add the path variables
@@ -227,10 +226,10 @@ public class AppiumServer implements IMobileServer {
                 throw new UnsupportedOperationException("Not supported yet for this operating system...");
             }
 
-            LOGGER.info( "Stopping the server with the command: {0}",
-                    String.join(" ", stopServerCommand));
+           
+            LOGGER.info( "Stopping the server with the command: {0}"+String.join(" ", stopServerCommand));
             String stopServerOutput = CommandUtils.runCommandUsingJavaRuntime(stopServerCommand, true);
-            LOGGER.info("Server stopping output: {0}", stopServerOutput);
+            LOGGER.info("Server stopping output: {0}"+ stopServerOutput);
         } catch (UnsupportedOperationException ex) {
             throw ex;
         } catch (Exception ex) {

@@ -23,8 +23,7 @@ package com.github.becausetesting.autoit;
 
 
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.github.becausetesting.dll.DllUtils;
 import com.github.becausetesting.file.FileUtils;
@@ -42,7 +41,7 @@ import com.jacob.com.Variant;
  */
 public class Application {
 
-	private static Logger log = LogManager.getLogger(Application.class);
+	private static Logger log = Logger.getLogger(Application.class);
 	/**
 	 * The AutoItX Component.
 	 */

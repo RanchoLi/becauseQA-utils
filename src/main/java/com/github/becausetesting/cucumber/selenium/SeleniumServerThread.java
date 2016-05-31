@@ -2,8 +2,7 @@ package com.github.becausetesting.cucumber.selenium;
 
 import java.io.File;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.server.RemoteControlConfiguration;
 import org.openqa.selenium.server.SeleniumServer;
 
@@ -16,7 +15,7 @@ import com.sun.jna.Platform;
  */
 public class SeleniumServerThread implements Runnable {
 
-	private static Logger logger = LogManager.getLogger(SeleniumServerThread.class);
+	private static Logger logger = Logger.getLogger(SeleniumServerThread.class);
 
 	private SeleniumServer seleniumServer;
 

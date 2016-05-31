@@ -1609,7 +1609,7 @@ public class NumberUtils {
      * @return the double value you want to see
      */
     public static String divideNumber(long number1,long number2){
-    	DecimalFormat df=new DecimalFormat("###.0");
+    	DecimalFormat df=new DecimalFormat("###");
     	double result=(double)number1/(double)number2;
     	String format = df.format(result);
     	return format;

@@ -47,7 +47,7 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+
 
 
 /**
@@ -61,7 +61,7 @@ import org.apache.logging.log4j.LogManager;
  */
 public class HttpClientUtils {
 
-	private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(HttpClientUtils.class);
+	private static Logger logger = Logger.getLogger(HttpClientUtils.class);
 	
 	private static CloseableHttpClient httpClient=null;
 	private static HttpResponse httpResponse=null;

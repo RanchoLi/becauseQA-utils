@@ -33,14 +33,13 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-
-import org.apache.logging.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.github.becausetesting.encrypt.Base64Utils;
 
 public class LDAPUtils {
 
-	private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(LDAPUtils.class);
+	private static Logger logger = Logger.getLogger(LDAPUtils.class);
 
 	private static DirContext ctx;
 	private static SearchControls search;

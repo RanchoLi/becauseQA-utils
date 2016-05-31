@@ -5,8 +5,7 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.github.becausetesting.http.TempHttpClientUtils;
@@ -15,7 +14,7 @@ import com.sun.jna.Platform;
 
 public class FieldUtilsTest {
 
-	private static Logger logger = LogManager.getLogger();
+	private static Logger logger = Logger.getLogger(FieldUtilsTest.class);
 
 	@Test
 	public void testGetFieldClassOfQString()

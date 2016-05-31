@@ -14,8 +14,7 @@ import cucumber.runtime.model.CucumberFeature;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
@@ -52,7 +51,7 @@ import java.util.List;
  */
 public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 
-	private static final Logger logger = LogManager.getLogger(BecauseCucumber.class);
+	private static final Logger logger = Logger.getLogger(BecauseCucumber.class);
 	private final List<FeatureRunner> children = new ArrayList<FeatureRunner>();
 
 	private final Runtime runtime;

@@ -22,8 +22,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import com.github.becausetesting.properties.PropertiesUtils;
 
@@ -56,7 +55,7 @@ public class JDBCUtils {
 	private static boolean isQuery = false;
 	private static boolean isBatch = false;
 
-	protected static Logger logger = LogManager.getLogger(JDBCUtils.class);
+	protected static Logger logger = Logger.getLogger(JDBCUtils.class);
 
 	public enum DatabaseDriver {
 		MYSQL("com.mysql.jdbc.Driver"), SQLSERVER("net.sourceforge.jtds.jdbc.Driver"), ORACLE(

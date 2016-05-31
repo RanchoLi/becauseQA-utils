@@ -47,8 +47,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
-import org.apache.logging.log4j.LogManager;
+
 
 /**
  * ClassName:HttpClientUtils Function: TODO ADD FUNCTION. Reason: TODO ADD
@@ -60,7 +61,7 @@ import org.apache.logging.log4j.LogManager;
  */
 public class TempHttpClientUtils {
 
-	private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(TempHttpClientUtils.class);
+	private static Logger logger = Logger.getLogger(TempHttpClientUtils.class);
 
 	private static CloseableHttpClient httpClient = null;
 	private static HttpResponse httpResponse = null;

@@ -2,12 +2,15 @@ package com.github.becausetesting.apache.commons;
 
 import static org.junit.Assert.*;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class NumberUtilsTest {
 
+	private static Logger log=Logger.getLogger(NumberUtilsTest.class);
 	@Test
 	public void testToIntString() {
+		log.warn("testing");
 		int int1 = NumberUtils.toInt("23232323");
 		assertEquals(23232323, int1);
 	}
