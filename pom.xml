@@ -16,11 +16,9 @@
 		<maven.build.timestamp.format>yyyy_MM_dd_HH_mm</maven.build.timestamp.format>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<!-- above properties should never be changed -->
 		<java.version>1.8</java.version>
-		<build.plugins.plugin.version>3.1</build.plugins.plugin.version>
-
-
+		<!-- above properties should never be changed -->
+				
 		<!-- dependencies -->
 		<junit.version>4.12</junit.version>
 		<log4j.version>1.2.17</log4j.version>
@@ -38,13 +36,14 @@
 		<mysql.version>5.1.9</mysql.version>
 
 
-		<!-- plugins dependencies -->
-		<plugin.compiler.version>3.5.1</plugin.compiler.version>
-		<plugin.surefire.version>2.12.4</plugin.surefire.version>
+		<!--common maven plugins -->
+		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
 
-		<!-- upload to maven central plugins -->
+		<!-- it profile check status plugins-->
 		<maven-invoker-plugin.version>2.0.0</maven-invoker-plugin.version>
 		<maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
+		<!-- release profile upload to maven central plugins -->
 		<maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
 		<maven-source-plugin.version>3.0.0</maven-source-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -234,7 +233,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${plugin.compiler.version}</version>
+				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
 					<source>${java.version}</source>
@@ -243,7 +242,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${plugin.surefire.version}</version>
+				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
 					<skipTests>false</skipTests>
 					<testFailureIgnore>true</testFailureIgnore>

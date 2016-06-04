@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.http.HttpConnection;
+import org.apache.log4j.Logger;
 
 import com.github.becausetesting.encrypt.Base64Utils;
 import com.github.becausetesting.json.JSONUtils;
@@ -36,6 +37,7 @@ import com.github.becausetesting.json.JSONUtils;
  */
 public class HttpUtils {
 
+	private static Logger log = Logger.getLogger(HttpUtils.class);
 	private static HttpURLConnection connection;
 
 	public static String getRequest(URL url, Map<String, String> headers) throws IOException {
@@ -46,6 +48,7 @@ public class HttpUtils {
 		return response;
 
 	}
+
 	public static InputStream getResponse(URL url, Map<String, String> headers) throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, "GET");
@@ -69,7 +72,7 @@ public class HttpUtils {
 	public static void getConnection(URL url, String method) {
 		// HttpURLConnection connection = null;
 		try {
-
+			log.info("Request url: " + url.toString());
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod(method);
 			// connection.setDoOutput(true);
@@ -139,7 +142,9 @@ public class HttpUtils {
 		try {
 			OutputStream outputStream = connection.getOutputStream();
 			JSONUtils jsonUtils = new JSONUtils();
-			byte[] bytes = JSONUtils.fromObject(data).getBytes("UTF-8");
+			String jsonString = JSONUtils.fromObject(data);
+			log.info("Json Data: \n" + jsonString);
+			byte[] bytes = jsonString.getBytes("UTF-8");
 
 			outputStream.write(bytes);
 			outputStream.flush();
@@ -154,17 +159,16 @@ public class HttpUtils {
 
 	public static InputStream getResponseStream() {
 		int responseCode = 0;
-		try {
-			responseCode = connection.getResponseCode();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 		InputStream inputStream = null;
-
+		String responseMessage = null;
 		try {
+			responseMessage = connection.getResponseMessage();
 			inputStream = connection.getInputStream();
-			if (responseCode != HttpURLConnection.HTTP_OK) {
+			responseCode = connection.getResponseCode();
+			// if (responseCode !=
+			// HttpURLConnection.HTTP_OK||responseCode!=HttpURLConnection.HTTP_CREATED)
+			// {
+			if (inputStream == null) {
 				inputStream = connection.getErrorStream();
 				if (inputStream != null) {
 					throw new Exception("Http Response Inputstream,response code : " + responseCode);
@@ -172,7 +176,7 @@ public class HttpUtils {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Response message：\n" + responseMessage, e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,7 +189,8 @@ public class HttpUtils {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader reader = null;
 
-		InputStream responseStream = getResponseStream();
+		InputStream responseStream = null;
+		responseStream = getResponseStream();
 		if (responseStream != null) {
 			reader = new BufferedReader(new InputStreamReader(responseStream));
 			String tempLine = null;
@@ -200,7 +205,8 @@ public class HttpUtils {
 			}
 
 		}
-
-		return sb.toString();
+		String responseContent = sb.toString();
+		log.info("Response Content is:\n" + responseContent);
+		return responseContent;
 	}
 }

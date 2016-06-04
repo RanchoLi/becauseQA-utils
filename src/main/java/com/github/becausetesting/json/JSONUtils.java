@@ -33,8 +33,8 @@ public class JSONUtils {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gson = gsonBuilder
 				.setPrettyPrinting()
-				.setDateFormat("yyyy-MM-dd")
-				.serializeNulls().create();
+				.setDateFormat("yyyy-MM-dd").create();
+		// if the object is null it will not serized
 	}
 	
 	/**
