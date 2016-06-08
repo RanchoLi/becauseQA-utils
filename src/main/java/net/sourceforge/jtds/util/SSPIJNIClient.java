@@ -97,10 +97,10 @@ public class SSPIJNIClient {
 		OSType platform = HostUtils.getPlatform();
 		String osBit = HostUtils.getOSBit();
 		if (osBit.contains("32bit")) {
-			shortpath = "/jtds/x86/SSO/";
+			shortpath = "/jtds/x86/SSO";
 		}
 		if (osBit.contains("64bit")) {
-			shortpath = "/jtds/x64/SSO/";
+			shortpath = "/jtds/x64/SSO";
 		}
 
 		DllUtils.loadDll(shortpath, ntlmfile);

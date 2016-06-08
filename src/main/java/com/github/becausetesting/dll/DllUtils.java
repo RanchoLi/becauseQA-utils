@@ -1,10 +1,14 @@
 package com.github.becausetesting.dll;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
 
 import com.github.becausetesting.file.FileUtils;
@@ -27,6 +31,7 @@ public class DllUtils {
 	 * @param resourcePath
 	 *            the dll resource file path in src/main/resources folder ,the
 	 *            path should be /dllfolder
+	 *            for path / seperator you need to specfied it manually
 	 * @param libname
 	 *            the dll file name without suffix
 	 */
@@ -34,33 +39,37 @@ public class DllUtils {
 		String tempdllpath = System.getProperty("java.io.tmpdir");
 		String libFileName = System.mapLibraryName(libname);
 		String destationfile = tempdllpath + libFileName;
-		
-		String resourceFilePath = null;
-		if (resourcePath.endsWith(File.separator)) {
-			resourceFilePath = resourcePath + libFileName;
-		} else {
-			resourceFilePath = resourcePath + File.separator + libFileName;
-		}
-		InputStream resourceFile = DllUtils.class.getResourceAsStream(resourceFilePath);
-		// copy the file to local host
-		
-		FileOutputStream output=null;
-		try {
-			output = new FileOutputStream(destationfile);
-			FileUtils.copy(resourceFile, output);
+		File dllFile = new File(destationfile);
+		if (!dllFile.exists()) {
+			String resourceFilePath = null;
+			if (resourcePath.endsWith("/")) {
+				resourceFilePath = resourcePath + libFileName;
+			} else {
+				resourceFilePath = resourcePath + "/" + libFileName;
+			}
+			// String workingDir =
+			// DllUtils.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+			InputStream resourceFile = null;
+			resourceFile = DllUtils.class.getResourceAsStream(resourceFilePath);
 
-			System.load(destationfile);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
+			FileOutputStream output = null;
 			try {
-				output.close();
-			} catch (IOException e) {
+				output = new FileOutputStream(dllFile);
+				FileUtils.copy(resourceFile, output);
+
+			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				try {
+					output.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
+		System.load(destationfile);
 		return destationfile;
 	}
 

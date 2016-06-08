@@ -12,6 +12,7 @@ import com.github.becausetesting.testcasetools.JiraAPI.IssueType;
 import com.github.becausetesting.testcasetools.JiraAPI.Priority;
 import com.github.becausetesting.testcasetools.JiraAPI.Project;
 import com.github.becausetesting.testcasetools.JiraAPI.Timetracking;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class JiraAPITest {
@@ -28,15 +29,17 @@ public class JiraAPITest {
 	public void test() {
 		
 		String projectKey="GDN";
-		String parentIssueKey="GDN-20275";
+		String parentIssueKey="GDN-20556";
 		String issueType="Sub-task";
 		
 		
-		String summary="Certify Unit Testing-QA";
+		String summary="Automation-Ecash enhancement";
 		String description="Create from jira api";
 		String OriginalEstimate="1h";
 		String priority="Minor";
 		String assigner="ahu";
+		String team="Mustang";
+	
 	
 		
 		Fields fields=jiraAPI.new Fields(priority);
@@ -46,8 +49,22 @@ public class JiraAPITest {
 		
 		IssueType issuetype = fields.getIssuetype();
 		issuetype.setName(issueType);
+		
+		JsonObject issueFieldData = jiraAPI.getIssueFieldData(projectKey, issuetype);
+		
+		String[] teams=null;
+		JsonArray asJsonArray = issueFieldData.get("customfield_10801").getAsJsonObject().get("allowedValues").getAsJsonArray();
+		int size = asJsonArray.size();
+		teams=new String[size];
+		for(int k=0;k<asJsonArray.size();k++){ 
+			teams[k]=asJsonArray.get(k).getAsJsonObject().get("value").getAsString();
+			
+		}
+		System.out.println(teams);
 		fields.getTimetracking().setOriginalEstimate(OriginalEstimate);		
 		fields.getAssignee().setName(assigner);
+		
+		fields.getCustomfield_10801().setValue(team);
 		
 		jiraAPI.createIssue(parentIssueKey, fields);
 		

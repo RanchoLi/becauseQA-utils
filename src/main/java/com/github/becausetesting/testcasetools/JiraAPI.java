@@ -17,6 +17,8 @@ import com.google.gson.JsonObject;
  * https://developer.atlassian.com/jiradev/jira-apis/jira-rest-apis/jira-rest-
  * api-tutorials/jira-rest-api-example-discovering-meta-data-for-creating-issues
  * 
+ * api document: https://docs.atlassian.com/jira/REST/
+ * 
  * @author ahu
  *
  */
@@ -55,8 +57,8 @@ public class JiraAPI {
 		this.setBase_Url("https://pd/rest/api/2/");
 		this.setUser("qa_test_automation");
 		this.setPassword("Gr33nDot!");
-		this.setUser("ahu");
-		this.setPassword("gu.chan-102633");
+		//this.setUser("ahu");
+		//this.setPassword("gu.chan-102633");
 	}
 
 	/**
@@ -120,6 +122,29 @@ public class JiraAPI {
 	}
 
 	// *************************************
+	/**
+	 * get the project by project name
+	 * 
+	 * @param projectname
+	 * @return
+	 */
+	public String[] getProjectNames() {
+		String[] projectNames= null;
+		String url = "project";
+		Object response = getRequest(url);
+		if (response instanceof JsonArray) {
+			JsonArray projects = (JsonArray) response;
+			int size=projects.size();
+			projectNames=new String[size];
+			for (int k = 0; k < projects.size(); k++) {
+				JsonObject foundproject = (JsonObject) projects.get(k);
+				String project = foundproject.get("name").getAsString();
+				projectNames[k]=project;
+			}
+
+		}
+		return projectNames;
+	}
 	/**
 	 * get the project by project name
 	 * 
@@ -222,6 +247,22 @@ public class JiraAPI {
 
 	}
 
+	public class CustomField{ 
+		private String value;
+		private String key;
+		public String getValue() {
+			return value;
+		}
+		public void setValue(String value) {
+			this.value = value;
+		}
+		public String getKey() {
+			return key;
+		}
+		public void setKey(String key) {
+			this.key = key;
+		}
+	}
 	public class Fields {
 		private String key;
 		private Project project;
@@ -232,6 +273,7 @@ public class JiraAPI {
 		private Priority priority;
 		private Timetracking timetracking;
 		private Assignee assignee;
+		private CustomField customfield_10801;
 
 		public Fields() {
 			
@@ -243,6 +285,8 @@ public class JiraAPI {
 			priority=new Priority(null, priorityValue, priorityValue, null);
 			timetracking=new Timetracking();
 			assignee=new Assignee();
+			
+			customfield_10801=new CustomField();
 			
 		}
 
@@ -316,6 +360,12 @@ public class JiraAPI {
 		}
 		private void setParent(Fields parent) {
 			this.parent = parent;
+		}
+		public CustomField getCustomfield_10801() {
+			return customfield_10801;
+		}
+		public void setCustomfield_10801(CustomField customfield_10801) {
+			this.customfield_10801 = customfield_10801;
 		}
 
 	}
