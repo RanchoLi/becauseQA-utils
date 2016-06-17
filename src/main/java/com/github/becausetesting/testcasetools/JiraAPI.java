@@ -39,13 +39,13 @@ public class JiraAPI {
 	 *            testrail password.
 	 */
 	public JiraAPI(String baseurl, String username, String password) {
-		this.setBase_Url(baseurl);
-		this.setUser(username);
-		this.setPassword(password);
-		if (!getBase_Url().endsWith("/")) {
-			setBase_Url(getBase_Url() + "/");
+		this.base_Url=baseurl;
+		this.user=username;
+		this.password=password;
+		if (!baseurl.endsWith("/")) {
+			baseurl=baseurl + "/";
 		}
-		setBase_Url(getBase_Url() + "/rest/api/2/");
+		base_Url=baseurl + "rest/api/2/";
 
 	}
 
@@ -105,7 +105,7 @@ public class JiraAPI {
 			HttpUtils.getConnection(parseurl, "POST");
 			Map<String, String> headers = new HashMap<>();
 			headers.put("Content-Type", "application/json");
-			// headers.put("Accept", "application/json");
+			//headers.put("Accept", "application/json");
 			HttpUtils.setAuthorizationHeader(this.user, this.password);
 			HttpUtils.setHeaders(headers);
 			HttpUtils.postJsonData(data);
@@ -120,6 +120,27 @@ public class JiraAPI {
 		}
 		return responsetext;
 	}
+	
+	
+	// *************************************
+		/**
+		 * get the project by project name
+		 * 
+		 * @param projectname
+		 * @return
+		 */
+		public String getMyself() {
+			String emailAddress= null;
+			String url = "myself";
+			Object response = getRequest(url);
+			if (response instanceof JsonObject) {
+				JsonObject myself = (JsonObject) response;
+				emailAddress=myself.get("emailAddress").getAsString();
+
+			}
+			return emailAddress;
+		}
+		
 
 	// *************************************
 	/**
@@ -286,7 +307,7 @@ public class JiraAPI {
 			timetracking=new Timetracking();
 			assignee=new Assignee();
 			
-			customfield_10801=new CustomField();
+			setCustomfield_10801(new CustomField());
 			
 		}
 
@@ -367,6 +388,7 @@ public class JiraAPI {
 		public void setCustomfield_10801(CustomField customfield_10801) {
 			this.customfield_10801 = customfield_10801;
 		}
+		
 
 	}
 

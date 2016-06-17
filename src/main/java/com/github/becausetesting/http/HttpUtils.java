@@ -148,7 +148,7 @@ public class HttpUtils {
 
 			outputStream.write(bytes);
 			outputStream.flush();
-			outputStream.close();
+			//outputStream.close();
 		} catch (IOException e) {
 
 			// TODO Auto-generated catch block

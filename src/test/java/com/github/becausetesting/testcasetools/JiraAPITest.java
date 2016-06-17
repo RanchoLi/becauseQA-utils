@@ -29,11 +29,11 @@ public class JiraAPITest {
 	public void test() {
 		
 		String projectKey="GDN";
-		String parentIssueKey="GDN-20556";
+		String parentIssueKey="GDN-20725";
 		String issueType="Sub-task";
 		
 		
-		String summary="Automation-Ecash enhancement";
+		String summary="Regresion Testing-moneypak email";
 		String description="Create from jira api";
 		String OriginalEstimate="1h";
 		String priority="Minor";
@@ -41,6 +41,7 @@ public class JiraAPITest {
 		String team="Mustang";
 	
 	
+		String myself = jiraAPI.getMyself();
 		
 		Fields fields=jiraAPI.new Fields(priority);
 		fields.setSummary(summary);

@@ -20,6 +20,12 @@ public class RefelectionUtils {
 		return c;
 	}
 
+	/**
+	 * @param instance the class instance
+	 * @param methodname the method name to call
+	 * @param parameterValues if null set to new Object[] {}
+	 * @return the method return value or void
+	 */
 	public static Object getMethod(Object instance, String methodname, Object... parameterValues) {
 		Object returnObj = null;
 		try {

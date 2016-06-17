@@ -34,9 +34,9 @@ public class TestRailAPITest {
 		System.out.println(projectByName);
 		api.getLatestMilestone();
 		api.getUserID();
-		// api.closeTestPlan(testplanname);
+		 api.closeTestPlan(testplanname);
 		// api.createTestPlan(testplanname+"test1");
-		// api.closeTestPlan(testplanname+"test1");
+		 //api.closeTestPlan(testplanname+"test1");
 		api.getTestSuite(testsuitename);
 		api.getTestSection(testsectioname1, testsectioname2);
 		System.out.println(api.getSectionid());

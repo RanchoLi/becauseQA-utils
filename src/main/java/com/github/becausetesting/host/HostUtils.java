@@ -13,6 +13,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
+
+
+import com.github.becausetesting.reflections.RefelectionUtils;
 import com.sun.jna.Platform;
 
 /**
@@ -165,6 +168,27 @@ public class HostUtils {
 		String osversion = System.getProperty("os.version");
 		// logger.info("the Operating system version:" + osversion);
 		return osversion;
+	}
+
+	public static String getCurrentUserName() {
+		String className = null;
+		String userName = null;
+		String methodUsername = "getUsername";
+		if (Platform.isWindows()) {
+			className = "com.sun.security.auth.module.NTSystem";
+			methodUsername = "getName";
+		} else if (Platform.isLinux()) {
+			className = "com.sun.security.auth.module.UnixSystem";
+		} else if (Platform.isSolaris()) {
+			className = "com.sun.security.auth.module.SolarisSystem";
+		}
+
+		Class getclass = RefelectionUtils.getclass(className);
+		Object contractorInstance = RefelectionUtils.getContractorInstance(getclass, new Object[] {});
+		Object method = RefelectionUtils.getMethod(contractorInstance, methodUsername, new Object[] {});
+		if (method != null)
+			userName = (String) method;
+		return userName;
 	}
 
 }
