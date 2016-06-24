@@ -171,12 +171,12 @@ public class HttpUtils {
 			if (inputStream == null) {
 				inputStream = connection.getErrorStream();
 				if (inputStream != null) {
-					throw new Exception("Http Response Inputstream,response code : " + responseCode);
+					throw new Exception("Http Response Inputstream,response code: " + responseCode);
 				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			log.error("Response message：\n" + responseMessage, e);
+			log.error("Response message:\n" + responseMessage, e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
