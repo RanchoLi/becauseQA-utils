@@ -19,7 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import com.github.becausetesting.lang.StringUtils;
+import com.github.becausetesting.apache.commons.StringUtils;
 import com.github.becausetesting.properties.PropertiesUtils;
 
 /**
@@ -56,7 +56,7 @@ public class EmailUtils {
 		prop.put("mail.smtp.port", port);
 		// prop.put("mail.debug", "true");
 		Session session = null;
-		if (!StringUtils.isNullOrEmpty(user) || !StringUtils.isNullOrEmpty(password)) {
+		if (!StringUtils.isEmpty(user) || !StringUtils.isEmpty(password)) {
 			prop.put("mail.smtp.auth", "true");
 			// prop.put("mail.smtp.starttls.enable", "true");
 			// prop.put("mail.smtp.ssl.enable","true");
@@ -102,6 +102,7 @@ public class EmailUtils {
 		return false;
 	}
 
+	@SuppressWarnings("unused")
 	private void addEmailImages(File image,String imageid){
 		bodypart = new MimeBodyPart();
 		DataSource ds = new FileDataSource(image);
@@ -118,6 +119,7 @@ public class EmailUtils {
 		// be careful this content must contain with <>
 		
 	}
+	@SuppressWarnings("unused")
 	private void addEmailAttachements(File attachment){
 		bodypart = new MimeBodyPart();
 		DataSource source = new FileDataSource(attachment);

@@ -1,17 +1,18 @@
 package com.github.becausetesting.cucumber;
 
-import cucumber.runtime.Runtime;
-import cucumber.runtime.model.CucumberScenario;
-import gherkin.formatter.model.Step;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cucumber.runtime.Runtime;
+import cucumber.runtime.model.CucumberScenario;
+import gherkin.formatter.model.Step;
 
 /**
  * Runs a scenario, or a "synthetic" scenario derived from an Examples row.

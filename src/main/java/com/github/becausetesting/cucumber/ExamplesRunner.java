@@ -1,16 +1,17 @@
 package com.github.becausetesting.cucumber;
 
-import cucumber.runtime.Runtime;
-import cucumber.runtime.model.CucumberExamples;
-import cucumber.runtime.model.CucumberScenario;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
 import org.junit.runners.model.InitializationError;
 
-import java.util.ArrayList;
-import java.util.List;
+import cucumber.runtime.Runtime;
+import cucumber.runtime.model.CucumberExamples;
+import cucumber.runtime.model.CucumberScenario;
 
 public class ExamplesRunner extends Suite {
     private final CucumberExamples cucumberExamples;

@@ -1,15 +1,9 @@
 package com.github.becausetesting.cucumber;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.openqa.selenium.WebDriver;
 
-import com.github.becausetesting.reflections.RefelectionUtils;
-
-import gherkin.formatter.Formatter;
-import gherkin.formatter.Reporter;
 import gherkin.formatter.model.Feature;
 import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
@@ -109,6 +103,7 @@ public interface BecauseCucumberHook {
 	 * @since JDK 1.8
 	 * @deprecated
 	 */
+	@Deprecated
 	public List<String> setCucumberStepDefinitionPaths();
 	/**
 	 * setCucumberPropertyFilePath: set the path

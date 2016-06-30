@@ -13,7 +13,6 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,12 +33,14 @@ Map
  * @version  1.0.0
  * @since    JDK 1.8 
  */
+@SuppressWarnings({"unchecked","rawtypes"})
 public class ListUtils {
 
 	
 	public String list2String(List list){
 		return list.toString();
 	}
+	
 	
 	public String list2String(List list,String delimiter){
 		return String.join(delimiter, list);
@@ -48,6 +49,7 @@ public class ListUtils {
 	public Object[] list2Array(List list){
 		return list.toArray();
 	}
+	
 	
 	public List fromArray(String[] arrays){
 		return Arrays.asList(arrays);
@@ -78,27 +80,6 @@ public class ListUtils {
 	public ArrayList toArrayList(LinkedList list){
 		ArrayList arrayList = new ArrayList(list);
 		return arrayList;
-	}
-	/**
-	 * linkedList is linked list(chain table),like a stack
-	 * add or delete is the same as ArrayList
-	 * http://stackoverflow.com/questions/322715/when-to-use-linkedlist-over-arraylist
-	 * LinkedList and ArrayList are two different implementations of the List interface.
-	 *  LinkedList implements it with a doubly-linked list.
-	 *   ArrayList implements it with a dynamically re-sizing array.
-	 * 
-	 * 
-	 * @author alterhu2020@gmail.com
-	 * @since JDK 1.8
-	 */
-	private void linkedList(){
-		LinkedList<String> linkedList = new LinkedList<String>();
-		linkedList.getFirst();
-		linkedList.getLast();
-		linkedList.add("first");
-		linkedList.add("second");
-		
-		//they all append in the last
 	}
 	
 }

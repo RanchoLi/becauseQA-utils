@@ -2,36 +2,24 @@ package com.github.becausetesting.testcasetools;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.Character.UnicodeScript;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.OutputType;
 
-import com.github.becausetesting.apache.commons.FileUtils;
 import com.github.becausetesting.apache.commons.IOUtils;
 import com.github.becausetesting.apache.commons.NumberUtils;
 import com.github.becausetesting.cucumber.selenium.SeleniumCore;
 import com.github.becausetesting.http.HttpUtils;
 import com.github.becausetesting.http.HttpsCert;
 import com.github.becausetesting.json.JSONUtils;
-import com.github.becausetesting.testcasetools.TestRailAPI.ResultStatusCode;
-import com.github.becausetesting.time.TimeUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -715,6 +703,7 @@ public class TestRailAPI {
 		return this.suiteid;
 	}
 
+	@SuppressWarnings("unused")
 	public long createTestSection(String... sectionnames) {
 		// parse the section strin
 		int sectioncount = 0;
@@ -882,6 +871,7 @@ public class TestRailAPI {
 	 * @param parameters
 	 * @return true or false
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public boolean updateTestCase(String caseName, CASETYPECODE typeid, PRIORITYCODE priorityid, String refs,
 			HashMap parameters) {
 		boolean hadupdated = false;

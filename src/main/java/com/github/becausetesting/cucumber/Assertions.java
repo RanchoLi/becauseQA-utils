@@ -1,12 +1,13 @@
 package com.github.becausetesting.cucumber;
 
-import cucumber.runtime.CucumberException;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import cucumber.runtime.CucumberException;
+
 public class Assertions {
-    public static void assertNoCucumberAnnotatedMethods(Class clazz) {
+    @SuppressWarnings("rawtypes")
+	public static void assertNoCucumberAnnotatedMethods(Class clazz) {
         for (Method method : clazz.getDeclaredMethods()) {
             for (Annotation annotation : method.getAnnotations()) {
                 if (annotation.annotationType().getName().startsWith("cucumber")) {

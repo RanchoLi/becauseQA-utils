@@ -1,7 +1,5 @@
 package com.github.becausetesting.host;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class HostUtilsTest {

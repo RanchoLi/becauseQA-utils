@@ -6,5 +6,3 @@
  *
  */
 package com.github.becausetesting.xml;
-
-import javax.xml.parsers.SAXParserFactory;

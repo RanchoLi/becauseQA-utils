@@ -9,8 +9,6 @@
 
 package com.github.becausetesting.url;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;

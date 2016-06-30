@@ -1,15 +1,8 @@
 package com.github.becausetesting.httpclient;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpCookie;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -22,12 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.github.becausetesting.apache.commons.ArrayUtils;
 import com.github.becausetesting.apache.commons.IOUtils;
-import com.github.becausetesting.apache.commons.ListUtils;
-import com.github.becausetesting.apache.commons.StringEscapeUtils;
-import com.github.becausetesting.apache.commons.StringUtils;
-import com.github.becausetesting.httpclient.bean.BasicAuth;
 import com.github.becausetesting.httpclient.bean.HttpMethod;
 import com.github.becausetesting.httpclient.bean.RequestEntityFormData;
 import com.github.becausetesting.httpclient.bean.RequestEntityString;
@@ -38,8 +26,6 @@ public class HttpClientRequesterTest {
 
 	@Test
 	public void testFormData302Response() throws IOException {
-		HttpClientUtils clientRequester = new HttpClientUtils();
-
 		Request request = new Request();
 		request.setUrl(new URL("https://www.attheregister.com/moneypak/login"));
 		request.setMethod(HttpMethod.GET);

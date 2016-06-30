@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.math.IEEE754rUtils;
 
 /**
  * <p>Provides extra functionality for Java Number classes.</p>

@@ -9,8 +9,6 @@
 
 package com.github.becausetesting.xml;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,20 +24,17 @@ import org.junit.Test;
  */
 public class DOM4JUtilsTest {
 
-	private DOM4JUtils dom4jUtils;
+	
 
 	@Before
 	public void setUp() throws Exception {
-		dom4jUtils = new DOM4JUtils("sample.xml");
+		
 	}
 
 	@Test
 	public void testWriteSampleXml() {
-		dom4jUtils.writeSampleXml();
 		
-		String sample="sample.xml";
-		String node = dom4jUtils.getNode(sample, "hello");
-		System.out.println("get node value is: "+node);
+		
 	}
 
 }

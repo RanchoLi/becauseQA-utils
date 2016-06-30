@@ -1,16 +1,11 @@
 package com.github.becausetesting.template;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -82,8 +77,6 @@ public class TemplateUtils {
 	 *            the freemarker object. template is in src/main/resources
 	 */
 	public static void renderContent(String templatename, String filePath, Object dataModel) {
-		// String outputPath = templatename + ".html";
-		URL resource = TemplateUtils.class.getClassLoader().getResource("/templates/email.jtl");
 		ClassTemplateLoader classTemplateLoader = new ClassTemplateLoader(TemplateUtils.class.getClassLoader(),
 				"/templates/");
 		renderContent(classTemplateLoader, templatename, filePath, dataModel);

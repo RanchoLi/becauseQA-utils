@@ -12,33 +12,27 @@ package com.github.becausetesting.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Map;
 
 import javax.net.ssl.SSLException;
 
 import org.apache.http.Consts;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
-import org.apache.http.HeaderIterator;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
-import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -59,6 +53,7 @@ import org.apache.log4j.Logger;
  * @since JDK 1.8
  * @deprecated
  */
+@Deprecated
 public class HttpClientUtils {
 
 	private static Logger logger = Logger.getLogger(HttpClientUtils.class);
@@ -131,6 +126,7 @@ public class HttpClientUtils {
 	private HttpRequestRetryHandler setRetryTimes(){
 		HttpRequestRetryHandler httpRequestRetryHandler=new HttpRequestRetryHandler() {
 			
+			@Override
 			public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
 				if (executionCount >DEFAULT_RETRY_TIMES) {  
 				return false;

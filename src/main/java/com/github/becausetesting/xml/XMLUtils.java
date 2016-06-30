@@ -120,6 +120,7 @@ public class XMLUtils {
 
 		private String nodename;
 		private boolean findnode = false;
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		private List<String> builder=new ArrayList();
 
 		public XMLParser(String nodename) {

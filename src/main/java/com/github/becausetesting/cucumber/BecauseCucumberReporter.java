@@ -1,17 +1,11 @@
 package com.github.becausetesting.cucumber;
 
-import cucumber.api.PendingException;
-import cucumber.runtime.CucumberException;
-import gherkin.formatter.Formatter;
-import gherkin.formatter.Reporter;
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.Match;
-import gherkin.formatter.model.Result;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
+import static cucumber.runtime.Runtime.isPending;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.junit.internal.runners.model.EachTestNotifier;
@@ -25,12 +19,18 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import com.github.becausetesting.cucumber.selenium.SeleniumCore;
 import com.github.becausetesting.reflections.RefelectionUtils;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static cucumber.runtime.Runtime.isPending;
+import cucumber.api.PendingException;
+import cucumber.runtime.CucumberException;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.Reporter;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Match;
+import gherkin.formatter.model.Result;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
 
 public class BecauseCucumberReporter implements Reporter, Formatter {
 	private final List<Step> steps = new ArrayList<Step>();
@@ -66,7 +66,6 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	public static AtomicInteger undefinedScenariosCount;
 	public static AtomicInteger passScenariosCount;
 
-	private static String cucumberErrorMessage = "";
 	private byte[] screenshotAs = new byte[1024];
 
 	private void myBecauseCucumberReporter() {
@@ -98,8 +97,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	}
 
 	private void becauseCucumberEndOfScenarioLifeCycle(Scenario scenario) {
-		// upload the cucumber steps result into test case tool
-		cucumberErrorMessage = result.getErrorMessage();
+		result.getErrorMessage();
 		Throwable error = result.getError();
 
 		if (Result.SKIPPED == result) {
@@ -182,6 +180,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		executionUnitNotifier.fireTestFinished();
 	}
 
+	@Override
 	public void match(Match match) {
 		Step runnerStep = fetchAndCheckRunnerStep();
 		Description description = executionUnitRunner.describeChild(runnerStep);
@@ -209,6 +208,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		reporter.write(text);
 	}
 
+	@Override
 	public void result(Result result) {
 		// fix this issue only for failed or passed steps to log the global result
 		String resultStatus = result.getStatus();

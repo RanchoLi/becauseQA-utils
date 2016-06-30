@@ -9,18 +9,11 @@
 
 package com.github.becausetesting.jdbc;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -51,9 +44,6 @@ public class JDBCUtils {
 	public static Connection connection = null;
 	public static PreparedStatement ps = null;
 	public static CallableStatement cs = null;
-
-	private static boolean isQuery = false;
-	private static boolean isBatch = false;
 
 	protected static Logger logger = Logger.getLogger(JDBCUtils.class);
 
@@ -215,30 +205,6 @@ public class JDBCUtils {
 			e.printStackTrace();
 		}
 		return cs;
-	}
-
-	/**
-	 * not used as it will close it automatically use try catch block
-	 * 
-	 * @param con
-	 * @param rs
-	 */
-	private static void closeAllConnections() {
-		try {
-			if (connection != null) {
-				connection.close();
-			}
-			if (ps != null) {
-				ps.close();
-			}
-			if (cs != null) {
-				cs.close();
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 }

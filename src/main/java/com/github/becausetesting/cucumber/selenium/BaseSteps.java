@@ -2,7 +2,6 @@ package com.github.becausetesting.cucumber.selenium;
 
 import java.awt.AWTException;
 import java.awt.Robot;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -22,14 +21,11 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-
 import org.openqa.selenium.remote.RemoteWebDriver;
-
 import org.openqa.selenium.security.UserAndPassword;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -38,8 +34,6 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.github.becausetesting.properties.PropertiesUtils;
 
 /*
  * Class Generate from Cucumber Tool
@@ -113,13 +107,13 @@ public class BaseSteps {
 	public Object runJS(String script) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
-		JavascriptExecutor je = (JavascriptExecutor) driver;
+		JavascriptExecutor je = driver;
 		return je.executeScript(script);
 
 	}
 
 	public Object runJSSync(String script) {
-		JavascriptExecutor je = (JavascriptExecutor) driver;
+		JavascriptExecutor je = driver;
 		return je.executeAsyncScript(script);
 
 	}
@@ -134,7 +128,7 @@ public class BaseSteps {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
 		// highLight(e);
-		JavascriptExecutor je = (JavascriptExecutor) driver;
+		JavascriptExecutor je = driver;
 		je.executeScript(script, e);
 
 	}
@@ -149,7 +143,7 @@ public class BaseSteps {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
 		// highLight(e);
-		JavascriptExecutor je = (JavascriptExecutor) driver;
+		JavascriptExecutor je = driver;
 		Object object = je.executeScript(script, e);
 		return object;
 
@@ -164,7 +158,7 @@ public class BaseSteps {
 	public Object runJSReturn(String script) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
-		JavascriptExecutor je = (JavascriptExecutor) driver;
+		JavascriptExecutor je = driver;
 		Object object = je.executeScript(script);
 		return object;
 	}
@@ -619,6 +613,7 @@ public class BaseSteps {
 		// resolve the pagefactory issue
 		pageElementsRelocatored(page);
 		return waitforElement().until(new ExpectedCondition<List<WebElement>>() {
+			@Override
 			public List<WebElement> apply(WebDriver d) {
 				try {
 					return d.findElements(locator);
@@ -669,6 +664,7 @@ public class BaseSteps {
 		try {
 			wait.until(new ExpectedCondition<Boolean>() {
 
+				@Override
 				public Boolean apply(WebDriver driver) {
 					// log.info("Enter the waitForObjectDisplay method to wait
 					// for the object displayed in the page ");
@@ -1216,6 +1212,7 @@ public class BaseSteps {
 		// is:"+currentbowserstate);
 		// wait for jQuery to load
 		ExpectedCondition<Boolean> jqueryload = new ExpectedCondition<Boolean>() {
+			@Override
 			public Boolean apply(WebDriver driver) {
 				// TODO Auto-generated method stub
 				Long newpagestate = (Long) runJS("return jQuery.active;");
@@ -1226,6 +1223,7 @@ public class BaseSteps {
 
 		// wait for Javascript to load
 		ExpectedCondition<Boolean> jsload = new ExpectedCondition<Boolean>() {
+			@Override
 			public Boolean apply(WebDriver driver) {
 				// TODO Auto-generated method stub
 				String newpagestate = (String) runJS("return document.readyState;");
@@ -1370,7 +1368,7 @@ public class BaseSteps {
 	 */
 
 	public boolean isChromeEmulationBrowser() {
-		Capabilities actualCapabilities = ((RemoteWebDriver) driver).getCapabilities();
+		Capabilities actualCapabilities = driver.getCapabilities();
 		String browser = actualCapabilities.getBrowserName();
 		Object isemulator = actualCapabilities.getCapability("mobileEmulationEnabled");
 		if (isemulator != null) {

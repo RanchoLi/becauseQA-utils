@@ -3,12 +3,9 @@ package com.github.becausetesting.properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
-import org.apache.commons.digester.plugins.strategies.FinderFromDfltClass;
 
 public class PropertiesUtils {
 

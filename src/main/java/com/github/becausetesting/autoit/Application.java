@@ -29,7 +29,6 @@ import com.github.becausetesting.dll.DllUtils;
 import com.github.becausetesting.file.FileUtils;
 import com.github.becausetesting.host.HostUtils;
 import com.jacob.activeX.ActiveXComponent;
-import com.jacob.com.LibraryLoader;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
 

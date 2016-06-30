@@ -4,17 +4,11 @@ import java.net.HttpCookie;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.becausetesting.apache.commons.CollectionUtils;
 import com.github.becausetesting.collections.MultiValueMap;
 import com.github.becausetesting.collections.MultiValueMapArrayList;
-import com.github.becausetesting.encrypt.Base64Utils;
 
 public class Response {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -871306924021357582L;
 	private int statusCode;
 	private String statusLine;
 	private MultiValueMap<String, String> headers;
@@ -85,6 +79,7 @@ public class Response {
 		this.statusLine = statusLine;
 	}
 
+	@Override
 	public Object clone() {
 		Response response = new Response();
 		response.executionTime = executionTime;

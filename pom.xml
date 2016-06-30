@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.becausetesting</groupId>
 	<artifactId>commons</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 	<packaging>jar</packaging>
 	<description>A common libraries used for testing framework.</description>
 	<url>https://github.com/becausetesting/commons</url>

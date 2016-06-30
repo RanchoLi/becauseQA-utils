@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.entity.StringEntity;
 
 public class RequestEntityInputStream extends InputStreamEntity implements RequestEntitySimple  {
 

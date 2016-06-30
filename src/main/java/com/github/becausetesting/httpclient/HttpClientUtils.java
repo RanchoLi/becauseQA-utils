@@ -1,10 +1,8 @@
 package com.github.becausetesting.httpclient;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URL;
@@ -27,7 +25,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
@@ -45,17 +42,12 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.FormBodyPartBuilder;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.auth.AuthSchemeBase;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.auth.DigestScheme;
@@ -63,29 +55,23 @@ import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.impl.client.WinHttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import com.github.becausetesting.apache.commons.IOUtils;
 import com.github.becausetesting.apache.commons.StringUtils;
 import com.github.becausetesting.collections.MultiValueMap;
-import com.github.becausetesting.http.HttpsCert;
 import com.github.becausetesting.httpclient.bean.Auth;
 import com.github.becausetesting.httpclient.bean.BasicAuth;
 import com.github.becausetesting.httpclient.bean.CookiesStore;
 import com.github.becausetesting.httpclient.bean.DigestAuth;
 import com.github.becausetesting.httpclient.bean.HttpVersion;
 import com.github.becausetesting.httpclient.bean.NTLMAuth;
-import com.github.becausetesting.httpclient.bean.OAuth2;
 import com.github.becausetesting.httpclient.bean.ProxyConfig;
 import com.github.becausetesting.httpclient.bean.RequestEntity;
 import com.github.becausetesting.httpclient.bean.RequestEntityFile;
@@ -96,8 +82,6 @@ import com.github.becausetesting.httpclient.bean.RequestEntityString;
 import com.github.becausetesting.httpclient.bean.SSLRequest;
 import com.github.becausetesting.httpclient.bean.SSLRequest.SSLHostnameVerifier;
 import com.github.becausetesting.properties.PropertiesUtils;
-
-import freemarker.template.utility.StringUtil;
 
 @SuppressWarnings("deprecation")
 public class HttpClientUtils {
@@ -119,6 +103,7 @@ public class HttpClientUtils {
 	 * / https://github.com/wiztools/rest-client/blob/master/restclient-lib/src/
 	 * main/java/org/wiztools/restclient/HTTPClientRequestExecuter.java
 	 */
+	@SuppressWarnings("unchecked")
 	public static Response getResponse(Request request) throws IOException {
 		response = new Response();
 		//HttpsCert.ignoreCert();
@@ -474,7 +459,7 @@ public class HttpClientUtils {
 
 		responseCookieStore = httpClientContext.getCookieStore();
 
-		URI finalURI;
+		URI finalURI = null;
 		List<URI> redirectURIs = httpClientContext.getRedirectLocations();
 		if (redirectURIs != null && !redirectURIs.isEmpty()) {
 			for (URI redirectURI : redirectURIs) {
@@ -482,13 +467,13 @@ public class HttpClientUtils {
 			}
 			finalURI = redirectURIs.get(redirectURIs.size() - 1);
 		}
+		System.out.println("Final URI: " + finalURI);
 
 		response.setExecutionTime(endTime - startTime);
 		response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
 		response.setStatusLine(httpResponse.getStatusLine().toString());
 
 		final Header[] responseHeaders = httpResponse.getAllHeaders();
-		List<HttpCookie> httpCookies = new ArrayList<>();
 		for (Header header : responseHeaders) {
 			response.setHeader(header.getName(), header.getValue());
 		}

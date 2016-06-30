@@ -4,7 +4,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+@SuppressWarnings({"unchecked","rawtypes"})
 public class RefelectionUtils {
+
 
 	public boolean isInterfaceFrom(Class instance, Class interfaceclass) {
 		return interfaceclass.isAssignableFrom(instance);

@@ -54,6 +54,7 @@ public class Request {
 		this.headers.put(key, value);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public MultiValueMap getHeaders() {
 		// TODO Auto-generated method stub
 		return headers;
@@ -122,6 +123,7 @@ public class Request {
 		this.isIgnoreResponseBody = isIgnoreResponseBody;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("@Request[");

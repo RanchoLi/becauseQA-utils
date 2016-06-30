@@ -76,7 +76,8 @@ public class MultiValueMapArrayList<K, V> implements MultiValueMap<K, V>{
         return values;
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -84,7 +85,8 @@ public class MultiValueMapArrayList<K, V> implements MultiValueMap<K, V>{
         if (!(obj instanceof MultiValueMap)) {
             return false;
         }
-        final MultiValueMap<K, V> other = (MultiValueMap<K, V>) obj;
+        @SuppressWarnings("unchecked")
+		final MultiValueMap<K, V> other = (MultiValueMap<K, V>) obj;
         
         if (this.keySet() != other.keySet() && (this.keySet() == null || !this.keySet().equals(other.keySet()))) {
             return false;

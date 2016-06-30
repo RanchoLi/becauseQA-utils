@@ -17,21 +17,8 @@
 //
 package net.sourceforge.jtds.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.sql.SQLException;
-
 import com.github.becausetesting.dll.DllUtils;
-import com.github.becausetesting.file.FileUtils;
 import com.github.becausetesting.host.HostUtils;
-import com.github.becausetesting.host.HostUtils.OSType;
-import com.github.becausetesting.regexp.RegexpUtils;
-
-import net.sourceforge.jtds.jdbc.Driver;
 
 /**
  * A JNI client to SSPI based CPP program (DLL) that returns the user
@@ -94,7 +81,6 @@ public class SSPIJNIClient {
 
 		String ntlmfile = "ntlmauth";
 		String shortpath = "";
-		OSType platform = HostUtils.getPlatform();
 		String osBit = HostUtils.getOSBit();
 		if (osBit.contains("32bit")) {
 			shortpath = "/jtds/x86/SSO";

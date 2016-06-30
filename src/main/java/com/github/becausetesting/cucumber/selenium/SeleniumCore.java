@@ -33,7 +33,6 @@ import com.github.becausetesting.cucumber.selenium.appium.AppiumServer;
 import com.github.becausetesting.cucumber.selenium.appium.ServerArguments;
 import com.sun.jna.Platform;
 
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -144,19 +143,21 @@ public class SeleniumCore {
 		case PC:
 			// start the web driver
 			if (servername.trim().equalsIgnoreCase("localhost") || servername.trim().equalsIgnoreCase("127.0.0.1")) {
-				startSeleniumServer();
+				startSeleniumServer(); // everytime start the server will caused
+										// reused session not worked.you need to
+										// run server command-line
 				if (useSession) {
-					System.err.println(
-							"As Selenium standalone start from existing page session ,you need to run thread from command line:");
-					System.err.println("java -jar " + SeleniumDownloader.seleniumstandaloneName
+					logger.error(
+							"Not Supported non-command line execution. As Selenium standalone start from existing page session ,you need to run thread from command line:");
+					logger.error("java -jar " + SeleniumDownloader.seleniumstandaloneName
 							+ " -trustAllSSLCertificates -browserSessionReuse -debug" + " -Dwebdriver.chrome.driver="
 							+ SeleniumDownloader.chromedriverFilePath + " -Dwebdriver.ie.driver="
 							+ SeleniumDownloader.iedriverFilePath);
 				}
 			}
 			try {
-				String property = System.getProperty("webdriver.chrome.driver");
-				driver = new RemoteWebDriverEx(new URL(pchub), capabilities, useSession);
+				RemoteWebDriverX.setUseSession(useSession);
+				driver = new RemoteWebDriverX(new URL(pchub), capabilities);
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -349,9 +350,9 @@ public class SeleniumCore {
 		fp.setPreference("security.default_personal_cert", "Select Automatically");
 		fp.setPreference("browser.helperApps.neverAsk.saveToDisk",
 				"application/octet-stream,application/x-compressed,application/x-zip-compressed,application/zip,multipart/x-zip");
-				// File sslerror=new
-				// File(SeleniumCore.getProjectWorkspace()+"resources"+File.separator+"remember_certificate_exception-1.0.0-fx.xpi");
-				// fp.addExtension(sslerror);
+		// File sslerror=new
+		// File(SeleniumCore.getProjectWorkspace()+"resources"+File.separator+"remember_certificate_exception-1.0.0-fx.xpi");
+		// fp.addExtension(sslerror);
 
 		// the submits HTTP authentication dialogs ,your proxy is blocking the
 		// WebSocket protocol
@@ -530,6 +531,7 @@ public class SeleniumCore {
 		rcc.setDebugMode(true);
 
 		try {
+		
 			seleniumServer = new SeleniumServer(true, rcc);
 			seleniumServer.boot();
 			logger.info("Start selenium remote server with configuration: " + rcc);

@@ -1,21 +1,14 @@
 package com.github.becausetesting.dll;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.List;
 
+import com.github.becausetesting.apache.commons.StringUtils;
 import com.github.becausetesting.file.FileUtils;
-import com.github.becausetesting.lang.StringUtils;
-import com.github.becausetesting.regexp.RegexpUtils;
 
-import net.sourceforge.jtds.util.SSPIJNIClient;
 
 /**
  * ClassName: DllUtils Function: TODO ADD FUNCTION. Reason: TODO ADD REASON
@@ -81,7 +74,7 @@ public class DllUtils {
 
 	protected void viewJavaLibraries() {
 		String property = System.getProperty("java.library.path");
-		List<String> seperateStr = StringUtils.split(property, ";");
+		String[] seperateStr = StringUtils.split(property, ";");
 		System.out.println("------java.library.path------");
 		for (String str : seperateStr) {
 			System.out.println(str);

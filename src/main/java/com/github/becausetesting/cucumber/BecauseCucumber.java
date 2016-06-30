@@ -1,8 +1,21 @@
 package com.github.becausetesting.cucumber;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.ParentRunner;
+import org.junit.runners.model.InitializationError;
+
+import com.github.becausetesting.reflections.RefelectionUtils;
+import com.google.common.collect.Lists;
+
 import cucumber.api.CucumberOptions;
 import cucumber.runtime.ClassFinder;
-import cucumber.runtime.CucumberException;
 import cucumber.runtime.Runtime;
 import cucumber.runtime.RuntimeOptions;
 import cucumber.runtime.RuntimeOptionsFactory;
@@ -13,25 +26,6 @@ import cucumber.runtime.io.ResourceLoaderClassFinder;
 import cucumber.runtime.model.CucumberFeature;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
-
-import org.apache.log4j.Logger;
-import org.junit.runner.Description;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.ParentRunner;
-import org.junit.runners.model.InitializationError;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import com.github.becausetesting.cucumber.selenium.SeleniumCore;
-import com.github.becausetesting.reflections.RefelectionUtils;
-import com.google.common.collect.Lists;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * <p>
@@ -85,6 +79,7 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 	 * @throws org.junit.runners.model.InitializationError
 	 *             if there is another problem
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public BecauseCucumber(Class clazz) throws InitializationError, IOException {
 		super(clazz);
 
@@ -222,14 +217,6 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 		runtime.printSummary();
 		// after the execution
 		if (reportInstance != null) {
-			// load from the properties file for configuration
-			Object invokeMethod = RefelectionUtils.getMethod(reportInstance, METHOD_CUCUMBERFEATUREPATHS,
-					new Object[] {});
-			if (invokeMethod != null) {
-				// get the property file path
-				String cucumberPath = invokeMethod.toString();
-
-			}
 			RefelectionUtils.getMethod(reportInstance, METHOD_AFTERRUN, new Object[] {});
 
 		}

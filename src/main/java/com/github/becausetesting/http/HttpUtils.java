@@ -15,14 +15,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.SSLHandshakeException;
-
-import org.apache.http.HttpConnection;
 import org.apache.log4j.Logger;
 
 import com.github.becausetesting.encrypt.Base64Utils;
@@ -141,7 +137,6 @@ public class HttpUtils {
 		connection.setDoOutput(true);
 		try {
 			OutputStream outputStream = connection.getOutputStream();
-			JSONUtils jsonUtils = new JSONUtils();
 			String jsonString = JSONUtils.fromObject(data);
 			log.info("Json Data: \n" + jsonString);
 			byte[] bytes = jsonString.getBytes("UTF-8");

@@ -35,8 +35,6 @@ import javax.naming.directory.SearchResult;
 
 import org.apache.log4j.Logger;
 
-import com.github.becausetesting.encrypt.Base64Utils;
-
 public class LDAPUtils {
 
 	private static Logger logger = Logger.getLogger(LDAPUtils.class);
@@ -57,6 +55,7 @@ public class LDAPUtils {
 	 * @return get the DirContext object.
 	 * @since JDK 1.8
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static DirContext getContext(String servername, String user, String password) {
 		if (ctx != null) {
 			return ctx;
@@ -219,6 +218,7 @@ public class LDAPUtils {
 		return success;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Attributes searchPerson(String filter) {
 		Attributes attributes = null;
 		//search the top user list,user the ldap browser tool to see the search filter

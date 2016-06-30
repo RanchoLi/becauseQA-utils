@@ -13,8 +13,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
 
-
-
 import com.github.becausetesting.reflections.RefelectionUtils;
 import com.sun.jna.Platform;
 
@@ -83,6 +81,7 @@ public class HostUtils {
 	 * 
 	 * @return String
 	 */
+	@Deprecated
 	public static String getJREType() {
 		String jretype = System.getProperty("os.arch");
 		return jretype;
@@ -170,6 +169,7 @@ public class HostUtils {
 		return osversion;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static String getCurrentUserName() {
 		String className = null;
 		String userName = null;

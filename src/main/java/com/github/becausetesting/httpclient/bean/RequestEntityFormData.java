@@ -2,14 +2,10 @@ package com.github.becausetesting.httpclient.bean;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
-
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 
 public class RequestEntityFormData extends UrlEncodedFormEntity implements RequestEntitySimple {
 

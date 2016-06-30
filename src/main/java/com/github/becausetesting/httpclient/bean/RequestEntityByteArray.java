@@ -2,7 +2,6 @@ package com.github.becausetesting.httpclient.bean;
 
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 
 public class RequestEntityByteArray  extends ByteArrayEntity implements RequestEntitySimple {
 

@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.InputStreamEntity;
 
 public class RequestEntityFile extends FileEntity implements RequestEntitySimple {
 

@@ -97,7 +97,7 @@ public class Base64Utils {
 			
 			byte[] md5Bytes = messageDigest.digest(bytes);
 			for (int i = 0; i < md5Bytes.length;) {
-				int val = ((int) md5Bytes[i]) & 0xff;
+				int val = (md5Bytes[i]) & 0xff;
 				if (val < 16) {
 					hexValue.append("0");
 				}

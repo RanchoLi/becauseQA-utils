@@ -17,7 +17,6 @@
 package com.github.becausetesting.apache.commons;
 
 import java.io.UnsupportedEncodingException;
-
 import java.nio.charset.Charset;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -212,6 +211,7 @@ public class StringUtils {
     public static boolean isEmpty(final CharSequence cs) {
         return cs == null || cs.length() == 0;
     }
+
 
     /**
      * <p>Checks if a CharSequence is not empty ("") and not null.</p>

@@ -88,9 +88,7 @@ public class FileHelper {
 			writer = new BufferedOutputStream(new FileOutputStream(destinationFile));
 			byte[] bytes = new byte[1024];
 			int length = 0;
-			int bytesum = 0;
 			while ((length = reader.read(bytes)) != -1) {
-				bytesum += length;
 				writer.write(bytes, 0, length);
 
 			}

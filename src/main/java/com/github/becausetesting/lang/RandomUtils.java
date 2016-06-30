@@ -2,7 +2,6 @@ package com.github.becausetesting.lang;
 
 
 
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +64,7 @@ public class RandomUtils {
 		return min;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int getMinNumber3(int[] arrays){
 		List asList = Arrays.asList(arrays);
 		Integer maxnumber = (Integer)Collections.min(asList);

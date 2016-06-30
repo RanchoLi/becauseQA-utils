@@ -1,13 +1,7 @@
 package com.github.becausetesting.time;
 
-import static org.junit.Assert.*;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.MonthDay;
-import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 import org.junit.After;
 import org.junit.Before;

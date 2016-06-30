@@ -15,8 +15,9 @@ package com.github.becausetesting.cucumber.selenium.appium;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
-import java.util.logging.Level;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.OS;
@@ -24,9 +25,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import com.github.becausetesting.command.CommandUtils;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * An implementation to Appium server which is responsible for all server
@@ -242,7 +240,8 @@ public class AppiumServer implements IMobileServer {
      * as not to block the execution. By default the function checks to see if
      * the server has actually started or not and times out after 30 seconds.
      */
-    public void startServer() {
+    @Override
+	public void startServer() {
         // pass the default timeout value of 30 seconds
         this.startServer(30000);
     }

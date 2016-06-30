@@ -3714,14 +3714,14 @@ public class ArrayUtils {
      * @since 2.1
      * @throws IllegalArgumentException if the array types are incompatible
      */
-    public static <T> T[] addAll(final T[] array1, final T... array2) {
+    @SuppressWarnings("unchecked")
+	public static <T> T[] addAll(final T[] array1, final T... array2) {
         if (array1 == null) {
             return clone(array2);
         } else if (array2 == null) {
             return clone(array1);
         }
         final Class<?> type1 = array1.getClass().getComponentType();
-        @SuppressWarnings("unchecked") // OK, because array is of type T
         final
         T[] joinedArray = (T[]) Array.newInstance(type1, array1.length + array2.length);
         System.arraycopy(array1, 0, joinedArray, 0, array1.length);
@@ -4611,7 +4611,7 @@ public class ArrayUtils {
      */
     @SuppressWarnings("unchecked") // remove() always creates an array of the same type as its input
     public static <T> T[] remove(final T[] array, final int index) {
-        return (T[]) remove((Object) array, index);
+        return (T[]) remove(array, index);
     }
 
     /**
@@ -5232,7 +5232,7 @@ public class ArrayUtils {
      */
     @SuppressWarnings("unchecked") // removeAll() always creates an array of the same type as its input
     public static <T> T[] removeAll(final T[] array, final int... indices) {
-        return (T[]) removeAll((Object) array, clone(indices));
+        return (T[]) removeAll(array, clone(indices));
     }
 
     /**
@@ -5263,7 +5263,8 @@ public class ArrayUtils {
      *         earliest-encountered occurrences of the specified elements.
      * @since 3.0.1
      */
-    public static <T> T[] removeElements(final T[] array, final T... values) {
+    @SuppressWarnings("unchecked")
+	public static <T> T[] removeElements(final T[] array, final T... values) {
         if (isEmpty(array) || isEmpty(values)) {
             return clone(array);
         }
@@ -5288,7 +5289,6 @@ public class ArrayUtils {
                 toRemove.set(found++);
             }
         }
-        @SuppressWarnings("unchecked") // removeAll() always creates an array of the same type as its input
         final
         T[] result = (T[]) removeAll(array, toRemove);
         return result;

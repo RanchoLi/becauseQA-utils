@@ -9,7 +9,6 @@ import com.github.becausetesting.http.HttpUtils;
 import com.github.becausetesting.http.HttpsCert;
 import com.github.becausetesting.json.JSONUtils;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -355,10 +354,6 @@ public class JiraAPI {
 
 		public Priority getPriority() {
 			return priority;
-		}
-
-		private void setPriority(Priority priority) {
-			this.priority = priority;
 		}
 
 		public Timetracking getTimetracking() {

@@ -1,17 +1,11 @@
 package com.github.becausetesting.testcasetools;
 
-import static org.junit.Assert.*;
-
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.github.becausetesting.testcasetools.JiraAPI.Fields;
-import com.github.becausetesting.testcasetools.JiraAPI.Issue;
 import com.github.becausetesting.testcasetools.JiraAPI.IssueType;
-import com.github.becausetesting.testcasetools.JiraAPI.Priority;
-import com.github.becausetesting.testcasetools.JiraAPI.Project;
-import com.github.becausetesting.testcasetools.JiraAPI.Timetracking;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 

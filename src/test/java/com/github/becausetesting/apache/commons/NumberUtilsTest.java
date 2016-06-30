@@ -1,6 +1,7 @@
 package com.github.becausetesting.apache.commons;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;

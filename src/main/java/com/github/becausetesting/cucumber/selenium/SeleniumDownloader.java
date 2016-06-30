@@ -1,18 +1,13 @@
 package com.github.becausetesting.cucumber.selenium;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.github.becausetesting.apache.commons.FileUtils;
-import com.github.becausetesting.apache.commons.IOUtils;
 import com.github.becausetesting.host.HostUtils;
 import com.github.becausetesting.http.HttpUtils;
 import com.github.becausetesting.xml.XMLUtils;
@@ -60,8 +55,6 @@ public class SeleniumDownloader {
 		String latestVersionStr = result.get(result.size() - 2);
 		latestVersionStr = latestVersionStr.substring(0, latestVersionStr.length() - 1);
 		logger.info("latest selenium version is: " + latestVersionStr);
-
-		String iedriverName = "IEDriverServer" + latestVersionStr + ".0.exe";
 
 		String iedriver_32bit_name = "IEDriverServer_Win32_" + latestVersionStr + ".0.zip";
 		String iedriver_64bit_name = "IEDriverServer_x64_" + latestVersionStr + ".0.zip";

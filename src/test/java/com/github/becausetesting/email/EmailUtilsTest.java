@@ -1,7 +1,5 @@
 package com.github.becausetesting.email;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.InputStream;
 
@@ -10,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.becausetesting.apache.commons.IOUtils;
-import com.github.becausetesting.apache.commons.StringUtils;
 
 public class EmailUtilsTest {
 

@@ -1,7 +1,5 @@
 package com.github.becausetesting.httpclient.bean;
 
-import com.github.becausetesting.encrypt.Base64Utils;
-
 public class BasicAuth implements Auth {
 
 	/**

@@ -38,7 +38,8 @@ public class AppiumIOSArgs extends AppiumCommonArgs {
      * @deprecated Trace is now in tmp dir by default and is cleared before each
      * run. Please also refer to the -–trace-dir flag.
      */
-    public static final String KEEP_ARTIFACTS = "--keep-artifacts";
+    @Deprecated
+	public static final String KEEP_ARTIFACTS = "--keep-artifacts";
     /**
      * (iOS-only) How many times to retry launching Instruments before saying it
      * crashed or timed out
