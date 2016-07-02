@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.OutputType;
 
 import com.github.becausetesting.apache.commons.IOUtils;
@@ -33,6 +34,7 @@ import com.google.gson.JsonObject;
  */
 public class TestRailAPI {
 
+	private static final Logger log=Logger.getLogger(TestRailAPI.class);
 	// the priority code in test rail
 	public enum PRIORITYCODE {
 		URGENT_TEST(5), MUST_TEST(4), SHOULD_TEST(3), TEST_IF_TIME(2), DONOT_TEST(1);
@@ -99,6 +101,7 @@ public class TestRailAPI {
 	public long planid = 0;
 	public long runid = 0;
 	public String entryid = null;
+	
 	public long suiteid = 0;
 	public long sectionid = 0;
 	private long caseid = 0;
@@ -921,10 +924,13 @@ public class TestRailAPI {
 	 */
 	public boolean addTestCaseRunResult(String testPlanRunName, long caseid, long elapseMilliSeconds,
 			ResultStatusCode status, String version, String rundescription, String screenshotsDirUrl) {
+		log.info("Upload the test result into test plan entry: "+testPlanRunName);
 		long testsuiteid = getTestSuiteidByTestCaseId(caseid);
 		boolean planEntry = getPlanEntry(testPlanRunName);
+		log.info("If plan entry created before:"+planEntry);
 		// get the testsuite id for this test case
 		if (!planEntry) {
+			log.info("plan entry not created before: "+planEntry+",begin to create new plan entry");
 			addPlanEntry(testsuiteid, caseid, testPlanRunName);
 		}
 		updatePlanEntry(testsuiteid, caseid);
