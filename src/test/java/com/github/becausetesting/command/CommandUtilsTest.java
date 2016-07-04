@@ -6,11 +6,9 @@ import org.junit.Test;
 
 public class CommandUtilsTest {
 
-	private CommandUtils commandUtils;
-
 	@Before
 	public void setUp() throws Exception {
-		commandUtils = new CommandUtils();
+		new CommandUtils();
 	}
 
 	@After

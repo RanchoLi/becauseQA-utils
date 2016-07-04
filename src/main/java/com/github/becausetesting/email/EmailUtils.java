@@ -44,10 +44,10 @@ public class EmailUtils {
 
 		PropertiesUtils.setResource(emailfile);
 		
-		String host = PropertiesUtils.getString("smtp.host");
-		String port = PropertiesUtils.getString("smtp.port");
-		String user = PropertiesUtils.getString("smtp.username");
-		String password = PropertiesUtils.getString("smtp.password");
+		String host = PropertiesUtils.getPropertyString("smtp.host");
+		String port = PropertiesUtils.getPropertyString("smtp.port");
+		String user = PropertiesUtils.getPropertyString("smtp.username");
+		String password = PropertiesUtils.getPropertyString("smtp.password");
 
 		// set these values into properties
 		Properties prop = new Properties();

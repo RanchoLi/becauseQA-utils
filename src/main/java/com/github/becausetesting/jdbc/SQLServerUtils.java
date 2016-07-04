@@ -16,7 +16,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.github.becausetesting.properties.PropertyUtils;
+import com.github.becausetesting.properties.PropertiesUtils;
 
 /**
  * ClassName:JDBCUtils  
@@ -107,12 +107,12 @@ public class SQLServerUtils {
 	 */
 	public void getConnection(File propertyfile) {
 		
-		PropertyUtils.setResourceBundle(propertyfile);
+		PropertiesUtils.setResourceBundle(propertyfile);
 		
 		//drivername = PropertyUtils.getBundleString("driver.name");
-		driverurl = PropertyUtils.getBundleString("driver.url");
-		user = PropertyUtils.getBundleString("driver.user");
-		password = PropertyUtils.getBundleString("driver.password");
+		driverurl = PropertiesUtils.getBundleString("driver.url");
+		user = PropertiesUtils.getBundleString("driver.user");
+		password = PropertiesUtils.getBundleString("driver.password");
 		try {
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 			connection = DriverManager.getConnection(driverurl, user, password);

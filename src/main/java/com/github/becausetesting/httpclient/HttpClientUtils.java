@@ -1,5 +1,6 @@
 package com.github.becausetesting.httpclient;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -163,7 +164,7 @@ public class HttpClientUtils {
 
 		// Set request timeout (default 1 minute--60000 milliseconds)
 		String httpclientFile = "httpclient.properties";
-		PropertiesUtils.setBundle(httpclientFile);
+		PropertiesUtils.setResourceBundle(new File(httpclientFile));
 		String timeout = PropertiesUtils.getBundleString("DEFAULT_TIMEOUT_MILLIS");
 		requestConfigBuilder.setConnectionRequestTimeout(Integer.parseInt(timeout));
 

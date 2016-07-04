@@ -9,6 +9,7 @@
 
 package com.github.becausetesting.jdbc;
 
+import java.io.File;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -150,9 +151,9 @@ public class JDBCUtils {
 	 *            the jdbc properties file.
 	 * @since JDK 1.8
 	 */
-	public static void getConnection(DatabaseDriver driver, String propertyfile) {
+	public static void getConnection(DatabaseDriver driver, File propertyfile) {
 		if (connection == null) {
-			PropertiesUtils.setBundle(propertyfile);
+			PropertiesUtils.setResourceBundle(propertyfile);
 
 			// drivername = PropertyUtils.getBundleString("driver.name");
 			String serverName = PropertiesUtils.getBundleString("driver.serverName");

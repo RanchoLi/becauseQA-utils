@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.becausetesting</groupId>
 	<artifactId>commons</artifactId>
-	<version>1.1.2</version>
+	<version>1.1.3</version>
 	<packaging>jar</packaging>
 	<description>A common libraries used for testing framework.</description>
 	<url>https://github.com/becausetesting/commons</url>
@@ -18,7 +18,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<java.version>1.8</java.version>
 		<!-- above properties should never be changed -->
-				
+
 		<!-- dependencies -->
 		<junit.version>4.12</junit.version>
 		<log4j.version>1.2.17</log4j.version>
@@ -40,7 +40,7 @@
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
 
-		<!-- it profile check status plugins-->
+		<!-- it profile check status plugins -->
 		<maven-invoker-plugin.version>2.0.0</maven-invoker-plugin.version>
 		<maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
 		<!-- release profile upload to maven central plugins -->
@@ -112,7 +112,7 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -132,12 +132,7 @@
 			<artifactId>mail</artifactId>
 			<version>${version.mail}</version>
 		</dependency>
-		<!-- xml parse -->
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-			<version>${dom4j.version}</version>
-		</dependency>
+
 		<!-- http://mvnrepository.com/artifact/jaxen/jaxen -->
 		<dependency>
 			<groupId>jaxen</groupId>
@@ -168,6 +163,18 @@
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 			<version>${jcommander.version}</version>
+		</dependency>
+		<!-- xml parse -->
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>${dom4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- selenium and cucumber tool libraries end -->
 		<dependency>

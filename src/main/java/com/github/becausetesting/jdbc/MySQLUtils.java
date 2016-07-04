@@ -16,7 +16,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.github.becausetesting.properties.PropertyUtils;
+import com.github.becausetesting.properties.PropertiesUtils;
 
 /**
  * ClassName:JDBCUtils  
@@ -110,11 +110,11 @@ public class MySQLUtils {
 	 */
 	public void getConnection(File propertyfile) {
 		
-		PropertyUtils.setResourceBundle(propertyfile);
+		PropertiesUtils.setResourceBundle(propertyfile);
 		
-		driverurl = PropertyUtils.getBundleString("driver.url");
-		user = PropertyUtils.getBundleString("driver.user");
-		password = PropertyUtils.getBundleString("driver.password");
+		driverurl = PropertiesUtils.getBundleString("driver.url");
+		user = PropertiesUtils.getBundleString("driver.user");
+		password = PropertiesUtils.getBundleString("driver.password");
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(driverurl, user, password);

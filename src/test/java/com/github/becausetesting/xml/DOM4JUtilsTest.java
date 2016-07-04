@@ -9,8 +9,12 @@
 
 package com.github.becausetesting.xml;
 
+import java.util.List;
+
+import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
+import org.omg.CORBA.SystemException;
 
 /**
  * ClassName:DOM4JUtilsTest  
@@ -34,7 +38,12 @@ public class DOM4JUtilsTest {
 	@Test
 	public void testWriteSampleXml() {
 		
-		
+		DOM4JUtils dom4jUtils=new DOM4JUtils("sample.xml");
+		List<Node> nodes = dom4jUtils.getNodes("//sample/hello");
+		for(Node node: nodes){
+			String name = node.getName();
+			System.out.println(name);
+		}
 	}
 
 }
