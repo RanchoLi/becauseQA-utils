@@ -67,9 +67,9 @@ public class HttpClientRequesterTest {
 		String jsonData = IOUtils.toString(openStream);
 
 		ContentType contentType = ContentType.APPLICATION_JSON;
-		RequestEntityString entityString = new RequestEntityString(jsonData, contentType);
-		// request.setBody(entityStrin和g);
-		Response response = HttpClientUtils.getResponse(request);
+		new RequestEntityString(jsonData, contentType);
+		//request.setBody(entityStrin和g);
+		 HttpClientUtils.getResponse(request);
 	}
 
 	@Test

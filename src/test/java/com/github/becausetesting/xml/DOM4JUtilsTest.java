@@ -14,7 +14,6 @@ import java.util.List;
 import org.dom4j.Node;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.SystemException;
 
 /**
  * ClassName:DOM4JUtilsTest  

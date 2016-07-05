@@ -18,10 +18,7 @@ import freemarker.template.TemplateException;
 public class TemplateUtilsTest {
 
 	private FileTemplateLoader fileTemplateLoader;
-	private TemplateUtils templateUtils;
 	private File location;
-	private StringTemplateLoader stringTemplateLoader;
-
 	@Before
 	public void setup() throws IOException {
 		// Class<? extends Class> protectionDomain =
@@ -31,8 +28,8 @@ public class TemplateUtilsTest {
 		location = new File(location2);
 		fileTemplateLoader = new FileTemplateLoader(location);
 
-		stringTemplateLoader = new StringTemplateLoader();
-		templateUtils = new TemplateUtils();
+		new StringTemplateLoader();
+		new TemplateUtils();
 	}
 
 	@Ignore

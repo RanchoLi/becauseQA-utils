@@ -6,11 +6,9 @@ import org.junit.Test;
 
 public class RefelectionUtilsTest {
 
-	private RefelectionUtils refelectionUtils;
-
 	@Before
 	public void setUp() throws Exception {
-		refelectionUtils = new RefelectionUtils();
+		new RefelectionUtils();
 	}
 
 	@After

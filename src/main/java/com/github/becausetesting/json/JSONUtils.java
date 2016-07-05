@@ -33,6 +33,7 @@ public class JSONUtils {
 				.setPrettyPrinting()
 				.setDateFormat("yyyy-MM-dd").create();
 		// if the object is null it will not serized
+		
 	}
 	
 	/**

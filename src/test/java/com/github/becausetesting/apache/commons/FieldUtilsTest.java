@@ -14,6 +14,7 @@ public class FieldUtilsTest {
 
 	private static Logger logger = Logger.getLogger(FieldUtilsTest.class);
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testGetFieldClassOfQString()
 			throws IllegalArgumentException, IllegalAccessException, InstantiationException {

@@ -35,7 +35,7 @@ public class JiraAPITest {
 		String team="Mustang";
 	
 	
-		String myself = jiraAPI.getMyself();
+		//String myself = jiraAPI.getMyself();
 		
 		Fields fields=jiraAPI.new Fields(priority);
 		fields.setSummary(summary);
@@ -46,7 +46,7 @@ public class JiraAPITest {
 		issuetype.setName(issueType);
 		
 		JsonObject issueFieldData = jiraAPI.getIssueFieldData(projectKey, issuetype);
-		
+		log.info("test log");
 		String[] teams=null;
 		JsonArray asJsonArray = issueFieldData.get("customfield_10801").getAsJsonObject().get("allowedValues").getAsJsonArray();
 		int size = asJsonArray.size();

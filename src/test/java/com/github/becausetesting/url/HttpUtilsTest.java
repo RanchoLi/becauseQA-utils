@@ -31,11 +31,9 @@ import com.github.becausetesting.http.HttpUtils;
  */
 public class HttpUtilsTest {
 
-	private HttpUtils httpUtils;
-
 	@Before
 	public void setUp() throws Exception {
-		httpUtils = new HttpUtils();
+		new HttpUtils();
 	}
 
 	@Test

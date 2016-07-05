@@ -283,6 +283,9 @@ public class JiraAPI {
 			this.key = key;
 		}
 	}
+	/*
+	 * if Null will not seriziable
+	 */
 	public class Fields {
 		private String key;
 		private Project project;
@@ -299,23 +302,13 @@ public class JiraAPI {
 			
 			
 		}
-		public Fields(String priorityValue) {
-			project=new Project();
-			issuetype=new IssueType();
-			priority=new Priority(null, priorityValue, priorityValue, null);
-			timetracking=new Timetracking();
-			assignee=new Assignee();
-			
-			setCustomfield_10801(new CustomField());
-			
+		public Fields(String priorityValue) {	
+			priority=new Priority(null, priorityValue, priorityValue, null);	
 		}
 
 		public Project getProject() {
+			project=new Project();
 			return project;
-		}
-
-		public void setProject(Project project) {
-			this.project = project;
 		}
 
 		public String getSummary() {
@@ -334,8 +327,7 @@ public class JiraAPI {
 			this.description = description;
 		}
 
-		
-
+	
 		public String getKey() {
 			return key;
 		}
@@ -345,45 +337,38 @@ public class JiraAPI {
 		}
 
 		public IssueType getIssuetype() {
+			issuetype=new IssueType();
 			return issuetype;
 		}
 
-		public void setIssuetype(IssueType issuetype) {
-			this.issuetype = issuetype;
-		}
 
 		public Priority getPriority() {
 			return priority;
 		}
 
 		public Timetracking getTimetracking() {
+			timetracking=new Timetracking();
 			return timetracking;
 		}
 
-		public void setTimetracking(Timetracking timetracking) {
-			this.timetracking = timetracking;
-		}
-
 		public Assignee getAssignee() {
+			assignee=new Assignee();
 			return assignee;
 		}
 
-		public void setAssignee(Assignee assignee) {
-			this.assignee = assignee;
+		public CustomField getCustomfield_10801() {
+			customfield_10801=new CustomField();
+			return customfield_10801;
 		}
+		
 		public Fields getParent() {
 			return parent;
 		}
 		private void setParent(Fields parent) {
 			this.parent = parent;
 		}
-		public CustomField getCustomfield_10801() {
-			return customfield_10801;
-		}
-		public void setCustomfield_10801(CustomField customfield_10801) {
-			this.customfield_10801 = customfield_10801;
-		}
 		
+	
 
 	}
 

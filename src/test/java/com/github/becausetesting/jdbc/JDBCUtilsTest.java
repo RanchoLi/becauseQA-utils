@@ -13,13 +13,10 @@ import com.github.becausetesting.jdbc.JDBCUtils.DatabaseDriver;
 
 public class JDBCUtilsTest {
 
-	private JDBCUtils jdbcUtils;
-	private DllUtils dllUtils;
-
 	@Before
 	public void setUp() throws Exception {
-		jdbcUtils = new JDBCUtils();
-		dllUtils = new DllUtils();
+		new JDBCUtils();
+		new DllUtils();
 	}
 
 	@After
