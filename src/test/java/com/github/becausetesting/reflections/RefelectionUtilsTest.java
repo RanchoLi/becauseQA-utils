@@ -8,7 +8,10 @@ public class RefelectionUtilsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new RefelectionUtils();
+		Object contractorInstance = RefelectionUtils.getContractorInstance(Class.forName("com.github.becausetesting.reflections.SampleCode"), new Object[] {});
+		
+		RefelectionUtils.getMethod(contractorInstance, "setvalue", new Object[] {});
+		RefelectionUtils.getMethod(contractorInstance, "getvalue", new Object[] {});
 	}
 
 	@After
