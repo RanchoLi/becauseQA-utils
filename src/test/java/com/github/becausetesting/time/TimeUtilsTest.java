@@ -21,9 +21,14 @@ public class TimeUtilsTest {
 	@Test
 	public void testGetCurrentTime() {
 		LocalDateTime currentTime = TimeUtils.getCurrentTime();
-		System.out.println(currentTime);
+		System.out.println("current time is:"+currentTime);
 	}
 
+	@Test
+	public void testCurrentDate(){
+		LocalDateTime currentUTCTime = TimeUtils.getCurrentUTCTime();
+		System.out.println("Current time UTC format is:"+currentUTCTime); 
+	}
 	@Test
 	public void testDateTimeString() {
 		String dateTimeString = TimeUtils.dateTimeString(LocalDateTime.now(), "yyyy/MM/dd HH:mm:ss:n");

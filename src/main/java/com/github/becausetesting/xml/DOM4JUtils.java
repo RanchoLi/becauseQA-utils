@@ -87,8 +87,11 @@ public class DOM4JUtils {
 	}
 
 	/**
-	 * @param node the xml node object
-	 * @param xpath the xpath need to query, if it's namespace should be ./ns:subnodename  ,if we root element should be //ns
+	 * @param node
+	 *            the xml node object
+	 * @param xpath
+	 *            the xpath need to query, if it's namespace should be
+	 *            ./ns:subnodename ,if we root element should be //ns
 	 * @return found node object
 	 */
 	public Node getNode(Node node, String xpath) {
@@ -110,7 +113,33 @@ public class DOM4JUtils {
 	}
 
 	/**
-	 * @param xpath the node object ,if it's namespace should be ://ns:nodename/ns:secondnodename
+	 * @param node
+	 *            the xml node object
+	 * @param xpath
+	 *            the xpath need to query, if it's namespace should be
+	 *            ./ns:subnodename ,if we root element should be //ns
+	 * @return found node object
+	 */
+	public Node getNode(String xpath) {
+		Node foundnode = null;
+		Element rootElement = document.getRootElement();
+		String namespace = rootElement.getNamespaceURI();
+		if (namespace != null) {
+			DefaultXPath defaultXPath = new DefaultXPath(xpath);
+			Map<String, String> namespaces = new TreeMap<String, String>();
+			namespaces.put("ns", namespace);
+			defaultXPath.setNamespaceURIs(namespaces);
+		}
+		foundnode = document.selectSingleNode(xpath);
+
+		return foundnode;
+
+	}
+
+	/**
+	 * @param xpath
+	 *            the node object ,if it's namespace should be
+	 *            ://ns:nodename/ns:secondnodename
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked" })

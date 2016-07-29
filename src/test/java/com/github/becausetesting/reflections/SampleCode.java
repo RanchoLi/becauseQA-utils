@@ -1,7 +1,5 @@
 package com.github.becausetesting.reflections;
 
-import org.omg.CORBA.SystemException;
-
 public class SampleCode {
 
 	private int a=3;
