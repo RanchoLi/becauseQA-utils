@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
+import org.openqa.grid.internal.utils.configuration.StandaloneConfiguration;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -24,10 +25,12 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.server.SeleniumServer;
 import org.openqa.selenium.safari.SafariOptions;
-import org.openqa.selenium.server.RemoteControlConfiguration;
-import org.openqa.selenium.server.SeleniumServer;
+//import org.openqa.selenium.server.RemoteControlConfiguration;
+//import org.openqa.selenium.server.SeleniumServer;
 
+import com.beust.jcommander.JCommander;
 import com.github.becausetesting.cucumber.selenium.appium.AppiumCommonArgs;
 import com.github.becausetesting.cucumber.selenium.appium.AppiumServer;
 import com.github.becausetesting.cucumber.selenium.appium.ServerArguments;
@@ -520,7 +523,10 @@ public class SeleniumCore {
 			logger.info("webdriver.chrome.driver is:" + System.getProperty("webdriver.chrome.driver"));
 		}
 
-		RemoteControlConfiguration rcc = SeleniumServer.parseLauncherOptions(args.toArray(new String[args.size()]));
+		/*
+		 * Selenium Server 2
+		 */
+		/*RemoteControlConfiguration rcc = SeleniumServer.parseLauncherOptions(args.toArray(new String[args.size()]));
 		rcc.setPort(RemoteControlConfiguration.DEFAULT_PORT);
 		rcc.setTrustAllSSLCertificates(true);
 		rcc.setCaptureLogsOnQuit(true);
@@ -528,17 +534,16 @@ public class SeleniumCore {
 		rcc.setReuseBrowserSessions(true);
 		rcc.setUserJSInjection(true);
 
-		rcc.setDebugMode(true);
-
+		rcc.setDebugMode(true);*/
+		StandaloneConfiguration configuration;
 		try {
+			configuration=new StandaloneConfiguration();
+			JCommander commander=new JCommander(configuration, args.toArray(new String[args.size()]));
+			commander.setProgramName("selenium-3-server");
 		
-			seleniumServer = new SeleniumServer(true, rcc);
+			seleniumServer = new SeleniumServer(configuration);
 			seleniumServer.boot();
-			logger.info("Start selenium remote server with configuration: " + rcc);
-		} catch (java.net.BindException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-			logger.warn("Selenium Server already started before: " + rcc);
+			logger.info("Start selenium remote server with configuration: " + configuration);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

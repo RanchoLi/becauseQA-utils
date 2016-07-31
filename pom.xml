@@ -2,6 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<name>becautesting-utils</name>
 	<modelVersion>4.0.0</modelVersion>
+	<artifactId>becausetesting-utils</artifactId>
 	<groupId>com.github.becausetesting</groupId>
 	<version>1.1.4</version>
 	<packaging>jar</packaging>
@@ -379,7 +380,8 @@
 									<goal>sign</goal>
 								</goals>
 								<!-- <configuration> <executable>gpg</executable> <homedir>${gpg.homedir}</homedir> 
-									<keyname>${gpg.keyname}</keyname> <passphrase>${gpg.passphrase}</passphrase> 
+								
+<keyname>${gpg.keyname}</keyname> <passphrase>${gpg.passphrase}</passphrase> 
 									</configuration> -->
 							</execution>
 						</executions>
@@ -399,5 +401,5 @@
 			</build>
 		</profile>
 	</profiles>
-	<artifactId>becausetesting-utils</artifactId>
+	
 </project>
