@@ -5,7 +5,7 @@ import java.io.File;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 
-public class RequestEntityFile extends FileEntity implements RequestEntitySimple {
+public class RequestEntityFile extends FileEntity implements IRequestEntitySimple {
 
 	/**
 	 * 

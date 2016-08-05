@@ -5,7 +5,7 @@ import java.io.InputStream;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 
-public class RequestEntityInputStream extends InputStreamEntity implements RequestEntitySimple  {
+public class RequestEntityInputStream extends InputStreamEntity implements IRequestEntitySimple  {
 
 	/**
 	 * 

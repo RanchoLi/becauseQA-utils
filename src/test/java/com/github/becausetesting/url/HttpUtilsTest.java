@@ -39,7 +39,7 @@ public class HttpUtilsTest {
 	@Test
 	public void testGetResponse() {
 		try {
-			HttpUtils.getRequest(new URL("https://www.baidu.com"), null);
+			HttpUtils.getRequestAsString(new URL("https://www.baidu.com"), null);
 		
 		Map<String,String> data=new HashMap<String,String>();
 		

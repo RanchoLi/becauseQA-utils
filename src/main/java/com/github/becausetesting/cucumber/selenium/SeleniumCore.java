@@ -27,8 +27,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.server.SeleniumServer;
 import org.openqa.selenium.safari.SafariOptions;
-//import org.openqa.selenium.server.RemoteControlConfiguration;
-//import org.openqa.selenium.server.SeleniumServer;
 
 import com.beust.jcommander.JCommander;
 import com.github.becausetesting.cucumber.selenium.appium.AppiumCommonArgs;
@@ -47,6 +45,7 @@ public class SeleniumCore {
 	private static AppiumServer appiumServer;
 
 	public static RemoteWebDriver driver;
+	// public static EventFiringWebDriver driver;
 
 	public final static String PROJECT_DIR = new File("").getAbsolutePath() + File.separator; // like
 																								// "C:\workspace\Micro2_Automation_Selenium\"
@@ -161,6 +160,7 @@ public class SeleniumCore {
 			try {
 				RemoteWebDriverX.setUseSession(useSession);
 				driver = new RemoteWebDriverX(new URL(pchub), capabilities);
+
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -188,6 +188,9 @@ public class SeleniumCore {
 			}
 			break;
 		}
+
+		// driver = new EventFiringWebDriver(remoteWebDriver);
+		// driver.register(new EventHandler());
 		Capabilities actualCapabilities = driver.getCapabilities();
 		String browser = actualCapabilities.getBrowserName();
 		// boolean emulation = (boolean)
@@ -493,14 +496,33 @@ public class SeleniumCore {
 		// method:SeleniumServer.setSystemProperty();
 		String userdir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"
 				+ File.separator + "resources";
+
 		SeleniumDownloader.downloadSeleniumResources(userdir);
+
+		String firefoxDriver = System.getProperty("webdriver.gecko.driver");
+		if (firefoxDriver == null) {
+			SeleniumDownloader.downloadfirefoxResources(userdir);
+			String firefoxDriverPath = null;
+			// ClassLoader loader = SeleniumCore.class.getClassLoader();
+			boolean windows = Platform.isWindows();
+			if (windows) {
+				firefoxDriverPath = userdir + File.separator + "geckodriver.exe";
+			} else {
+				firefoxDriverPath = userdir + File.separator + "geckodriver";
+			}
+			System.setProperty("webdriver.gecko.driver",firefoxDriverPath);
+			// System.setProperty("webdriver.chrome.driver",
+			// chromedriverPath);
+			logger.info("Firefox Driver location: " + firefoxDriverPath);
+			logger.info("webdriver.gecko.driver is:" + System.getProperty("webdriver.gecko.driver"));
+		}
 
 		String iedriver = System.getProperty("webdriver.ie.driver");
 		if (iedriver == null) {
 			SeleniumDownloader.downloadIEDriverResources(userdir);
 			// ClassLoader loader = SeleniumCore.class.getClassLoader();
 			String iedriverPath = userdir + File.separator + "IEDriverServer.exe";
-			args.add("-Dwebdriver.ie.driver=" + iedriverPath);
+			System.setProperty("webdriver.ie.driver",iedriverPath);
 			// System.setProperty("webdriver.ie.driver", iedriverPath);
 			logger.info("Set IE Driver in this location:" + iedriverPath);
 		}
@@ -516,31 +538,37 @@ public class SeleniumCore {
 			} else {
 				chromedriverPath = userdir + File.separator + "chromedriver";
 			}
-			args.add("-Dwebdriver.chrome.driver=" + chromedriverPath);
+			System.setProperty("webdriver.chrome.driver" , chromedriverPath);
 			// System.setProperty("webdriver.chrome.driver",
 			// chromedriverPath);
 			logger.info("Chrome Driver location: " + chromedriverPath);
 			logger.info("webdriver.chrome.driver is:" + System.getProperty("webdriver.chrome.driver"));
 		}
 
+		StandaloneConfiguration configuration = new StandaloneConfiguration();
+
 		/*
 		 * Selenium Server 2
 		 */
-		/*RemoteControlConfiguration rcc = SeleniumServer.parseLauncherOptions(args.toArray(new String[args.size()]));
-		rcc.setPort(RemoteControlConfiguration.DEFAULT_PORT);
-		rcc.setTrustAllSSLCertificates(true);
-		rcc.setCaptureLogsOnQuit(true);
-		rcc.setBrowserSideLogEnabled(true);
-		rcc.setReuseBrowserSessions(true);
-		rcc.setUserJSInjection(true);
+		/*
+		 * RemoteControlConfiguration rcc =
+		 * SeleniumServer.parseLauncherOptions(args.toArray(new
+		 * String[args.size()]));
+		 * rcc.setPort(RemoteControlConfiguration.DEFAULT_PORT);
+		 * rcc.setTrustAllSSLCertificates(true); rcc.setCaptureLogsOnQuit(true);
+		 * rcc.setBrowserSideLogEnabled(true);
+		 * rcc.setReuseBrowserSessions(true); rcc.setUserJSInjection(true);
+		 * 
+		 * rcc.setDebugMode(true);
+		 */
+		configuration.port = 4444;
+		configuration.debug = true;
 
-		rcc.setDebugMode(true);*/
-		StandaloneConfiguration configuration;
 		try {
-			configuration=new StandaloneConfiguration();
-			JCommander commander=new JCommander(configuration, args.toArray(new String[args.size()]));
-			commander.setProgramName("selenium-3-server");
-		
+
+			JCommander commander = new JCommander(configuration, args.toArray(new String[args.size()]));
+			commander.setProgramName("Selenium-3-Server");
+
 			seleniumServer = new SeleniumServer(configuration);
 			seleniumServer.boot();
 			logger.info("Start selenium remote server with configuration: " + configuration);

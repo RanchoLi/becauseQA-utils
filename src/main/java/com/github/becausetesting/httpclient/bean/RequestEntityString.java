@@ -7,14 +7,13 @@ import java.nio.charset.UnsupportedCharsetException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
-public class RequestEntityString extends StringEntity implements RequestEntitySimple {
+public class RequestEntityString extends StringEntity implements IRequestEntitySimple {
 
 	/**
-	 * 
+	 * send the request body content
 	 */
 	private static final long serialVersionUID = -7011737982426984773L;
 
-	
 	public RequestEntityString(String string, Charset charset) {
 		super(string, charset);
 		// TODO Auto-generated constructor stub
@@ -31,12 +30,11 @@ public class RequestEntityString extends StringEntity implements RequestEntitySi
 	}
 
 	/*
-	 * text/plain
+	 * text/plain Default is json data
 	 */
 	public RequestEntityString(String string) throws UnsupportedEncodingException {
-		super(string);
+		super(string, ContentType.APPLICATION_JSON);
 		// TODO Auto-generated constructor stub
 	}
 
-	
 }

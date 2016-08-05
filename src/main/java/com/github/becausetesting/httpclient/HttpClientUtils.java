@@ -41,7 +41,6 @@ import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.FormBodyPartBuilder;
@@ -67,21 +66,22 @@ import org.apache.log4j.Logger;
 import com.github.becausetesting.apache.commons.IOUtils;
 import com.github.becausetesting.apache.commons.StringUtils;
 import com.github.becausetesting.collections.MultiValueMap;
-import com.github.becausetesting.httpclient.bean.Auth;
-import com.github.becausetesting.httpclient.bean.BasicAuth;
+import com.github.becausetesting.httpclient.bean.AbstractRequestEntityMultipart;
+import com.github.becausetesting.httpclient.bean.AbstractRequestEntityMultipart.MultipartMode;
+import com.github.becausetesting.httpclient.bean.AuthBasic;
+import com.github.becausetesting.httpclient.bean.AuthDigest;
+import com.github.becausetesting.httpclient.bean.AuthNTLM;
 import com.github.becausetesting.httpclient.bean.CookiesStore;
-import com.github.becausetesting.httpclient.bean.DigestAuth;
 import com.github.becausetesting.httpclient.bean.HttpVersion;
-import com.github.becausetesting.httpclient.bean.NTLMAuth;
-import com.github.becausetesting.httpclient.bean.ProxyConfig;
-import com.github.becausetesting.httpclient.bean.RequestEntity;
+import com.github.becausetesting.httpclient.bean.IRequestAuth;
+import com.github.becausetesting.httpclient.bean.IRequestEntity;
+import com.github.becausetesting.httpclient.bean.IRequestEntitySimple;
 import com.github.becausetesting.httpclient.bean.RequestEntityFile;
-import com.github.becausetesting.httpclient.bean.RequestEntityMultipart;
-import com.github.becausetesting.httpclient.bean.RequestEntityMultipart.MultipartMode;
-import com.github.becausetesting.httpclient.bean.RequestEntitySimple;
 import com.github.becausetesting.httpclient.bean.RequestEntityString;
-import com.github.becausetesting.httpclient.bean.SSLRequest;
-import com.github.becausetesting.httpclient.bean.SSLRequest.SSLHostnameVerifier;
+import com.github.becausetesting.httpclient.bean.RequestProxyConfig;
+import com.github.becausetesting.httpclient.bean.RequestSSL;
+import com.github.becausetesting.httpclient.bean.RequestSSL.SSLHostnameVerifier;
+import com.github.becausetesting.httpclient.bean.TrustAllTrustStrategy;
 import com.github.becausetesting.properties.PropertiesUtils;
 
 @SuppressWarnings("deprecation")
@@ -105,9 +105,9 @@ public class HttpClientUtils {
 	 * main/java/org/wiztools/restclient/HTTPClientRequestExecuter.java
 	 */
 	@SuppressWarnings("unchecked")
-	public static Response getResponse(Request request) throws IOException {
+	public static Response execute(Request request) throws IOException {
 		response = new Response();
-		//HttpsCert.ignoreCert();
+		// HttpsCert.ignoreCert();
 		// Create all the builder objects:
 		final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 		final RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
@@ -175,7 +175,7 @@ public class HttpClientUtils {
 		// PoolingHttpClientConnectionManager();
 		// cm.setMaxTotal(100);
 		// proxy
-		ProxyConfig proxy = ProxyConfig.getInstance();
+		RequestProxyConfig proxy = RequestProxyConfig.getInstance();
 		proxy.acquire();
 		if (proxy.isEnabled()) {
 			final HttpHost proxyHost = new HttpHost(proxy.getHost(), proxy.getPort(), "http");
@@ -190,11 +190,11 @@ public class HttpClientUtils {
 		proxy.release();
 
 		// Get request headers
-		boolean createAuthorizationHeader = true;
+		boolean AuthorizationAlready = false;
 		MultiValueMap<String, String> headerdata = request.getHeaders();
 		for (String key : headerdata.keySet()) {
 			if (key.equals("Authorization")) {
-				createAuthorizationHeader = false;
+				AuthorizationAlready = true;
 			}
 			for (String value : headerdata.get(key)) {
 				Header header = new BasicHeader(key, value);
@@ -203,14 +203,14 @@ public class HttpClientUtils {
 		}
 
 		// HTTP Authentication header
-		if (createAuthorizationHeader) {
+		if (!AuthorizationAlready) {
 			CredentialsProvider credsProvider = new BasicCredentialsProvider();
-			Auth auth = request.getAuth();
+			IRequestAuth auth = request.getAuth();
 			AuthCache authCache = null;
 			List<String> authPrefs = new ArrayList<>();
-			if (auth != null && auth instanceof BasicAuth) {
+			if (auth != null && auth instanceof AuthBasic) {
 				authPrefs.add(AuthSchemes.BASIC);
-				BasicAuth basicAuth = (BasicAuth) auth;
+				AuthBasic basicAuth = (AuthBasic) auth;
 				// new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
 				// AuthScope.ANY_REALM,AuthScope.ANY_SCHEME)
 				credsProvider.setCredentials(AuthScope.ANY,
@@ -220,7 +220,7 @@ public class HttpClientUtils {
 				// preemptive mode:
 				if (basicAuth.isPreemptive()) {
 					authCache = new BasicAuthCache();
-					AuthSchemeBase authScheme = auth instanceof BasicAuth ? new BasicScheme() : new DigestScheme();
+					AuthSchemeBase authScheme = auth instanceof AuthBasic ? new BasicScheme() : new DigestScheme();
 					// Generate BASIC scheme object and add it to the local
 					// auth cache
 					authCache.put(new HttpHost(urlHost, urlPort, urlProtocol), authScheme);
@@ -231,9 +231,9 @@ public class HttpClientUtils {
 				}
 			}
 			// NTLM:
-			else if (auth != null && auth instanceof NTLMAuth) {
+			else if (auth != null && auth instanceof AuthNTLM) {
 				authPrefs.add(AuthSchemes.NTLM);
-				NTLMAuth a = (NTLMAuth) auth;
+				AuthNTLM a = (AuthNTLM) auth;
 				String uid = a.getUsername();
 				String pwd = new String(a.getPassword());
 
@@ -242,9 +242,9 @@ public class HttpClientUtils {
 				httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
 			}
 			// Digest auth
-			else if (auth != null && auth instanceof DigestAuth) {
+			else if (auth != null && auth instanceof AuthDigest) {
 				authPrefs.add(AuthSchemes.DIGEST);
-				DigestAuth basicAuth = (DigestAuth) auth;
+				AuthDigest basicAuth = (AuthDigest) auth;
 				// new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
 				// AuthScope.ANY_REALM,AuthScope.ANY_SCHEME)
 				credsProvider.setCredentials(AuthScope.ANY,
@@ -254,7 +254,7 @@ public class HttpClientUtils {
 				// preemptive mode:
 				if (basicAuth.isPreemptive()) {
 					authCache = new BasicAuthCache();
-					AuthSchemeBase authScheme = auth instanceof DigestAuth ? new DigestScheme() : new BasicScheme();
+					AuthSchemeBase authScheme = auth instanceof AuthDigest ? new DigestScheme() : new BasicScheme();
 					// Generate BASIC scheme object and add it to the local
 					// auth cache
 					authCache.put(new HttpHost(urlHost, urlPort, urlProtocol), authScheme);
@@ -309,15 +309,15 @@ public class HttpClientUtils {
 		// httpContext.setCookieStore(responseCookieStore);
 		// POST/PUT/PATCH/DELETE method specific logic
 		// Create and set RequestEntity
-		RequestEntity bean = request.getBody();
+		IRequestEntity bean = request.getBody();
 		if (bean != null) {
 			try {
 				HttpEntity httpEntity = null;
-				if (bean instanceof RequestEntitySimple) {
+				if (bean instanceof IRequestEntitySimple) {
 					httpEntity = (HttpEntity) bean;
 					requestBuilder.setEntity(httpEntity);
-				} else if (bean instanceof RequestEntityMultipart) {
-					RequestEntityMultipart multipart = (RequestEntityMultipart) bean;
+				} else if (bean instanceof AbstractRequestEntityMultipart) {
+					AbstractRequestEntityMultipart multipart = (AbstractRequestEntityMultipart) bean;
 					MultipartEntityBuilder meb = MultipartEntityBuilder.create();
 
 					// multipart/mixed / multipart/form-data:
@@ -338,7 +338,7 @@ public class HttpClientUtils {
 					}
 
 					// Parts:
-					for (RequestEntitySimple part : multipart.getBody()) {
+					for (IRequestEntitySimple part : multipart.getBody()) {
 						ContentBody cb = null;
 
 						if (part instanceof RequestEntityString) {
@@ -387,10 +387,10 @@ public class HttpClientUtils {
 
 		// SSL
 		// Set the hostname verifier:
-		final SSLRequest sslReq = request.getSslRequest();
+		final RequestSSL sslReq = request.getSslRequest();
+		final HostnameVerifier hcVerifier;
 		if (sslReq != null) {
 			SSLHostnameVerifier hostNameVerifier = sslReq.getHostNameVerifier();
-			final HostnameVerifier hcVerifier;
 			switch (hostNameVerifier) {
 			case ALLOW_ALL:
 				hcVerifier = new NoopHostnameVerifier();
@@ -400,33 +400,35 @@ public class HttpClientUtils {
 				hcVerifier = new DefaultHostnameVerifier();
 				break;
 			}
-
-			// Register the SSL Scheme manually
-			KeyStore trustStore = null;
-			SSLConnectionSocketFactory sf = null;
-			try {
-				final KeyStore keyStore = sslReq.getKeyStore() == null ? null : sslReq.getKeyStore().getKeyStore();
-
-				final TrustStrategy trustStrategy = sslReq.isTrustSelfSignedCert() ? new TrustSelfSignedStrategy()
-						: null;
-				trustStore = sslReq.getTrustStore() == null ? null : sslReq.getTrustStore().getKeyStore();
-
-				SSLContext ctx = new SSLContextBuilder()
-						.loadKeyMaterial(keyStore,
-								sslReq.getKeyStore() != null ? sslReq.getKeyStore().getPassword() : null)
-						.loadTrustMaterial(trustStore, trustStrategy).setSecureRandom(null).useProtocol("TLS").build();
-				sf = new SSLConnectionSocketFactory(ctx, hcVerifier);
-			} catch (KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException
-					| KeyStoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CertificateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			httpClientBuilder.setSSLSocketFactory(sf);
+		} else { // default to allow all hosts
+			hcVerifier = new NoopHostnameVerifier();
 		}
+
+		// Register the SSL Scheme manually,trust all SSL request
+		boolean isTrustAllCerts = sslReq.isTrustAllCerts();
+
+		SSLConnectionSocketFactory SSLConnectionSocketFactory = null;
+		try {
+			final TrustStrategy trustStrategy = isTrustAllCerts ? new TrustAllTrustStrategy() : null;
+
+			final KeyStore trustStore = sslReq.getTrustStore() == null ? null : sslReq.getTrustStore().getKeyStore();
+
+			final KeyStore keyStore = sslReq.getKeyStore() == null ? null : sslReq.getKeyStore().getKeyStore();
+
+			SSLContext ctx = new SSLContextBuilder()
+					.loadKeyMaterial(keyStore, sslReq.getKeyStore() != null ? sslReq.getKeyStore().getPassword() : null)
+					.loadTrustMaterial(trustStore, trustStrategy).setSecureRandom(null).useProtocol("TLS").build();
+
+			SSLConnectionSocketFactory = new SSLConnectionSocketFactory(ctx, hcVerifier);
+		} catch (KeyManagementException | UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		httpClientBuilder.setSSLSocketFactory(SSLConnectionSocketFactory);
 
 		// How to handle redirects:
 		boolean followRedirect = request.isFollowRedirect();
@@ -464,11 +466,11 @@ public class HttpClientUtils {
 		List<URI> redirectURIs = httpClientContext.getRedirectLocations();
 		if (redirectURIs != null && !redirectURIs.isEmpty()) {
 			for (URI redirectURI : redirectURIs) {
-				System.out.println("Redirect URI: " + redirectURI);
+				log.info("Redirect URI: " + redirectURI);
 			}
 			finalURI = redirectURIs.get(redirectURIs.size() - 1);
 		}
-		System.out.println("Final URI: " + finalURI);
+		log.info("Final or Redirected URI: " + finalURI);
 
 		response.setExecutionTime(endTime - startTime);
 		response.setStatusCode(httpResponse.getStatusLine().getStatusCode());

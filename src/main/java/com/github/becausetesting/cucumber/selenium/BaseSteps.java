@@ -52,7 +52,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BaseSteps {
 
-	public static RemoteWebDriver driver;
+	public static WebDriver driver;
 	public static final Logger log = Logger.getLogger(BaseSteps.class);
 
 	/**
@@ -66,16 +66,24 @@ public class BaseSteps {
 		driver.get(params1);
 	}
 
-	/**
+	/**http://www.w3schools.com/jsref/dom_obj_style.asp
 	 * @Title: highLight @Description: TODO @author
 	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
+	 *         
 	 */
 
 	public void highLight(WebElement e) {
 		if (driver instanceof JavascriptExecutor) {
-			runJS("arguments[0].style.border='3px solid red'", e);
+			String jsString="element = arguments[0];\r\n"
+				+ "original_style = element.getAttribute('style');"
+				+ "element.setAttribute('style', original_style + \"; background: yellow; border: 2px solid red;outline:2px dashed #00F;\");"
+				+ "setTimeout(function(){"
+		        +"element.setAttribute('style', original_style);"
+		        +"        }, 300);";
+			
+			runJS(jsString, e);
 		}
+
 	}
 
 	/**
@@ -104,16 +112,23 @@ public class BaseSteps {
 	 *         Object return type @throws
 	 */
 
-	public Object runJS(String script) {
+	public static Object runJS(String script) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
-		JavascriptExecutor je = driver;
+		JavascriptExecutor je = (JavascriptExecutor) driver;
 		return je.executeScript(script);
 
 	}
 
-	public Object runJSSync(String script) {
-		JavascriptExecutor je = driver;
+	/**
+	 * Run js not sync simple thread
+	 * 
+	 * @param script
+	 *            js script
+	 * @return the js object
+	 */
+	public static Object runJSAsync(String script) {
+		JavascriptExecutor je = (JavascriptExecutor)driver;
 		return je.executeAsyncScript(script);
 
 	}
@@ -124,11 +139,11 @@ public class BaseSteps {
 	 *         void return type @throws
 	 */
 
-	public void runJS(String script, WebElement e) {
+	public static void runJS(String script, WebElement e) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
 		// highLight(e);
-		JavascriptExecutor je = driver;
+		JavascriptExecutor je = (JavascriptExecutor)driver;
 		je.executeScript(script, e);
 
 	}
@@ -143,7 +158,7 @@ public class BaseSteps {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
 		// highLight(e);
-		JavascriptExecutor je = driver;
+		JavascriptExecutor je =(JavascriptExecutor) driver;
 		Object object = je.executeScript(script, e);
 		return object;
 
@@ -158,7 +173,7 @@ public class BaseSteps {
 	public Object runJSReturn(String script) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
-		JavascriptExecutor je = driver;
+		JavascriptExecutor je =(JavascriptExecutor) driver;
 		Object object = je.executeScript(script);
 		return object;
 	}
@@ -1368,7 +1383,7 @@ public class BaseSteps {
 	 */
 
 	public boolean isChromeEmulationBrowser() {
-		Capabilities actualCapabilities = driver.getCapabilities();
+		Capabilities actualCapabilities =((RemoteWebDriver) driver).getCapabilities();
 		String browser = actualCapabilities.getBrowserName();
 		Object isemulator = actualCapabilities.getCapability("mobileEmulationEnabled");
 		if (isemulator != null) {

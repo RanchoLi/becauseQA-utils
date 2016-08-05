@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 
-public class RequestEntityFormData extends UrlEncodedFormEntity implements RequestEntitySimple {
+public class RequestEntityFormData extends UrlEncodedFormEntity implements IRequestEntitySimple {
 
 	/**
 	 * 

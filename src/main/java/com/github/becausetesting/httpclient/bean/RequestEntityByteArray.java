@@ -3,7 +3,7 @@ package com.github.becausetesting.httpclient.bean;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 
-public class RequestEntityByteArray  extends ByteArrayEntity implements RequestEntitySimple {
+public class RequestEntityByteArray  extends ByteArrayEntity implements IRequestEntitySimple {
 
 	/**
 	 * 
@@ -11,7 +11,7 @@ public class RequestEntityByteArray  extends ByteArrayEntity implements RequestE
 	private static final long serialVersionUID = -1411344002540616649L;
 
 	public RequestEntityByteArray(byte[] b, ContentType contentType) {
-		super(b, contentType);
+		super(b, contentType);	
 		// TODO Auto-generated constructor stub
 	}
 

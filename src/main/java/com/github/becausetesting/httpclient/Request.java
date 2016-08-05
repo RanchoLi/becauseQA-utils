@@ -7,28 +7,26 @@ import java.util.List;
 
 import com.github.becausetesting.collections.MultiValueMap;
 import com.github.becausetesting.collections.MultiValueMapArrayList;
-import com.github.becausetesting.httpclient.bean.Auth;
+import com.github.becausetesting.httpclient.bean.IRequestAuth;
 import com.github.becausetesting.httpclient.bean.HttpMethod;
 import com.github.becausetesting.httpclient.bean.HttpVersion;
-import com.github.becausetesting.httpclient.bean.RequestEntity;
-import com.github.becausetesting.httpclient.bean.SSLRequest;
+import com.github.becausetesting.httpclient.bean.IRequestEntity;
+import com.github.becausetesting.httpclient.bean.RequestSSL;
 
 public class Request {
 
 	private URL url;
+	private RequestSSL sslReq = new RequestSSL();   //Default ignore all the cert issue ,trust all certs
 	private HttpMethod method;
-	private Auth auth;
-
-	private RequestEntity body;
+	private HttpVersion httpVersion = HttpVersion.getDefault(); 
+	
+	private IRequestAuth auth;
 	private final MultiValueMap<String, String> headers = new MultiValueMapArrayList<>();
 	private final List<HttpCookie> cookies = new ArrayList<HttpCookie>();
-	private HttpVersion httpVersion = HttpVersion.getDefault(); // Initialize to
-																// the default
-																// version
-
-	private SSLRequest sslReq = new SSLRequest();
-
-	private boolean isFollowRedirect = true;
+	
+	private IRequestEntity body;
+	
+	private boolean isFollowRedirect = true;  //302
 	private boolean isIgnoreResponseBody = false;
 
 	
@@ -69,20 +67,20 @@ public class Request {
 		return cookies;
 	}
 
-	public void setAuth(Auth auth) {
+	public void setAuth(IRequestAuth auth) {
 		this.auth = auth;
 	}
 
-	public Auth getAuth() {
+	public IRequestAuth getAuth() {
 		// TODO Auto-generated method stub
 		return auth;
 	}
 
-	public void setBody(final RequestEntity body) {
+	public void setBody(final IRequestEntity body) {
 		this.body = body;
 	}
 
-	public RequestEntity getBody() {
+	public IRequestEntity getBody() {
 		// TODO Auto-generated method stub
 		return body;
 	}
@@ -96,12 +94,12 @@ public class Request {
 		return httpVersion;
 	}
 
-	public SSLRequest getSslRequest() {
+	public RequestSSL getSslRequest() {
 		// TODO Auto-generated method stub
 		return sslReq;
 	}
 
-	public void setSslRequest(SSLRequest sslReq) {
+	public void setSslRequest(RequestSSL sslReq) {
 		this.sslReq = sslReq;
 	}
 

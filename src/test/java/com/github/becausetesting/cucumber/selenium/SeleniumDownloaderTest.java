@@ -11,7 +11,7 @@ public class SeleniumDownloaderTest {
 		//SeleniumDownloader downloader=new SeleniumDownloader();
 		String userdir=System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+"resources";
 		SeleniumDownloader.downloadSeleniumResources(userdir);
-		SeleniumDownloader.downloadChromeResources(userdir);
+		SeleniumDownloader.downloadfirefoxResources(userdir);
 	}
 
 }

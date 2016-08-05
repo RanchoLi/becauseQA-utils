@@ -36,7 +36,7 @@ public class HttpUtils {
 	private static Logger log = Logger.getLogger(HttpUtils.class);
 	private static HttpURLConnection connection;
 
-	public static String getRequest(URL url, Map<String, String> headers) throws IOException {
+	public static String getRequestAsString(URL url, Map<String, String> headers) throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, "GET");
 		setHeaders(headers);
@@ -45,7 +45,7 @@ public class HttpUtils {
 
 	}
 
-	public static InputStream getResponse(URL url, Map<String, String> headers) throws IOException {
+	public static InputStream getRequestAsInputStream(URL url, Map<String, String> headers) throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, "GET");
 		setHeaders(headers);
@@ -54,13 +54,23 @@ public class HttpUtils {
 
 	}
 
-	public static String postRequest(URL url, Map<String, String> headers, Map<String, Object> data)
+	public static String postRequestAsString(URL url, Map<String, String> headers, Map<String, Object> data)
 			throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, "POST");
 		setHeaders(headers);
 		postData(data);
 		String response = getResponse();
+		return response;
+
+	}
+	public static InputStream postRequestAsInputstream(URL url, Map<String, String> headers, Map<String, Object> data)
+			throws IOException {
+		HttpsCert.ignoreCert();
+		getConnection(url, "POST");
+		setHeaders(headers);
+		postData(data);
+		InputStream response = getResponseStream();
 		return response;
 
 	}
