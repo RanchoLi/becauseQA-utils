@@ -148,18 +148,18 @@ public class SeleniumCore {
 				startSeleniumServer(); // everytime start the server will caused
 										// reused session not worked.you need to
 										// run server command-line
-				if (useSession) {
+				/*if (useSession) {
 					logger.error(
 							"Not Supported non-command line execution. As Selenium standalone start from existing page session ,you need to run thread from command line:");
 					logger.error("java -jar " + SeleniumDownloader.seleniumstandaloneName
 							+ " -trustAllSSLCertificates -browserSessionReuse -debug" + " -Dwebdriver.chrome.driver="
 							+ SeleniumDownloader.chromedriverFilePath + " -Dwebdriver.ie.driver="
 							+ SeleniumDownloader.iedriverFilePath);
-				}
+				}*/
 			}
 			try {
-				RemoteWebDriverX.setUseSession(useSession);
-				driver = new RemoteWebDriverX(new URL(pchub), capabilities);
+				// RemoteWebDriver.useSession=true;
+				driver = new RemoteWebDriver(new URL(pchub), capabilities);
 
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -265,10 +265,12 @@ public class SeleniumCore {
 
 		capability.setCapability(CapabilityType.SUPPORTS_LOCATION_CONTEXT, true);
 		capability.setCapability(CapabilityType.SUPPORTS_NETWORK_CONNECTION, true);
+		capability.setCapability(CapabilityType.SUPPORTS_WEB_STORAGE, true);
+		capability.setCapability(CapabilityType.HAS_TOUCHSCREEN, true);
 
 		// log
 		LoggingPreferences logPrefs = new LoggingPreferences();
-		logPrefs.enable(LogType.BROWSER, Level.ALL);
+		logPrefs.enable(LogType.BROWSER, Level.INFO);
 		capability.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 
 		return capability;
@@ -484,6 +486,7 @@ public class SeleniumCore {
 		return capabilities;
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void startSeleniumServer() {
 		List<String> args = new ArrayList<String>();
 
@@ -510,21 +513,36 @@ public class SeleniumCore {
 			} else {
 				firefoxDriverPath = userdir + File.separator + "geckodriver";
 			}
-			System.setProperty("webdriver.gecko.driver",firefoxDriverPath);
-			// System.setProperty("webdriver.chrome.driver",
-			// chromedriverPath);
-			logger.info("Firefox Driver location: " + firefoxDriverPath);
-			logger.info("webdriver.gecko.driver is:" + System.getProperty("webdriver.gecko.driver"));
+			if (new File(firefoxDriverPath).exists()) {
+				System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
+				// System.setProperty("webdriver.chrome.driver",
+				// chromedriverPath);
+				logger.info("Firefox Driver location: " + firefoxDriverPath);
+				logger.info("webdriver.gecko.driver is:" + System.getProperty("webdriver.gecko.driver"));
+			}
 		}
 
 		String iedriver = System.getProperty("webdriver.ie.driver");
+
 		if (iedriver == null) {
 			SeleniumDownloader.downloadIEDriverResources(userdir);
 			// ClassLoader loader = SeleniumCore.class.getClassLoader();
 			String iedriverPath = userdir + File.separator + "IEDriverServer.exe";
-			System.setProperty("webdriver.ie.driver",iedriverPath);
-			// System.setProperty("webdriver.ie.driver", iedriverPath);
-			logger.info("Set IE Driver in this location:" + iedriverPath);
+			if (new File(iedriverPath).exists()) {
+				System.setProperty("webdriver.ie.driver", iedriverPath);
+				// System.setProperty("webdriver.ie.driver", iedriverPath);
+				logger.info("Set IE Driver in this location:" + iedriverPath);
+			}
+		}
+		String edgedriver = System.getProperty("webdriver.edge.driver");
+		if (edgedriver == null) {
+			SeleniumDownloader.downloadEdgeDriver(userdir);
+			String edgeDriverPath = userdir + File.separator + "MicrosoftWebDriver.exe";
+			if (new File(edgeDriverPath).exists()) {
+				System.setProperty("webdriver.edge.driver", edgeDriverPath);
+				// System.setProperty("webdriver.ie.driver", iedriverPath);
+				logger.info("Set Edge Driver in this location:" + edgeDriverPath);
+			}
 		}
 
 		String chromeDriver = System.getProperty("webdriver.chrome.driver");
@@ -532,17 +550,19 @@ public class SeleniumCore {
 			SeleniumDownloader.downloadChromeResources(userdir);
 			String chromedriverPath = null;
 			// ClassLoader loader = SeleniumCore.class.getClassLoader();
-			boolean windows = Platform.isWindows();
-			if (windows) {
+			boolean iswindows = Platform.isWindows();
+			if (iswindows) {
 				chromedriverPath = userdir + File.separator + "chromedriver.exe";
 			} else {
 				chromedriverPath = userdir + File.separator + "chromedriver";
 			}
-			System.setProperty("webdriver.chrome.driver" , chromedriverPath);
-			// System.setProperty("webdriver.chrome.driver",
-			// chromedriverPath);
-			logger.info("Chrome Driver location: " + chromedriverPath);
-			logger.info("webdriver.chrome.driver is:" + System.getProperty("webdriver.chrome.driver"));
+			if (new File(chromedriverPath).exists()) {
+				System.setProperty("webdriver.chrome.driver", chromedriverPath);
+				// System.setProperty("webdriver.chrome.driver",
+				// chromedriverPath);
+				logger.info("Chrome Driver location: " + chromedriverPath);
+				logger.info("webdriver.chrome.driver is:" + System.getProperty("webdriver.chrome.driver"));
+			}
 		}
 
 		StandaloneConfiguration configuration = new StandaloneConfiguration();

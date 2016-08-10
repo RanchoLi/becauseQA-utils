@@ -85,7 +85,7 @@ public class FileUtils {
 		if (sourceFileFolder.endsWith(File.separator)) {
 			useSourcePath = sourceFileFolder + mapLibraryName;
 		} else {
-			useSourcePath = sourceFileFolder + File.separator + mapLibraryName;
+			useSourcePath = sourceFileFolder + "/" + mapLibraryName;
 		}
 
 		try {

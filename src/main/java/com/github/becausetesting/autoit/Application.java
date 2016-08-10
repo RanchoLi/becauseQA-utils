@@ -29,6 +29,7 @@ import com.github.becausetesting.dll.DllUtils;
 import com.github.becausetesting.file.FileUtils;
 import com.github.becausetesting.host.HostUtils;
 import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.LibraryLoader;
 import com.jacob.com.SafeArray;
 import com.jacob.com.Variant;
 
@@ -252,14 +253,18 @@ public class Application {
 		String autoitResourcePath = null;
 		if (HostUtils.is64Bit()) {
 			autoitResourcePath = "/autoit/x64";
+			autoitName="AutoItX3_x64";
+			jacobName="jacob-1.14.3-x64";
 		} else {
 			autoitResourcePath = "/autoit/x86";
+			autoitName="AutoItX3";
+			jacobName="jacob-1.14.3-x86";
 		}
 		DllUtils.loadDll(autoitResourcePath, autoitName);
 		String dllPath = FileUtils.copyDll(autoitResourcePath, jacobName);
-		System.setProperty("jacob.dll.path", dllPath);
-		//System.setProperty(LibraryLoader.JACOB_DLL_PATH, tempJacobPath);
-		//LibraryLoader.loadJacobLibrary();
+		//System.setProperty("jacob.dll.path", dllPath);
+		System.setProperty(LibraryLoader.JACOB_DLL_PATH, dllPath);
+		LibraryLoader.loadJacobLibrary();
 		autoItX = new ActiveXComponent("AutoItX3.Control");
 		log.info("The AutoIt Library been loaded, and an activeX component been created");
 
@@ -275,7 +280,8 @@ public class Application {
 		 * 3. Exception in thread "main" java.lang.NoSuchFieldError: m_pDispatch
 		 * A: Must keep the "jacob-1.14.3-x64.dll version same as the jacob.jar
 		 * file version. otherwise it will throw this.
-		 * 
+		 * 4. Caused by: com.jacob.com.ComFailException: Can't co-create object
+		 * need to manually register it via command line: regsvr32 autoit32.dll
 		 * 
 		 * 
 		 * 

@@ -12,6 +12,7 @@ import com.github.becausetesting.apache.commons.StringUtils;
 import com.github.becausetesting.host.HostUtils;
 import com.github.becausetesting.http.HttpUtils;
 import com.github.becausetesting.json.JSONUtils;
+import com.github.becausetesting.regexp.RegexpUtils;
 import com.github.becausetesting.xml.XMLUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -24,13 +25,17 @@ public class SeleniumDownloader {
 	private static String SELENIUM_URL = "https://selenium-release.storage.googleapis.com/";
 	private static String CHROME_DRIVER_URL = "https://chromedriver.storage.googleapis.com/";
 	private static String latest_firefoxdriver = "https://api.github.com/repos/mozilla/geckodriver/releases";
+	private static String EDGE_DRIVER_URL = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/";
 
 	public static String seleniumstandaloneName = null;
 	public static String iedriverFilePath = null;
+	public static String edgeDriverPath = null;
 	public static String chromedriverFilePath = null;
+	public static String firefoxdriverFilePath = null;
 
 	public static String firefoxdriver_name = "geckodriver.exe";
 	public static String iedriver_name = "IEDriverServer.exe";
+	public static String edgedriver_name = "MicrosoftWebDriver.exe";
 	public static String chromedriver_name = "chromedriver";
 
 	public static String getLatestSeleniumVersionNumber() {
@@ -44,7 +49,7 @@ public class SeleniumDownloader {
 
 	}
 
-	public static void downloadSeleniumResources(String destinationFolder) {
+	public static String downloadSeleniumResources(String destinationFolder) {
 		String latestVersionStr = getLatestSeleniumVersionNumber();
 
 		// String seleniumName = "selenium-server-standalone-" +
@@ -64,16 +69,24 @@ public class SeleniumDownloader {
 			seleniumstandaloneName = destinationFolder + File.separator + seleniumName;
 			if (!new File(seleniumstandaloneName).exists()) {
 				FileUtils.copyURLToFile(new URL(latest_selenium_url), new File(seleniumstandaloneName));
+				logger.info("download selenium jar file into this place :" + seleniumstandaloneName + " succesfully!");
 			}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return seleniumstandaloneName;
 
 	}
 
-	public static void downloadIEDriverResources(String destinationFolder) {
+	/**
+	 * @deprecated see latest ie driver had been removed from selenium3
+	 * @param destinationFolder
+	 *            the folder
+	 * @return the path
+	 */
+	public static String downloadIEDriverResources(String destinationFolder) {
 		String latestVersionStr = getLatestSeleniumVersionNumber();
 
 		String iedriver_32bit_name = "IEDriverServer_Win32_" + latestVersionStr + ".0.zip";
@@ -100,18 +113,39 @@ public class SeleniumDownloader {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn("Not found the IE Driver maybe you need to use edge driver,so take to download the edge driver instead.", e);
+			//downloadEdgeDriver(destinationFolder);
 		}
+		return iedriverFilePath;
 
 	}
 
-	public static void downloadChromeResources(String destinationFolder) {
+	public static String downloadEdgeDriver(String destinationFolder) {
+		edgeDriverPath = destinationFolder + File.separator + edgedriver_name;
+		if (!new File(edgeDriverPath).exists()) {
+			try {
+				String edgeDriverContent = HttpUtils.getRequestAsString(new URL(EDGE_DRIVER_URL), null).trim();
+				String pattern = "(https://download.microsoft.com/download/[^=]*/MicrosoftWebDriver.exe)";
+				List<String> validateStrings = RegexpUtils.validateStrings(edgeDriverContent, pattern);
+				String latestVersionUrl = validateStrings.get(0);
+				FileUtils.copyURLToFile(new URL(latestVersionUrl), new File(edgeDriverPath));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return edgeDriverPath;
+	}
+
+	public static String downloadChromeResources(String destinationFolder) {
 
 		String chrome_note_url = CHROME_DRIVER_URL + "LATEST_RELEASE";
 		String chromedriver_win_zipname = "chromedriver_win32.zip";
 		String chromedriver_linux_zipname = "chromedriver_linux64.zip";
 		String chromedriver_mac_zipname = "chromedriver_mac32.zip";
 
+		chromedriverFilePath = destinationFolder + File.separator + chromedriver_name;
 		try {
 			String latest_chromedriver_version = HttpUtils.getRequestAsString(new URL(chrome_note_url), null).trim();
 			logger.info("latest chrome driver version is: " + latest_chromedriver_version);
@@ -136,7 +170,6 @@ public class SeleniumDownloader {
 				destination_chromedriver_path = destinationFolder + File.separator + chromedriver_mac_zipname;
 			}
 
-			chromedriverFilePath = destinationFolder + File.separator + chromedriver_name;
 			if (!new File(chromedriverFilePath).exists()) {
 				logger.info("Begin to download the chrome driver from server: " + CHROME_DRIVER_URL);
 				FileUtils.copyURLToFile(new URL(chromedriver_path), new File(destination_chromedriver_path));
@@ -148,9 +181,11 @@ public class SeleniumDownloader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return chromedriverFilePath;
 	}
 
-	public static void downloadfirefoxResources(String destinationFolder) {
+	public static String downloadfirefoxResources(String destinationFolder) {
+		firefoxdriverFilePath = destinationFolder + File.separator + firefoxdriver_name;
 		try {
 			boolean linux = Platform.isLinux() && HostUtils.is64Bit();
 			boolean win = Platform.isWindows() && HostUtils.is64Bit();
@@ -183,8 +218,9 @@ public class SeleniumDownloader {
 					break;
 				}
 			}
+
 			if (StringUtils.isNotEmpty(downloadurl)) {
-				String firefoxdriverFilePath = destinationFolder + File.separator + firefoxdriver_name;
+
 				if (!new File(firefoxdriverFilePath).exists()) {
 					logger.info("Begin to download the chrome driver from server: " + downloadurl);
 					FileUtils.copyURLToFile(new URL(downloadurl), new File(download_firefox_zipFile));
@@ -200,5 +236,6 @@ public class SeleniumDownloader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return firefoxdriverFilePath;
 	}
 }

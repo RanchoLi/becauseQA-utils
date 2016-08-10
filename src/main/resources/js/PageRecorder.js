@@ -584,7 +584,6 @@
             </tr>\
             </tbody>\
             </table>\
-            <input type="button" class="addElementbtn" value="Add tWo" onclick="document.PageRecorder.addElement()"> &nbsp;\
             <input type="button" class="addElementbtn" value="Add Element" onclick="document.PageRecorder.addElement()">\
         ';
 			return log("createFormHtmlCode");

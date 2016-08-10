@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-package com.github.becausetesting.cucumber.selenium;
+package org.openqa.selenium.remote;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,44 +35,34 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.HasCapabilities;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.internal.FindsByClassName;
+import org.openqa.selenium.internal.FindsByCssSelector;
+import org.openqa.selenium.internal.FindsById;
+import org.openqa.selenium.internal.FindsByLinkText;
+import org.openqa.selenium.internal.FindsByName;
+import org.openqa.selenium.internal.FindsByTagName;
+import org.openqa.selenium.internal.FindsByXPath;
 import org.openqa.selenium.logging.LocalLogs;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingHandler;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.logging.NeedsLocalLogs;
-import org.openqa.selenium.remote.Augmentable;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.Command;
-import org.openqa.selenium.remote.CommandExecutor;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.DriverCommand;
-import org.openqa.selenium.remote.ErrorHandler;
-import org.openqa.selenium.remote.ExecuteMethod;
-import org.openqa.selenium.remote.FileDetector;
-import org.openqa.selenium.remote.HttpCommandExecutor;
-import org.openqa.selenium.remote.JsonToBeanConverter;
-import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.remote.RemoteExecuteMethod;
-import org.openqa.selenium.remote.RemoteKeyboard;
-import org.openqa.selenium.remote.RemoteLogs;
-import org.openqa.selenium.remote.RemoteMouse;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.Response;
-import org.openqa.selenium.remote.SessionId;
-import org.openqa.selenium.remote.SessionNotFoundException;
-import org.openqa.selenium.remote.UnreachableBrowserException;
-import org.openqa.selenium.remote.UselessFileDetector;
 import org.openqa.selenium.remote.internal.JsonToWebElementConverter;
 import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.openqa.selenium.security.Credentials;
@@ -84,15 +74,14 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-/**
- * @author ahu
- * @deprecated see new implement for RemoteWebDriver
- */
 @Augmentable
-public class RemoteWebDriverX extends RemoteWebDriver { 
+public class RemoteWebDriver
+		implements WebDriver, JavascriptExecutor, FindsById, FindsByClassName, FindsByLinkText, FindsByName,
+		FindsByCssSelector, FindsByTagName, FindsByXPath, HasInputDevices, HasCapabilities, TakesScreenshot {
+
 	// TODO(dawagner): This static logger should be unified with the
 	// per-instance localLogs
-	private static final Logger logger = Logger.getLogger(RemoteWebDriverX.class.getName());
+	private static final Logger logger = Logger.getLogger(RemoteWebDriver.class.getName());
 	private Level level = Level.FINE;
 
 	private ErrorHandler errorHandler = new ErrorHandler();
@@ -111,14 +100,14 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 
 	private int w3cComplianceLevel = 0;
 
-	private static boolean useSession=false;
+	public static boolean useSession = true;
 
 	// For cglib
-	protected RemoteWebDriverX() {
+	protected RemoteWebDriver() {
 		init(new DesiredCapabilities(), null);
 	}
 
-	public RemoteWebDriverX(CommandExecutor executor, Capabilities desiredCapabilities,
+	public RemoteWebDriver(CommandExecutor executor, Capabilities desiredCapabilities,
 			Capabilities requiredCapabilities) {
 		this.executor = executor;
 
@@ -162,19 +151,72 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 		}
 	}
 
-	public RemoteWebDriverX(CommandExecutor executor, Capabilities desiredCapabilities) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void getExistingSessionId() {
+		try {
+			Response response = execute(DriverCommand.GET_ALL_SESSIONS);
+			ArrayList sessionsList = (ArrayList) response.getValue();
+			int size = sessionsList.size();
+			if (size > 0) {
+				// Here it will get the first sesion container ,if you have
+				// multiply
+				// sesssion ,it always get the top sessions in the session
+				// containers
+				Map<String, Object> rawCapabilities = (Map<String, Object>) sessionsList.get(sessionsList.size() - 1);
+
+				DesiredCapabilities returnedCapabilities = new DesiredCapabilities();
+				for (Map.Entry<String, Object> entry : rawCapabilities.entrySet()) {
+					// Handle the platform later
+					if (CapabilityType.PLATFORM.equals(entry.getKey())) {
+						continue;
+					}
+					returnedCapabilities.setCapability(entry.getKey(), entry.getValue());
+				}
+				String platformString = (String) rawCapabilities.get(CapabilityType.PLATFORM);
+				Platform platform;
+				try {
+					if (platformString == null || "".equals(platformString)) {
+						platform = Platform.ANY;
+					} else {
+						platform = Platform.valueOf(platformString);
+					}
+				} catch (IllegalArgumentException e) {
+					// The server probably responded with a name matching the
+					// os.name
+					// system property. Try to recover and parse this.
+					platform = Platform.extractFromSysProperty(platformString);
+				}
+				returnedCapabilities.setPlatform(platform);
+
+				capabilities = returnedCapabilities;
+				String oldsessionid = (String) rawCapabilities.get("id");
+				sessionId = new SessionId(oldsessionid);
+				logger.info("Found Existing sessionId: " + oldsessionid
+						+ " from session container,and emulate all the operations in this existing session.");
+				if (response.getStatus() == null) {
+					w3cComplianceLevel = 1;
+				}
+			}
+		} catch (UnreachableBrowserException e) {
+			// TODO: handle exception
+			logger.warning("Not found existing browser session ,take to create a new browser session.");
+		}
+
+	}
+
+	public RemoteWebDriver(CommandExecutor executor, Capabilities desiredCapabilities) {
 		this(executor, desiredCapabilities, null);
 	}
 
-	public RemoteWebDriverX(Capabilities desiredCapabilities) {
+	public RemoteWebDriver(Capabilities desiredCapabilities) {
 		this((URL) null, desiredCapabilities);
 	}
 
-	public RemoteWebDriverX(URL remoteAddress, Capabilities desiredCapabilities, Capabilities requiredCapabilities) {
+	public RemoteWebDriver(URL remoteAddress, Capabilities desiredCapabilities, Capabilities requiredCapabilities) {
 		this(new HttpCommandExecutor(remoteAddress), desiredCapabilities, requiredCapabilities);
 	}
 
-	public RemoteWebDriverX(URL remoteAddress, Capabilities desiredCapabilities) {
+	public RemoteWebDriver(URL remoteAddress, Capabilities desiredCapabilities) {
 		this(new HttpCommandExecutor(remoteAddress), desiredCapabilities, null);
 	}
 
@@ -244,54 +286,6 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 
 	public SessionId getSessionId() {
 		return sessionId;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void getExistingSessionId() {
-
-		Response response = execute(DriverCommand.GET_ALL_SESSIONS);
-		ArrayList sessionsList = (ArrayList) response.getValue();
-		int size = sessionsList.size();
-		if (size > 0) {
-			// Here it will get the first sesion container ,if you have multiply
-			// sesssion ,it always get the top sessions in the session
-			// containers
-			Map<String, Object> rawCapabilities = (Map<String, Object>) sessionsList.get(sessionsList.size() - 1);
-
-			DesiredCapabilities returnedCapabilities = new DesiredCapabilities();
-			for (Map.Entry<String, Object> entry : rawCapabilities.entrySet()) {
-				// Handle the platform later
-				if (CapabilityType.PLATFORM.equals(entry.getKey())) {
-					continue;
-				}
-				returnedCapabilities.setCapability(entry.getKey(), entry.getValue());
-			}
-			String platformString = (String) rawCapabilities.get(CapabilityType.PLATFORM);
-			Platform platform;
-			try {
-				if (platformString == null || "".equals(platformString)) {
-					platform = Platform.ANY;
-				} else {
-					platform = Platform.valueOf(platformString);
-				}
-			} catch (IllegalArgumentException e) {
-				// The server probably responded with a name matching the
-				// os.name
-				// system property. Try to recover and parse this.
-				platform = Platform.extractFromSysProperty(platformString);
-			}
-			returnedCapabilities.setPlatform(platform);
-
-			capabilities = returnedCapabilities;
-			String oldsessionid = (String) rawCapabilities.get("id");
-			sessionId = new SessionId(oldsessionid);
-			logger.info("Found Existing sessionId: " + oldsessionid
-					+ " from session container,and emulate all the operations in this session.");
-			if (response.getStatus() == null) {
-				w3cComplianceLevel = 1;
-			}
-		}
-
 	}
 
 	protected void setSessionId(String opaqueKey) {
@@ -454,6 +448,12 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 		}
 		setFoundBy(this, element, by, using);
 		return element;
+	}
+
+	protected void setFoundBy(SearchContext context, WebElement element, String by, String using) {
+		if (element instanceof RemoteWebElement) {
+			((RemoteWebElement) element).setFoundBy(context, by, using);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -692,6 +692,7 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 		this.level = level;
 	}
 
+	@SuppressWarnings("deprecation")
 	protected Response execute(String driverCommand, Map<String, ?> parameters) {
 		Command command = new Command(sessionId, driverCommand, parameters);
 		Response response;
@@ -1031,15 +1032,15 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 
 		public WebDriver frame(int frameIndex) {
 			execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", frameIndex));
-			return RemoteWebDriverX.this;
+			return RemoteWebDriver.this;
 		}
 
 		public WebDriver frame(String frameName) {
 			String name = frameName.replaceAll("(['\"\\\\#.:;,!?+<>=~*^$|%&@`{}\\-/\\[\\]\\(\\)])", "\\\\$1");
-			List<WebElement> frameElements = RemoteWebDriverX.this
+			List<WebElement> frameElements = RemoteWebDriver.this
 					.findElements(By.cssSelector("frame[name='" + name + "'],iframe[name='" + name + "']"));
 			if (frameElements.size() == 0) {
-				frameElements = RemoteWebDriverX.this.findElements(By.cssSelector("frame#" + name + ",iframe#" + name));
+				frameElements = RemoteWebDriver.this.findElements(By.cssSelector("frame#" + name + ",iframe#" + name));
 			}
 			if (frameElements.size() == 0) {
 				throw new NoSuchFrameException("No frame element found by name or id " + frameName);
@@ -1050,29 +1051,29 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 		public WebDriver frame(WebElement frameElement) {
 			Object elementAsJson = new WebElementToJsonConverter().apply(frameElement);
 			execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", elementAsJson));
-			return RemoteWebDriverX.this;
+			return RemoteWebDriver.this;
 		}
 
 		public WebDriver parentFrame() {
 			execute(DriverCommand.SWITCH_TO_PARENT_FRAME);
-			return RemoteWebDriverX.this;
+			return RemoteWebDriver.this;
 		}
 
 		public WebDriver window(String windowHandleOrName) {
 			if (getW3CStandardComplianceLevel() == 0) {
 				execute(DriverCommand.SWITCH_TO_WINDOW, ImmutableMap.of("name", windowHandleOrName));
-				return RemoteWebDriverX.this;
+				return RemoteWebDriver.this;
 			}
 			try {
 				execute(DriverCommand.SWITCH_TO_WINDOW, ImmutableMap.of("handle", windowHandleOrName));
-				return RemoteWebDriverX.this;
+				return RemoteWebDriver.this;
 			} catch (NoSuchWindowException nsw) {
 				// simulate search by name
 				String original = getWindowHandle();
 				for (String handle : getWindowHandles()) {
 					switchTo().window(handle);
 					if (windowHandleOrName.equals(executeScript("return window.name"))) {
-						return RemoteWebDriverX.this; // found by name
+						return RemoteWebDriver.this; // found by name
 					}
 				}
 				switchTo().window(original);
@@ -1084,7 +1085,7 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 			Map<String, Object> frameId = Maps.newHashMap();
 			frameId.put("id", null);
 			execute(DriverCommand.SWITCH_TO_FRAME, frameId);
-			return RemoteWebDriverX.this;
+			return RemoteWebDriver.this;
 		}
 
 		public WebElement activeElement() {
@@ -1175,7 +1176,4 @@ public class RemoteWebDriverX extends RemoteWebDriver {
 				getSessionId());
 	}
 
-	public void setUseSession(boolean useSession) {
-		RemoteWebDriverX.useSession = useSession;
-	}
 }

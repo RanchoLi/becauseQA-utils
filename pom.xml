@@ -37,7 +37,7 @@
 
 		<!--common maven plugins -->
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
-		<maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 
 		<!-- it profile check status plugins -->
 		<maven-invoker-plugin.version>2.0.0</maven-invoker-plugin.version>
