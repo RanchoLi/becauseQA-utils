@@ -16,12 +16,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.github.becausetesting.encrypt.Base64Utils;
+import com.github.becausetesting.httpclient.bean.HttpMethod;
 import com.github.becausetesting.json.JSONUtils;
 
 /**
@@ -38,16 +38,16 @@ public class HttpUtils {
 
 	public static String getRequestAsString(URL url, Map<String, String> headers) throws IOException {
 		HttpsCert.ignoreCert();
-		getConnection(url, "GET");
+		getConnection(url, HttpMethod.GET);
 		setHeaders(headers);
-		String response = getResponse();
+		String response = getResponseString();
 		return response;
 
 	}
 
 	public static InputStream getRequestAsInputStream(URL url, Map<String, String> headers) throws IOException {
 		HttpsCert.ignoreCert();
-		getConnection(url, "GET");
+		getConnection(url, HttpMethod.GET);
 		setHeaders(headers);
 		InputStream response = getResponseStream();
 		return response;
@@ -57,30 +57,50 @@ public class HttpUtils {
 	public static String postRequestAsString(URL url, Map<String, String> headers, Map<String, Object> data)
 			throws IOException {
 		HttpsCert.ignoreCert();
-		getConnection(url, "POST");
+		getConnection(url, HttpMethod.POST);
 		setHeaders(headers);
-		postData(data);
-		String response = getResponse();
+		postFormData(data);
+		String response = getResponseString();
+		return response;
+
+	}
+	public static String postRequestAsString(URL url, Map<String, String> headers, Object data)
+			throws IOException {
+		HttpsCert.ignoreCert();
+		getConnection(url, HttpMethod.POST);
+		setHeaders(headers);
+		postJsonData(data);
+		String response = getResponseString();
 		return response;
 
 	}
 	public static InputStream postRequestAsInputstream(URL url, Map<String, String> headers, Map<String, Object> data)
 			throws IOException {
 		HttpsCert.ignoreCert();
-		getConnection(url, "POST");
+		getConnection(url, HttpMethod.POST);
 		setHeaders(headers);
-		postData(data);
+		postFormData(data);
+		InputStream response = getResponseStream();
+		return response;
+
+	}
+	public static InputStream postRequestAsInputstream(URL url, Map<String, String> headers,Object data)
+			throws IOException {
+		HttpsCert.ignoreCert();
+		getConnection(url, HttpMethod.POST);
+		setHeaders(headers);
+		postJsonData(data);
 		InputStream response = getResponseStream();
 		return response;
 
 	}
 
-	public static void getConnection(URL url, String method) {
+	public static void getConnection(URL url, HttpMethod method) {
 		// HttpURLConnection connection = null;
 		try {
 			log.info("Request url: " + url.toString());
 			connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod(method);
+			connection.setRequestMethod(method.name());
 			// connection.setDoOutput(true);
 			// connection.setDoInput(true);
 			connection.setUseCaches(false);
@@ -112,26 +132,29 @@ public class HttpUtils {
 	 *            password.
 	 * @since JDK 1.8
 	 */
-	public static void setAuthorizationHeader(String username, String password) {
+	public static void setAuthorizationHeader(Map<String, String> header,String username, String password) {
 		// Base64Utils base64 = new Base64Utils();
 		String userpass = username + ":" + password;
 		String basicAuth = Base64Utils.encryptBasic(userpass);
-		Map<String, String> header = new HashMap<>();
 		header.put("Authorization", "Basic " + basicAuth);
-		setHeaders(header);
 	}
 
-	private static void postData(Map<String, Object> data) {
+	public static void postFormData(Map<String, Object> data) {
 		connection.setDoOutput(true);
 		try {
 			OutputStream outputStream = connection.getOutputStream();
+			if(data instanceof Map){
+				
+			}else{
+				
+			}
 			StringBuffer sb = new StringBuffer();
 			for (String key : data.keySet()) {
 				Object parametervalue = data.get(key);
 				sb.append(key).append("=").append(parametervalue).append("&");
 			}
 			String params = sb.substring(0, sb.length() - 1);
-			byte[] bytes = params.toString().getBytes();
+			byte[] bytes = params.toString().getBytes("UTF-8");
 			outputStream.write(bytes);
 			outputStream.flush();
 			outputStream.close();
@@ -190,7 +213,7 @@ public class HttpUtils {
 
 	}
 
-	public static String getResponse() {
+	public static String getResponseString() {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader reader = null;
 
@@ -206,7 +229,7 @@ public class HttpUtils {
 				reader.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Server Response Exception",e);
 			}
 
 		}

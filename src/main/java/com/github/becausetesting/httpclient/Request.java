@@ -7,9 +7,9 @@ import java.util.List;
 
 import com.github.becausetesting.collections.MultiValueMap;
 import com.github.becausetesting.collections.MultiValueMapArrayList;
-import com.github.becausetesting.httpclient.bean.IRequestAuth;
 import com.github.becausetesting.httpclient.bean.HttpMethod;
 import com.github.becausetesting.httpclient.bean.HttpVersion;
+import com.github.becausetesting.httpclient.bean.IRequestAuth;
 import com.github.becausetesting.httpclient.bean.IRequestEntity;
 import com.github.becausetesting.httpclient.bean.RequestSSL;
 

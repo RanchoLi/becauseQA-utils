@@ -1,12 +1,12 @@
 package com.github.becausetesting.testcasetools;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.github.becausetesting.http.HttpUtils;
-import com.github.becausetesting.http.HttpsCert;
 import com.github.becausetesting.json.JSONUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -70,19 +70,15 @@ public class JiraAPI {
 	 * @since JDK 1.8
 	 */
 	private Object getRequest(String url) {
-		HttpsCert.ignoreCert();
 		URL parseurl;
 		Object responsetext = null;
-
 		try {
 			parseurl = new URL(this.getBase_Url() + url);
-			HttpUtils.getConnection(parseurl, "GET");
 			Map<String, String> headers = new HashMap<>();
 			headers.put("Content-Type", "application/json");
 			// headers.put("Accept", "application/json");
-			HttpUtils.setAuthorizationHeader(this.getUser(), this.getPassword());
-			HttpUtils.setHeaders(headers);
-			String response = HttpUtils.getResponse();
+			HttpUtils.setAuthorizationHeader(headers,this.getUser(), this.getPassword());
+			String response=HttpUtils.getRequestAsString(parseurl, headers);
 			if (response != "") {
 				responsetext = JSONUtils.toJsonElement(response);
 			}
@@ -90,30 +86,32 @@ public class JiraAPI {
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return responsetext;
 	}
 
 	private Object postRequest(String url, Object data) {
-		HttpsCert.ignoreCert();
 		URL parseurl = null;
 		Object responsetext = null;
 
 		try {
 			parseurl = new URL(this.getBase_Url() + url);
-			HttpUtils.getConnection(parseurl, "POST");
 			Map<String, String> headers = new HashMap<>();
 			headers.put("Content-Type", "application/json");
-			//headers.put("Accept", "application/json");
-			HttpUtils.setAuthorizationHeader(this.user, this.password);
-			HttpUtils.setHeaders(headers);
-			HttpUtils.postJsonData(data);
-			String response = HttpUtils.getResponse();
+			HttpUtils.setAuthorizationHeader(headers,this.user, this.password);
+			String response=HttpUtils.postRequestAsString(parseurl, headers, data);
+			
 			if (response != "") {
 				responsetext = JSONUtils.toJsonElement(response);
 			}
 
 		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

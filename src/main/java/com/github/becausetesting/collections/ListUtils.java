@@ -9,12 +9,12 @@
 
 package com.github.becausetesting.collections;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * ClassName:ListUtils  
@@ -36,22 +36,26 @@ Map
 @SuppressWarnings({"unchecked","rawtypes"})
 public class ListUtils {
 
+	public static CopyOnWriteArrayList newConcurrentList(){
+		CopyOnWriteArrayList name = new CopyOnWriteArrayList();
+		return name;
+	}
 	
-	public String list2String(List list){
+	public static String list2String(List list){
 		return list.toString();
 	}
 	
 	
-	public String list2String(List list,String delimiter){
+	public static String list2String(List list,String delimiter){
 		return String.join(delimiter, list);
 	}
 	
-	public Object[] list2Array(List list){
+	public static Object[] list2Array(List list){
 		return list.toArray();
 	}
 	
 	
-	public List fromArray(String[] arrays){
+	public static List fromArray(String[] arrays){
 		return Arrays.asList(arrays);
 	}
 	
@@ -70,14 +74,13 @@ public class ListUtils {
 	 * @param list
 	 * @since JDK 1.8
 	 */
-	public void sortList(List list){
+	public static void sortList(List list){
 		 Collections.sort(list);
-		 Collections.sort(list,Collator.getInstance(java.util.Locale.CHINA)); //sort
-		 //desc
-		 Collections.reverse(list);//
+		 //Collections.sort(list,Collator.getInstance(java.util.Locale.CHINA)); //sort	 
+		 Collections.reverse(list);//desc
 	}
 	
-	public ArrayList toArrayList(LinkedList list){
+	public static ArrayList toArrayList(LinkedList list){
 		ArrayList arrayList = new ArrayList(list);
 		return arrayList;
 	}
