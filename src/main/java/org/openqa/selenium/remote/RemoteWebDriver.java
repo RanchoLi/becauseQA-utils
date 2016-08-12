@@ -388,20 +388,24 @@ public class RemoteWebDriver
 		this.executor = executor;
 	}
 
+	@Override
 	public Capabilities getCapabilities() {
 		return capabilities;
 	}
 
+	@Override
 	public void get(String url) {
 		execute(DriverCommand.GET, ImmutableMap.of("url", url));
 	}
 
+	@Override
 	public String getTitle() {
 		Response response = execute(DriverCommand.GET_TITLE);
 		Object value = response.getValue();
 		return value == null ? "" : value.toString();
 	}
 
+	@Override
 	public String getCurrentUrl() {
 		Response response = execute(DriverCommand.GET_CURRENT_URL);
 		if (response == null || response.getValue() == null) {
@@ -410,6 +414,7 @@ public class RemoteWebDriver
 		return response.getValue().toString();
 	}
 
+	@Override
 	public <X> X getScreenshotAs(OutputType<X> outputType) throws WebDriverException {
 		Response response = execute(DriverCommand.SCREENSHOT);
 		Object result = response.getValue();
@@ -425,10 +430,12 @@ public class RemoteWebDriver
 		}
 	}
 
+	@Override
 	public List<WebElement> findElements(By by) {
 		return by.findElements(this);
 	}
 
+	@Override
 	public WebElement findElement(By by) {
 		return by.findElement(this);
 	}
@@ -484,6 +491,7 @@ public class RemoteWebDriver
 		return using;
 	}
 
+	@Override
 	public WebElement findElementById(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElement("id", using);
@@ -491,6 +499,7 @@ public class RemoteWebDriver
 		return findElementByCssSelector("#" + cssEscape(using));
 	}
 
+	@Override
 	public List<WebElement> findElementsById(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElements("id", using);
@@ -498,22 +507,27 @@ public class RemoteWebDriver
 		return findElementsByCssSelector("#" + cssEscape(using));
 	}
 
+	@Override
 	public WebElement findElementByLinkText(String using) {
 		return findElement("link text", using);
 	}
 
+	@Override
 	public List<WebElement> findElementsByLinkText(String using) {
 		return findElements("link text", using);
 	}
 
+	@Override
 	public WebElement findElementByPartialLinkText(String using) {
 		return findElement("partial link text", using);
 	}
 
+	@Override
 	public List<WebElement> findElementsByPartialLinkText(String using) {
 		return findElements("partial link text", using);
 	}
 
+	@Override
 	public WebElement findElementByTagName(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElement("tag name", using);
@@ -521,6 +535,7 @@ public class RemoteWebDriver
 		return findElementByCssSelector(using);
 	}
 
+	@Override
 	public List<WebElement> findElementsByTagName(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElements("tag name", using);
@@ -528,6 +543,7 @@ public class RemoteWebDriver
 		return findElementsByCssSelector(using);
 	}
 
+	@Override
 	public WebElement findElementByName(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElement("name", using);
@@ -535,6 +551,7 @@ public class RemoteWebDriver
 		return findElementByCssSelector("*[name='" + using + "']");
 	}
 
+	@Override
 	public List<WebElement> findElementsByName(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElements("name", using);
@@ -542,6 +559,7 @@ public class RemoteWebDriver
 		return findElementsByCssSelector("*[name='" + using + "']");
 	}
 
+	@Override
 	public WebElement findElementByClassName(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElement("class name", using);
@@ -549,6 +567,7 @@ public class RemoteWebDriver
 		return findElementByCssSelector("." + cssEscape(using));
 	}
 
+	@Override
 	public List<WebElement> findElementsByClassName(String using) {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return findElements("class name", using);
@@ -556,24 +575,29 @@ public class RemoteWebDriver
 		return findElementsByCssSelector("." + cssEscape(using));
 	}
 
+	@Override
 	public WebElement findElementByCssSelector(String using) {
 		return findElement("css selector", using);
 	}
 
+	@Override
 	public List<WebElement> findElementsByCssSelector(String using) {
 		return findElements("css selector", using);
 	}
 
+	@Override
 	public WebElement findElementByXPath(String using) {
 		return findElement("xpath", using);
 	}
 
+	@Override
 	public List<WebElement> findElementsByXPath(String using) {
 		return findElements("xpath", using);
 	}
 
 	// Misc
 
+	@Override
 	public String getPageSource() {
 		if (getW3CStandardComplianceLevel() == 0) {
 			return (String) execute(DriverCommand.GET_PAGE_SOURCE).getValue();
@@ -583,10 +607,12 @@ public class RemoteWebDriver
 		return (String) executeScript(script);
 	}
 
+	@Override
 	public void close() {
 		execute(DriverCommand.CLOSE);
 	}
 
+	@Override
 	public void quit() {
 		try {
 			execute(DriverCommand.QUIT);
@@ -596,6 +622,7 @@ public class RemoteWebDriver
 		}
 	}
 
+	@Override
 	@SuppressWarnings({ "unchecked" })
 	public Set<String> getWindowHandles() {
 		Response response;
@@ -613,6 +640,7 @@ public class RemoteWebDriver
 		}
 	}
 
+	@Override
 	public String getWindowHandle() {
 		if (getW3CStandardComplianceLevel() > 0) {
 			return String.valueOf(execute(DriverCommand.GET_CURRENT_WINDOW_HANDLE_W3C).getValue());
@@ -620,6 +648,7 @@ public class RemoteWebDriver
 		return String.valueOf(execute(DriverCommand.GET_CURRENT_WINDOW_HANDLE).getValue());
 	}
 
+	@Override
 	public Object executeScript(String script, Object... args) {
 		if (!capabilities.isJavascriptEnabled()) {
 			throw new UnsupportedOperationException(
@@ -639,6 +668,7 @@ public class RemoteWebDriver
 		return execute(DriverCommand.EXECUTE_SCRIPT, params).getValue();
 	}
 
+	@Override
 	public Object executeAsyncScript(String script, Object... args) {
 		if (!isJavascriptEnabled()) {
 			throw new UnsupportedOperationException(
@@ -662,14 +692,17 @@ public class RemoteWebDriver
 		return capabilities.isJavascriptEnabled();
 	}
 
+	@Override
 	public TargetLocator switchTo() {
 		return new RemoteTargetLocator();
 	}
 
+	@Override
 	public Navigation navigate() {
 		return new RemoteNavigation();
 	}
 
+	@Override
 	public Options manage() {
 		return new RemoteWebDriverOptions();
 	}
@@ -763,10 +796,12 @@ public class RemoteWebDriver
 		return executeMethod;
 	}
 
+	@Override
 	public Keyboard getKeyboard() {
 		return keyboard;
 	}
 
+	@Override
 	public Mouse getMouse() {
 		return mouse;
 	}
@@ -813,28 +848,34 @@ public class RemoteWebDriver
 
 	protected class RemoteWebDriverOptions implements Options {
 
+		@Override
 		@Beta
 		public Logs logs() {
 			return remoteLogs;
 		}
 
+		@Override
 		public void addCookie(Cookie cookie) {
 			cookie.validate();
 			execute(DriverCommand.ADD_COOKIE, ImmutableMap.of("cookie", cookie));
 		}
 
+		@Override
 		public void deleteCookieNamed(String name) {
 			execute(DriverCommand.DELETE_COOKIE, ImmutableMap.of("name", name));
 		}
 
+		@Override
 		public void deleteCookie(Cookie cookie) {
 			deleteCookieNamed(cookie.getName());
 		}
 
+		@Override
 		public void deleteAllCookies() {
 			execute(DriverCommand.DELETE_ALL_COOKIES);
 		}
 
+		@Override
 		@SuppressWarnings({ "unchecked" })
 		public Set<Cookie> getCookies() {
 			Object returned = execute(DriverCommand.GET_ALL_COOKIES).getValue();
@@ -864,6 +905,7 @@ public class RemoteWebDriver
 			return toReturn;
 		}
 
+		@Override
 		public Cookie getCookieNamed(String name) {
 			Set<Cookie> allCookies = getCookies();
 			for (Cookie cookie : allCookies) {
@@ -874,14 +916,17 @@ public class RemoteWebDriver
 			return null;
 		}
 
+		@Override
 		public Timeouts timeouts() {
 			return new RemoteTimeouts();
 		}
 
+		@Override
 		public ImeHandler ime() {
 			return new RemoteInputMethodManager();
 		}
 
+		@Override
 		@Beta
 		public Window window() {
 			return new RemoteWindow();
@@ -889,26 +934,31 @@ public class RemoteWebDriver
 
 		protected class RemoteInputMethodManager implements WebDriver.ImeHandler {
 
+			@Override
 			@SuppressWarnings("unchecked")
 			public List<String> getAvailableEngines() {
 				Response response = execute(DriverCommand.IME_GET_AVAILABLE_ENGINES);
 				return (List<String>) response.getValue();
 			}
 
+			@Override
 			public String getActiveEngine() {
 				Response response = execute(DriverCommand.IME_GET_ACTIVE_ENGINE);
 				return (String) response.getValue();
 			}
 
+			@Override
 			public boolean isActivated() {
 				Response response = execute(DriverCommand.IME_IS_ACTIVATED);
 				return (Boolean) response.getValue();
 			}
 
+			@Override
 			public void deactivate() {
 				execute(DriverCommand.IME_DEACTIVATE);
 			}
 
+			@Override
 			public void activateEngine(String engine) {
 				execute(DriverCommand.IME_ACTIVATE_ENGINE, ImmutableMap.of("engine", engine));
 			}
@@ -916,18 +966,21 @@ public class RemoteWebDriver
 
 		protected class RemoteTimeouts implements Timeouts {
 
+			@Override
 			public Timeouts implicitlyWait(long time, TimeUnit unit) {
 				execute(DriverCommand.SET_TIMEOUT,
 						ImmutableMap.of("type", "implicit", "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
 				return this;
 			}
 
+			@Override
 			public Timeouts setScriptTimeout(long time, TimeUnit unit) {
 				execute(DriverCommand.SET_TIMEOUT,
 						ImmutableMap.of("type", "script", "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
 				return this;
 			}
 
+			@Override
 			public Timeouts pageLoadTimeout(long time, TimeUnit unit) {
 				execute(DriverCommand.SET_TIMEOUT,
 						ImmutableMap.of("type", "page load", "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
@@ -938,6 +991,7 @@ public class RemoteWebDriver
 		@Beta
 		protected class RemoteWindow implements Window {
 
+			@Override
 			public void setSize(Dimension targetSize) {
 				if (getW3CStandardComplianceLevel() == 0) {
 					execute(DriverCommand.SET_WINDOW_SIZE, ImmutableMap.of("windowHandle", "current", "width",
@@ -948,6 +1002,7 @@ public class RemoteWebDriver
 				}
 			}
 
+			@Override
 			public void setPosition(Point targetPosition) {
 				if (getW3CStandardComplianceLevel() == 0) {
 					execute(DriverCommand.SET_WINDOW_POSITION,
@@ -958,6 +1013,7 @@ public class RemoteWebDriver
 				}
 			}
 
+			@Override
 			@SuppressWarnings({ "unchecked" })
 			public Dimension getSize() {
 				Response response = getW3CStandardComplianceLevel() == 0
@@ -975,6 +1031,7 @@ public class RemoteWebDriver
 			@SuppressWarnings({})
 			Map<String, Object> rawPoint;
 
+			@Override
 			@SuppressWarnings("unchecked")
 			public Point getPosition() {
 				if (getW3CStandardComplianceLevel() == 0) {
@@ -991,6 +1048,7 @@ public class RemoteWebDriver
 				return new Point(x, y);
 			}
 
+			@Override
 			public void maximize() {
 				if (getW3CStandardComplianceLevel() == 0) {
 					execute(DriverCommand.MAXIMIZE_WINDOW, ImmutableMap.of("windowHandle", "current"));
@@ -999,6 +1057,7 @@ public class RemoteWebDriver
 				}
 			}
 
+			@Override
 			public void fullscreen() {
 				execute(DriverCommand.FULLSCREEN_CURRENT_WINDOW);
 			}
@@ -1007,22 +1066,27 @@ public class RemoteWebDriver
 
 	private class RemoteNavigation implements Navigation {
 
+		@Override
 		public void back() {
 			execute(DriverCommand.GO_BACK);
 		}
 
+		@Override
 		public void forward() {
 			execute(DriverCommand.GO_FORWARD);
 		}
 
+		@Override
 		public void to(String url) {
 			get(url);
 		}
 
+		@Override
 		public void to(URL url) {
 			get(String.valueOf(url));
 		}
 
+		@Override
 		public void refresh() {
 			execute(DriverCommand.REFRESH);
 		}
@@ -1030,11 +1094,13 @@ public class RemoteWebDriver
 
 	protected class RemoteTargetLocator implements TargetLocator {
 
+		@Override
 		public WebDriver frame(int frameIndex) {
 			execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", frameIndex));
 			return RemoteWebDriver.this;
 		}
 
+		@Override
 		public WebDriver frame(String frameName) {
 			String name = frameName.replaceAll("(['\"\\\\#.:;,!?+<>=~*^$|%&@`{}\\-/\\[\\]\\(\\)])", "\\\\$1");
 			List<WebElement> frameElements = RemoteWebDriver.this
@@ -1048,17 +1114,20 @@ public class RemoteWebDriver
 			return frame(frameElements.get(0));
 		}
 
+		@Override
 		public WebDriver frame(WebElement frameElement) {
 			Object elementAsJson = new WebElementToJsonConverter().apply(frameElement);
 			execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", elementAsJson));
 			return RemoteWebDriver.this;
 		}
 
+		@Override
 		public WebDriver parentFrame() {
 			execute(DriverCommand.SWITCH_TO_PARENT_FRAME);
 			return RemoteWebDriver.this;
 		}
 
+		@Override
 		public WebDriver window(String windowHandleOrName) {
 			if (getW3CStandardComplianceLevel() == 0) {
 				execute(DriverCommand.SWITCH_TO_WINDOW, ImmutableMap.of("name", windowHandleOrName));
@@ -1081,6 +1150,7 @@ public class RemoteWebDriver
 			}
 		}
 
+		@Override
 		public WebDriver defaultContent() {
 			Map<String, Object> frameId = Maps.newHashMap();
 			frameId.put("id", null);
@@ -1088,11 +1158,13 @@ public class RemoteWebDriver
 			return RemoteWebDriver.this;
 		}
 
+		@Override
 		public WebElement activeElement() {
 			Response response = execute(DriverCommand.GET_ACTIVE_ELEMENT);
 			return (WebElement) response.getValue();
 		}
 
+		@Override
 		public Alert alert() {
 			execute(DriverCommand.GET_ALERT_TEXT);
 			return new RemoteAlert();
@@ -1104,6 +1176,7 @@ public class RemoteWebDriver
 		public RemoteAlert() {
 		}
 
+		@Override
 		public void dismiss() {
 			if (getW3CStandardComplianceLevel() > 0) {
 				execute(DriverCommand.DISMISS_ALERT_W3C);
@@ -1112,6 +1185,7 @@ public class RemoteWebDriver
 			}
 		}
 
+		@Override
 		public void accept() {
 			if (getW3CStandardComplianceLevel() > 0) {
 				execute(DriverCommand.ACCEPT_ALERT_W3C);
@@ -1120,6 +1194,7 @@ public class RemoteWebDriver
 			}
 		}
 
+		@Override
 		public String getText() {
 			if (getW3CStandardComplianceLevel() > 0) {
 				return (String) execute(DriverCommand.GET_ALERT_TEXT_W3C).getValue();
@@ -1127,6 +1202,7 @@ public class RemoteWebDriver
 			return (String) execute(DriverCommand.GET_ALERT_TEXT).getValue();
 		}
 
+		@Override
 		public void sendKeys(String keysToSend) {
 			if (getW3CStandardComplianceLevel() > 0) {
 				execute(DriverCommand.SET_ALERT_VALUE_W3C, ImmutableMap.of("text", keysToSend));
@@ -1135,6 +1211,7 @@ public class RemoteWebDriver
 			}
 		}
 
+		@Override
 		@Beta
 		public void setCredentials(Credentials credentials) {
 			if (!(credentials instanceof UserAndPassword)) {
@@ -1155,6 +1232,7 @@ public class RemoteWebDriver
 		 * @param credentials
 		 *            credentials to pass to Auth prompt
 		 */
+		@Override
 		@Beta
 		public void authenticateUsing(Credentials credentials) {
 			this.setCredentials(credentials);

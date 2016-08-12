@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<name>becautesting-utils</name>
+	<name>becauseQA-utils</name>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>becausetesting-utils</artifactId>
-	<groupId>com.github.becausetesting</groupId>
-	<version>1.1.5</version>
+	<artifactId>becauseQA-utils</artifactId>
+	<groupId>com.github.becauseQA</groupId>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<description>A common libraries used for testing framework.</description>
-	<url>https://github.com/becausetesting/becausetesting-utils</url>
+	<url>https://github.com/BecauseQA/becauseQA-utils</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -63,21 +63,21 @@
 
 	<organization>
 		<name>Alter Hu</name>
-		<url>https://github.com/becausetesting/becausetesting-utils</url>
+		<url>https://github.com/BecauseQA/becauseQA-utils</url>
 	</organization>
 	<scm>
-		<connection>scm:git:git@github.com:becausetesting/becausetesting-utils.git</connection>
-		<developerConnection>scm:git:git@github.com:becausetesting/becausetesting-utils.git</developerConnection>
-		<url>https://github.com/becausetesting/becausetesting-utils</url>
-		<tag>becausetesting-utils-1.0.0</tag>
+		<connection>scm:git:git@github.com:BecauseQA/becauseQA-utils.git</connection>
+		<developerConnection>scm:git:git@github.com:BecauseQA/becauseQA-utils.git</developerConnection>
+		<url>https://github.com/BecauseQA/becauseQA-utils</url>
+		<tag>becauseQA-utils-1.0.0</tag>
 	</scm>
 	<issueManagement>
-		<url>https://github.com/becausetesting/becausetesting-utils</url>
+		<url>https://github.com/BecauseQA/becauseQA-utils</url>
 		<system>GitHub</system>
 	</issueManagement>
 	<ciManagement>
 		<system>Travis CI</system>
-		<url>https://github.com/becausetesting/becausetesting-utils</url>
+		<url>https://github.com/BecauseQA/becauseQA-utils</url>
 	</ciManagement>
 
 	<mailingLists>

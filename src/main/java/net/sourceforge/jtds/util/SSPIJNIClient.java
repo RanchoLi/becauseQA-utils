@@ -17,8 +17,8 @@
 //
 package net.sourceforge.jtds.util;
 
-import com.github.becausetesting.dll.DllUtils;
-import com.github.becausetesting.host.HostUtils;
+import com.github.becauseQA.dll.DllUtils;
+import com.github.becauseQA.host.HostUtils;
 
 /**
  * A JNI client to SSPI based CPP program (DLL) that returns the user
