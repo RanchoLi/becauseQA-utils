@@ -1,7 +1,7 @@
 /**
  * Project Name:becausejmeter
  * File Name:XMLUtils.java
- * Package Name:com.github.becausetesting.becausejmeter.utilities
+ * Package Name:com.github.becauseQA.becausejmeter.utilities
  * Date:2016年4月5日下午9:19:14
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *
@@ -9,7 +9,7 @@
 /**
  * Project Name:becausejmeter
  * File Name:XMLUtils.java
- * Package Name:com.github.becausetesting.becausejmeter.utilities
+ * Package Name:com.github.becauseQA.becausejmeter.utilities
  * Date:2016年4月5日下午9:19:14
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

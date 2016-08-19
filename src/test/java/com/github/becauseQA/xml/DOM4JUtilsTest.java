@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:DOM4JUtilsTest.java
- * Package Name:com.github.becausetesting.xml
+ * Package Name:com.github.becauseQA.xml
  * Date:Apr 16, 20169:57:06 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:HttpUtils.java
- * Package Name:com.github.becausetesting.url
+ * Package Name:com.github.becauseQA.url
  * Date:2016年4月16日下午6:52:01
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

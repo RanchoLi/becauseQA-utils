@@ -52,7 +52,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BaseSteps {
 
-	public static WebDriver driver;
+	public static WebDriver driver = SeleniumCore.driver;
 	public static final Logger log = Logger.getLogger(BaseSteps.class);
 
 	/**
@@ -62,25 +62,24 @@ public class BaseSteps {
 	 */
 
 	public void visitPage(String params1) {
-		driver = SeleniumCore.driver;
+		// driver = SeleniumCore.driver;
 		driver.get(params1);
 	}
 
-	/**http://www.w3schools.com/jsref/dom_obj_style.asp
+	/**
+	 * http://www.w3schools.com/jsref/dom_obj_style.asp
+	 * 
 	 * @Title: highLight @Description: TODO @author
 	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         
+	 * 
 	 */
 
 	public void highLight(WebElement e) {
 		if (driver instanceof JavascriptExecutor) {
-			String jsString="element = arguments[0];\r\n"
-				+ "original_style = element.getAttribute('style');"
-				+ "element.setAttribute('style', original_style + \"; background: yellow; border: 2px solid red;outline:2px dashed #00F;\");"
-				+ "setTimeout(function(){"
-		        +"element.setAttribute('style', original_style);"
-		        +"        }, 300);";
-			
+			String jsString = "element = arguments[0];\r\n" + "original_style = element.getAttribute('style');"
+					+ "element.setAttribute('style', original_style + \"; background: yellow; border: 2px solid red;outline:2px dashed #00F;\");"
+					+ "setTimeout(function(){" + "element.setAttribute('style', original_style);" + "        }, 300);";
+
 			runJS(jsString, e);
 		}
 
@@ -110,15 +109,15 @@ public class BaseSteps {
 	 * @Title: runJS @Description: TODO @author
 	 *         ahu@greendotcorp.com @param @param script @param @return @return
 	 *         Object return type @throws
-	 */
-
-	public static Object runJS(String script) {
-		// logger.info("Run the javascript from page ,the java script is:"
-		// + script);
-		JavascriptExecutor je = (JavascriptExecutor) driver;
-		return je.executeScript(script);
-
-	}
+	 *//*
+		 * 
+		 * public static Object runJS(String script) { //
+		 * logger.info("Run the javascript from page ,the java script is:" // +
+		 * script); JavascriptExecutor je = (JavascriptExecutor) driver; return
+		 * je.executeScript(script);
+		 * 
+		 * }
+		 */
 
 	/**
 	 * Run js not sync simple thread
@@ -127,9 +126,11 @@ public class BaseSteps {
 	 *            js script
 	 * @return the js object
 	 */
-	public static Object runJSAsync(String script) {
-		JavascriptExecutor je = (JavascriptExecutor)driver;
-		return je.executeAsyncScript(script);
+	public static Object runJSAsync(String script, Object... element) {
+		if (driver == null)
+			driver = SeleniumCore.driver;
+		JavascriptExecutor je = (JavascriptExecutor) driver;
+		return je.executeAsyncScript(script, element);
 
 	}
 
@@ -139,43 +140,43 @@ public class BaseSteps {
 	 *         void return type @throws
 	 */
 
-	public static void runJS(String script, WebElement e) {
+	public static Object runJS(String script, Object... e) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
 		// highLight(e);
-		JavascriptExecutor je = (JavascriptExecutor)driver;
-		je.executeScript(script, e);
+		JavascriptExecutor je = (JavascriptExecutor) driver;
+		return je.executeScript(script, e);
 
 	}
 
 	/**
-	 * @Title: runJSReturn @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param script @param @param
-	 *         e @param @return @return Object return type @throws
+	 * add the css style file content
+	 * 
+	 * @param css
+	 *            css file content
+	 * @return the return value
 	 */
-
-	public Object runJSReturn(String script, WebElement e) {
+	public static Object addCssStyle(String css) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
 		// highLight(e);
-		JavascriptExecutor je =(JavascriptExecutor) driver;
-		Object object = je.executeScript(script, e);
-		return object;
+		String cssFunction = "var pageRecordHeader = document.getElementsByTagName('head')[0];\n"
+				+ "var pageRecordStyle=document.createElement('style');\n"
+				+ "pageRecordStyle.setAttribute('type', 'text/css');\n";
+		String injectCSSAlreadyContent = "function supportCSSType(){" + cssFunction
+				+ "if(pageRecordStyle.styleSheet){console.log('pageRecord:true');return true;}else{console.log('pageRecord:true');return false;}};\n"
+				+ "return supportCSSType();";
+		boolean hasCssStyleAlready = (boolean) BaseSteps.runJS(injectCSSAlreadyContent);
+		if (hasCssStyleAlready) {
+			cssFunction += "pageRecordStyle.styleSheet.cssText = '" + css + "';";
+			// log.info(CSSFunctionInjectedObject.toString());
+		} else {
+			cssFunction += "pageRecordStyle.appendChild(document.createTextNode('" + css + "'));";
+		}
+		cssFunction += "\n pageRecordHeader.appendChild(pageRecordStyle);";
 
-	}
+		return BaseSteps.runJS(cssFunction);
 
-	/**
-	 * @Title: runJSReturn @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param script @param @return @return
-	 *         Object return type @throws
-	 */
-
-	public Object runJSReturn(String script) {
-		// logger.info("Run the javascript from page ,the java script is:"
-		// + script);
-		JavascriptExecutor je =(JavascriptExecutor) driver;
-		Object object = je.executeScript(script);
-		return object;
 	}
 
 	/**
@@ -971,7 +972,7 @@ public class BaseSteps {
 	 */
 
 	public String getAlertMessage() {
-		Object objmsg = runJSReturn("return window.message;");
+		Object objmsg = runJS("return window.message;");
 		return objmsg.toString();
 	}
 
@@ -1308,7 +1309,7 @@ public class BaseSteps {
 
 	public String elementHtmlCodeIs(WebElement e) {
 		// throw new PendingException();
-		String contents = (String) runJSReturn("return arguments[0].innerHTML;", e);
+		String contents = (String) runJS("return arguments[0].innerHTML;", e);
 		return contents;
 	}
 
@@ -1383,7 +1384,7 @@ public class BaseSteps {
 	 */
 
 	public boolean isChromeEmulationBrowser() {
-		Capabilities actualCapabilities =((RemoteWebDriver) driver).getCapabilities();
+		Capabilities actualCapabilities = ((RemoteWebDriver) driver).getCapabilities();
 		String browser = actualCapabilities.getBrowserName();
 		Object isemulator = actualCapabilities.getCapability("mobileEmulationEnabled");
 		if (isemulator != null) {

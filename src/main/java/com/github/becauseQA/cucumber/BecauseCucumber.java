@@ -59,6 +59,10 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 
 	public static String METHOD_BEFORERUN = "beforeRun";
 	public static String METHOD_AFTERRUN = "afterRun";
+	
+	//public static String METHOD_BEFORESTEP = "beforeStep";
+	//public static String METHOD_AFTERSTEP= "afterStep";
+	
 
 	public static String METHOD_BEFORESCENARIO = "beforeEachScenario";
 	public static String METHOD_AFTERSCENARIO = "afterEachScenario";
@@ -103,7 +107,7 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 				"rerun:target/cucumber/cucumber-failed-report/failed,rerun.txt" };
 		List<String> reportformatList = Arrays.asList(formatArrays);
 		// get the step definition paths
-		String[] stepArrays = new String[] { "classpath:", "com.github.becausetesting.cucumber.selenium" };
+		String[] stepArrays = new String[] { "classpath:", "com.github.becauseQA.cucumber.selenium" };
 		List<String> stepdefinitionList = Arrays.asList(stepArrays);
 
 		// the cucumber feature files

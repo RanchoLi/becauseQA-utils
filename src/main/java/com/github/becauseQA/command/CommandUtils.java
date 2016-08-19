@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:CommandUtils.java
- * Package Name:com.github.becausetesting.command
+ * Package Name:com.github.becauseQA.command
  * Date:Apr 16, 201610:59:06 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

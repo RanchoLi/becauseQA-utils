@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:JDBCUtils.java
- * Package Name:com.github.becausetesting.database
+ * Package Name:com.github.becauseQA.database
  * Date:Apr 16, 201611:07:18 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<title>toastr examples</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<!-- CSS -->
+<link rel="stylesheet"
+	href="toastr.min.css" />
+ 
+
+<body class="container">
+
+	<div class="row">
+		<button type="button" class="btn btn-primary" id="showtoast">Show
+			Toast</button>
+		<button type="button" class="btn btn-danger" id="cleartoasts">Clear
+			Toasts</button>
+		<button type="button" class="btn btn-danger" id="clearlasttoast">Clear
+			Last Toast</button>
+	</div>
+
+	<script
+		src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script
+	src="toastr.min.js"></script>
+
+	<script type="text/javascript">
+		$(function() {
+
+
+			$('#showtoast').click(function() {
+				toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-top-left",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+              toastr['warning']('Are you the 6 fingered man?','title3232323232323232322323232323').css('width','350px')
+			});
+		});
+	</script>
+</body>
+
+</html>

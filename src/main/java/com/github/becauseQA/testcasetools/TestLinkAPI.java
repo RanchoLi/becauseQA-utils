@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:TestLinkAPI.java
- * Package Name:com.github.becausetesting.testcasetools
+ * Package Name:com.github.becauseQA.testcasetools
  * Date:Apr 17, 20168:58:26 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

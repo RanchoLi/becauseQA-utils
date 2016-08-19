@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:ListUtils.java
- * Package Name:com.github.becausetesting.collections
+ * Package Name:com.github.becauseQA.collections
  * Date:Apr 17, 20168:49:15 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

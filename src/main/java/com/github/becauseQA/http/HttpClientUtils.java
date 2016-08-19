@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:HttpClientUtils.java
- * Package Name:com.github.becausetesting.http
+ * Package Name:com.github.becauseQA.http
  * Date:Apr 17, 20166:29:02 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

@@ -11,7 +11,7 @@ public class TestRailAPITest {
 
 	private TestRailAPI api;
 	private String projectname = "Green Dot Network";
-	private String testplanname = "Green Dot Network-Web-Sample-1";
+	private String testplanname = "Green Dot Network-Web-Automation-389";
 	private String testsuitename = "Disbursements";
 	private String testsectioname1 = "Uber MC Send Link API";
 	private String testsectioname2 = "Authentication and Connectivity to MasterCard Send API";

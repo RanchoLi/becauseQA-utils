@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:HttpsCert.java
- * Package Name:becausetesting.webserivce
+ * Package Name:becauseQA.webserivce
  * Date:Apr 16, 201611:30:00 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

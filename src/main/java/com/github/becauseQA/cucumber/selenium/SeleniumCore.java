@@ -198,6 +198,9 @@ public class SeleniumCore {
 		logger.info("Server Capabilities are :\n" + actualCapabilities.toString() + "\nBrowser Name:" + browser
 				+ " , is mobile emulation:?? ");
 		seleniumDriverManager(driver);
+		
+		// inject the page recorder
+		PageRecorder.startRecord(driver);
 
 	}
 

@@ -16,6 +16,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.github.becauseQA.cucumber.selenium.PageRecorder;
 import com.github.becauseQA.cucumber.selenium.SeleniumCore;
 import com.github.becauseQA.reflections.RefelectionUtils;
 
@@ -46,6 +47,9 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	private boolean failedStep;
 	private boolean ignoredStep;
 	private boolean inScenarioLifeCycle;
+	
+	private String cucumberStepTitle="Automation Step Execution Recorder";
+	private String cucumberScenarioTitle="Automation Scenario Execution Recorder";
 
 	/*
 	 * static { try { driver = new RemoteWebDriver(new
@@ -67,8 +71,10 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	public static AtomicInteger passScenariosCount;
 
 	private byte[] screenshotAs = new byte[1024];
+	// public static Object reportInstance;
 
 	private void myBecauseCucumberReporter() {
+
 		// define the step and scenarios counters
 		failedStepsCount = new AtomicInteger(0);
 		skippedStepsCount = new AtomicInteger(0);
@@ -89,7 +95,27 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		}
 	}
 
+	/*private void becauseCucumberBeforeStep(Step step) {
+		// Object reportInstance = BecauseCucumber.reportInstance;
+		String CucumberStep = step.getKeyword() + " " + step.getName();
+		// PageRecorder.showMessage(CucumberStep, null);
+		Object reportInstance = BecauseCucumber.reportInstance;
+		if (reportInstance != null) {
+			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESTEP, step);
+		}
+	}
+
+	private void becauseCucumberAfterStep(Step step, Result result) {
+		// Object reportInstance = BecauseCucumber.reportInstance;
+		Object reportInstance = BecauseCucumber.reportInstance;
+		if (reportInstance != null) {
+			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_AFTERSTEP, step, result);
+		}
+	}
+*/
 	private void becauseCucumberStartOfScenarioLifeCycle(Scenario scenario) {
+		String message=scenario.getKeyword()+" "+scenario.getName()+":"+scenario.getLine();
+		PageRecorder.showMessage(message, "info",cucumberScenarioTitle);
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
 			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESCENARIO, scenario);
@@ -171,6 +197,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
 		executionUnitNotifier = new EachTestNotifier(runNotifier, executionUnitRunner.getDescription());
 		executionUnitNotifier.fireTestStarted();
+		//PageRecorder.showMessage(executionUnitRunner.getDescription().getDisplayName(), "info");
 	}
 
 	public void finishExecutionUnit() {
@@ -210,9 +237,17 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
 	@Override
 	public void result(Result result) {
-		// fix this issue only for failed or passed steps to log the global result
+		// fix this issue only for failed or passed steps to log the global
+		// result
+		int size = steps.size();
+		String cucumberStep="Last Step Execution Result";
+		if(size>0){
+			Step step = steps.get(size-1);
+			cucumberStep=step.getKeyword()+" "+step.getName()+" :"+step.getLine();
+		}
+		
 		String resultStatus = result.getStatus();
-		if (Result.FAILED == resultStatus||Result.PASSED == resultStatus){
+		if (Result.FAILED == resultStatus || Result.PASSED == resultStatus) {
 			BecauseCucumberReporter.result = result;
 		}
 		Throwable error = result.getError();
@@ -220,9 +255,12 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		if (Result.SKIPPED == result) {
 			skippedStepsCount.incrementAndGet();
 			stepNotifier.fireTestIgnored();
+
+			PageRecorder.showMessage(cucumberStep + "==> [Skipped]", "warn",cucumberStepTitle);
 		} else if (isPendingOrUndefined(result)) {
 			undefinedStepsCount.incrementAndGet();
 			addFailureOrIgnoreStep(result);
+			PageRecorder.showMessage(cucumberStep + "==> [Pending]", "warn",cucumberStepTitle);
 		} else {
 			if (stepNotifier != null) {
 				// Should only fireTestStarted if not ignored
@@ -230,8 +268,10 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 				if (error != null) {
 					failedStepsCount.incrementAndGet();
 					stepNotifier.addFailure(error);
+					PageRecorder.showMessage(cucumberStep + "==> [Failed]" + "\r\n" + error.getMessage(), "error",cucumberStepTitle);
 				} else {
 					passStepsCount.incrementAndGet();
+					PageRecorder.showMessage(cucumberStep + "==> [Passed]", "success",cucumberStepTitle);
 				}
 				stepNotifier.fireTestFinished();
 			}
@@ -333,6 +373,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	public void step(Step step) {
 		if (inScenarioLifeCycle) {
 			steps.add(step);
+
 		}
 		formatter.step(step);
 	}

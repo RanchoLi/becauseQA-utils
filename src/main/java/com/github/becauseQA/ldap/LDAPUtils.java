@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:LDAPUtils.java
- * Package Name:com.github.becausetesting.ldap
+ * Package Name:com.github.becauseQA.ldap
  * Date:Apr 23, 20162:11:03 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

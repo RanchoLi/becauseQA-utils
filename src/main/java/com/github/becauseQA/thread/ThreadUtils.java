@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:ThreadUtils.java
- * Package Name:com.github.becausetesting.thread
+ * Package Name:com.github.becauseQA.thread
  * Date:Apr 17, 20168:59:45 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *
@@ -19,5 +19,6 @@ package com.github.becauseQA.thread;
  */
 public class ThreadUtils {
 
+	
 }
 

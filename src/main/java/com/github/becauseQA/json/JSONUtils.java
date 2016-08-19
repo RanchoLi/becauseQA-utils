@@ -1,7 +1,7 @@
 /**
  * Project Name:commons
  * File Name:JSONUtils.java
- * Package Name:com.github.becausetesting.json
+ * Package Name:com.github.becauseQA.json
  * Date:Apr 17, 20162:30:48 PM
  * Copyright (c) 2016, alterhu2020@gmail.com All Rights Reserved.
  *

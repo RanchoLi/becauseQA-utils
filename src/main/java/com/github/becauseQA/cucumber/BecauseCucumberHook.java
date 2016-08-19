@@ -51,6 +51,23 @@ public interface BecauseCucumberHook {
 	 */
 	public void afterRun(); 
 	
+
+	/**
+	 * beforeStep start the cucumber step
+	 * @author alterhu2020@gmail.com
+	 * @param step the parameter for cucumber step.
+	 * @since JDK 1.8
+	 *//*
+	public void beforeStep(Step step);  //start the selenium 
+	*//**
+	 * afterStep: after finished the cucumber step
+	 * @author alterhu2020@gmail.com
+	 * @param step the parameter for cucumber step.
+	 * @since JDK 1.8
+	 *//*
+	public void afterStep(Step step,Result result); // upload the result into test tool
+	
+	*/
 	
 	/**
 	 * beforeEachScenario:before start the cucumber scenario
@@ -96,7 +113,7 @@ public interface BecauseCucumberHook {
 	 * setCucumberStepDefinitionPaths to use to set cucumber step definition path:
 	 * we had set these paths as default path to search the step definition,
 	 * <p>1. classpath:</p>
-	 * <p>2. com.github.becausetesting.cucumber.selenium</p>
+	 * <p>2. com.github.becauseQA.cucumber.selenium</p>
 	 * so actually you no need to set the step definition path here ,just leave it as empty.
 	 * @author alterhu2020@gmail.com
 	 * @return
