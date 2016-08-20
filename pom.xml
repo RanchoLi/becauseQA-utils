@@ -379,8 +379,7 @@
 									<goal>sign</goal>
 								</goals>
 								<!-- <configuration> <executable>gpg</executable> <homedir>${gpg.homedir}</homedir> 
-								
-<keyname>${gpg.keyname}</keyname> <passphrase>${gpg.passphrase}</passphrase> 
+									<keyname>${gpg.keyname}</keyname> <passphrase>${gpg.passphrase}</passphrase> 
 									</configuration> -->
 							</execution>
 						</executions>
@@ -390,15 +389,20 @@
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>${nexus-staging-maven-plugin.version}</version>
 						<extensions>true</extensions>
+
 						<configuration>
-							<serverId>ossrh</serverId>
+							<serverId>nexus</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>false</autoReleaseAfterClose>
+							<sslAllowAll>true</sslAllowAll>
+							<stagingProgressPauseDurationSeconds>20</stagingProgressPauseDurationSeconds>
+							<stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
+							<detectBuildFailures>true</detectBuildFailures>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
 	</profiles>
-	
+
 </project>
