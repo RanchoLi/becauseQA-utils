@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>becauseQA-utils</artifactId>
 	<groupId>com.github.becauseQA</groupId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>jar</packaging>
 	<description>A common libraries used for testing framework.</description>
 	<url>https://github.com/BecauseQA/becauseQA-utils</url>
@@ -379,7 +379,8 @@
 									<goal>sign</goal>
 								</goals>
 								<!-- <configuration> <executable>gpg</executable> <homedir>${gpg.homedir}</homedir> 
-									<keyname>${gpg.keyname}</keyname> <passphrase>${gpg.passphrase}</passphrase> 
+								
+<keyname>${gpg.keyname}</keyname> <passphrase>${gpg.passphrase}</passphrase> 
 									</configuration> -->
 							</execution>
 						</executions>
@@ -389,20 +390,15 @@
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>${nexus-staging-maven-plugin.version}</version>
 						<extensions>true</extensions>
-
 						<configuration>
-							<serverId>nexus</serverId>
+							<serverId>ossrh</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>false</autoReleaseAfterClose>
-							<sslAllowAll>true</sslAllowAll>
-							<stagingProgressPauseDurationSeconds>20</stagingProgressPauseDurationSeconds>
-							<stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
-							<detectBuildFailures>true</detectBuildFailures>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
 	</profiles>
-
+	
 </project>

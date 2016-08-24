@@ -47,9 +47,10 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	private boolean failedStep;
 	private boolean ignoredStep;
 	private boolean inScenarioLifeCycle;
-	
-	private String cucumberStepTitle="Automation Step Execution Recorder";
-	private String cucumberScenarioTitle="Automation Scenario Execution Recorder";
+	private Description description;
+
+	private String cucumberStepTitle = "Automation Step Execution Recorder";
+	private String cucumberScenarioTitle = "Automation Scenario Execution Recorder";
 
 	/*
 	 * static { try { driver = new RemoteWebDriver(new
@@ -95,27 +96,24 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		}
 	}
 
-	/*private void becauseCucumberBeforeStep(Step step) {
-		// Object reportInstance = BecauseCucumber.reportInstance;
-		String CucumberStep = step.getKeyword() + " " + step.getName();
-		// PageRecorder.showMessage(CucumberStep, null);
-		Object reportInstance = BecauseCucumber.reportInstance;
-		if (reportInstance != null) {
-			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESTEP, step);
-		}
-	}
-
-	private void becauseCucumberAfterStep(Step step, Result result) {
-		// Object reportInstance = BecauseCucumber.reportInstance;
-		Object reportInstance = BecauseCucumber.reportInstance;
-		if (reportInstance != null) {
-			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_AFTERSTEP, step, result);
-		}
-	}
-*/
+	/*
+	 * private void becauseCucumberBeforeStep(Step step) { // Object
+	 * reportInstance = BecauseCucumber.reportInstance; String CucumberStep =
+	 * step.getKeyword() + " " + step.getName(); //
+	 * PageRecorder.showMessage(CucumberStep, null); Object reportInstance =
+	 * BecauseCucumber.reportInstance; if (reportInstance != null) {
+	 * RefelectionUtils.getMethod(reportInstance,
+	 * BecauseCucumber.METHOD_BEFORESTEP, step); } }
+	 * 
+	 * private void becauseCucumberAfterStep(Step step, Result result) { //
+	 * Object reportInstance = BecauseCucumber.reportInstance; Object
+	 * reportInstance = BecauseCucumber.reportInstance; if (reportInstance !=
+	 * null) { RefelectionUtils.getMethod(reportInstance,
+	 * BecauseCucumber.METHOD_AFTERSTEP, step, result); } }
+	 */
 	private void becauseCucumberStartOfScenarioLifeCycle(Scenario scenario) {
-		String message=scenario.getKeyword()+" "+scenario.getName()+":"+scenario.getLine();
-		PageRecorder.showMessage(message, "info",cucumberScenarioTitle);
+		String message = scenario.getKeyword() + " " + scenario.getName() + ":" + scenario.getLine();
+		PageRecorder.showMessage(message, "info", cucumberScenarioTitle);
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
 			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESCENARIO, scenario);
@@ -197,7 +195,8 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 
 		executionUnitNotifier = new EachTestNotifier(runNotifier, executionUnitRunner.getDescription());
 		executionUnitNotifier.fireTestStarted();
-		//PageRecorder.showMessage(executionUnitRunner.getDescription().getDisplayName(), "info");
+		// PageRecorder.showMessage(executionUnitRunner.getDescription().getDisplayName(),
+		// "info");
 	}
 
 	public void finishExecutionUnit() {
@@ -210,7 +209,7 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	@Override
 	public void match(Match match) {
 		Step runnerStep = fetchAndCheckRunnerStep();
-		Description description = executionUnitRunner.describeChild(runnerStep);
+		description = executionUnitRunner.describeChild(runnerStep);
 		stepNotifier = new EachTestNotifier(runNotifier, description);
 		reporter.match(match);
 	}
@@ -239,13 +238,13 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	public void result(Result result) {
 		// fix this issue only for failed or passed steps to log the global
 		// result
-		int size = steps.size();
-		String cucumberStep="Last Step Execution Result";
-		if(size>0){
-			Step step = steps.get(size-1);
-			cucumberStep=step.getKeyword()+" "+step.getName()+" :"+step.getLine();
-		}
-		
+		/*int size = steps.size();
+		String cucumberStep = "Last Step Execution Result";
+		if (size > 0) {
+			Step step = steps.get(size - 1);
+			cucumberStep = step.getKeyword() + " " + step.getName() + " (lineNumber:" + step.getLine() + ")";
+		}*/
+
 		String resultStatus = result.getStatus();
 		if (Result.FAILED == resultStatus || Result.PASSED == resultStatus) {
 			BecauseCucumberReporter.result = result;
@@ -256,11 +255,11 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 			skippedStepsCount.incrementAndGet();
 			stepNotifier.fireTestIgnored();
 
-			PageRecorder.showMessage(cucumberStep + "==> [Skipped]", "warn",cucumberStepTitle);
+			PageRecorder.showMessage(description.getDisplayName(), "warning","[Skipped] "+ cucumberStepTitle);
 		} else if (isPendingOrUndefined(result)) {
 			undefinedStepsCount.incrementAndGet();
 			addFailureOrIgnoreStep(result);
-			PageRecorder.showMessage(cucumberStep + "==> [Pending]", "warn",cucumberStepTitle);
+			PageRecorder.showMessage(description.getDisplayName(), "warning", "[Pending] "+cucumberStepTitle);
 		} else {
 			if (stepNotifier != null) {
 				// Should only fireTestStarted if not ignored
@@ -268,16 +267,16 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 				if (error != null) {
 					failedStepsCount.incrementAndGet();
 					stepNotifier.addFailure(error);
-					PageRecorder.showMessage(cucumberStep + "==> [Failed]" + "\r\n" + error.getMessage(), "error",cucumberStepTitle);
 				} else {
 					passStepsCount.incrementAndGet();
-					PageRecorder.showMessage(cucumberStep + "==> [Passed]", "success",cucumberStepTitle);
+					PageRecorder.showMessage(description.getDisplayName(), "success", "[Passed] "+cucumberStepTitle);
 				}
 				stepNotifier.fireTestFinished();
 			}
 			if (error != null) {
 				failedStep = true;
 				executionUnitNotifier.addFailure(error);
+				PageRecorder.showMessage(description + "\n\n" + error.getMessage(), "error","[Failed] "+cucumberStepTitle);
 			}
 		}
 		if (steps.isEmpty()) {

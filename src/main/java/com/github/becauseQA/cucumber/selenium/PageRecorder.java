@@ -2,6 +2,7 @@ package com.github.becauseQA.cucumber.selenium;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
 import com.github.becauseQA.apache.commons.FileUtils;
+import com.github.becauseQA.apache.commons.StringEscapeUtils;
 import com.github.becauseQA.apache.commons.StringUtils;
 import com.github.becauseQA.json.JSONUtils;
 import com.google.gson.JsonElement;
@@ -24,23 +26,47 @@ public class PageRecorder {
 
 	private static String lastCommandid = null;
 	private static String elementName;
+	private static String jsFolder = "/js/";
+
+	public static File copyResource2TempFolder(String filename) {
+		String tempdllpath = System.getProperty("java.io.tmpdir");
+		String destinationPath = tempdllpath + filename;
+		File jsFile = new File(destinationPath);
+		if (!jsFile.exists()) {
+			String resourceFilePath = jsFolder + filename;
+			InputStream inputStreamJS = PageRecorder.class.getResourceAsStream(resourceFilePath);
+			try {
+				FileUtils.copyInputStreamToFile(inputStreamJS, jsFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return jsFile;
+	}
 
 	public static void InjectAlertifyFile() {
-		String alertifyJS = PageRecorder.class.getResource("/js/toastr.min.js").getFile();
+		// String alertifyJS =
+		// PageRecorder.class.getResourceAsStream("/js/toastr.min.js").getFile();
 		try {
-			String alertifyJSContent = FileUtils.readFileToString(new File(alertifyJS));
+			File alertifyJS = copyResource2TempFolder("toastr.min.js");
+			File alertifyCSS = copyResource2TempFolder("toastr.min.css");
+			String alertifyJSContent = FileUtils.readFileToString(alertifyJS);
+			String toastrJSContent = FileUtils.readFileToString(alertifyCSS, "UTF-8");
 			// String alertifyFound = "return typeof $.notify=='function'; ";
 			String alertifyFound = "return typeof toastr=='object'; ";
 			boolean alertSupport = (boolean) BaseSteps.runJS(alertifyFound);
 			if (!alertSupport) {
 				BaseSteps.runJS(alertifyJSContent);
+				BaseSteps.addCssStyle(toastrJSContent);
 			} else {
 				log.info("Current browser had support toastr object,it's modern browser");
 			}
 
-			String toastrCSS = PageRecorder.class.getResource("/js/toastr.min.css").getFile();
-			String toastrJSContent = FileUtils.readFileToString(new File(toastrCSS), "UTF-8");
-			BaseSteps.addCssStyle(toastrJSContent);
+			// String toastrCSS =
+			// PageRecorder.class.getResource("/js/toastr.min.css").getFile();
+
+			
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -49,9 +75,11 @@ public class PageRecorder {
 	}
 
 	public static void InjectJSON2ObjectForWierdBrowsers() {
-		String jsonFilePath = PageRecorder.class.getResource("/js/json2.js").getFile();
+		// String jsonFilePath =
+		// PageRecorder.class.getResource("/js/json2.js").getFile();
 		try {
-			String jsonContent = FileUtils.readFileToString(new File(jsonFilePath));
+			File jsonFilePath = copyResource2TempFolder("json2.js");
+			String jsonContent = FileUtils.readFileToString(jsonFilePath);
 			String IsJson2ObjectExists = "return typeof JSON === 'object';";
 			boolean jsonSupport = (boolean) BaseSteps.runJS(IsJson2ObjectExists);
 			if (!jsonSupport) {
@@ -66,9 +94,11 @@ public class PageRecorder {
 	}
 
 	public static void InjectJQuery() {
-		String jqueryFilePath = PageRecorder.class.getResource("/js/jquery-3.1.0.min.js").getFile();
+		// String jqueryFilePath =
+		// PageRecorder.class.getResource("/js/jquery-3.1.0.min.js").getFile();
 		try {
-			String jqueryContent = FileUtils.readFileToString(new File(jqueryFilePath));
+			File jqueryFilePath = copyResource2TempFolder("jquery-3.1.0.min.js");
+			String jqueryContent = FileUtils.readFileToString(jqueryFilePath);
 			String IsJqueryObjectExists = "return typeof jQuery  === 'undefined';";
 			boolean jqueryNotSupport = (boolean) BaseSteps.runJS(IsJqueryObjectExists);
 			if (jqueryNotSupport) {
@@ -93,11 +123,13 @@ public class PageRecorder {
 		InjectJQuery();
 		InjectJSON2ObjectForWierdBrowsers();
 		InjectAlertifyFile();
-		String jsonFilePath = PageRecorder.class.getResource("/js/PageRecorder.js").getFile();
+		// String jsonFilePath =
+		// PageRecorder.class.getResource("/js/PageRecorder.js").getFile();
 		try {
+			File jsonFilePath = copyResource2TempFolder("PageRecorder.js");
 			boolean isVisualSearchScriptInjected = IsVisualSearchScriptInjected();
 			if (!isVisualSearchScriptInjected) {
-				String jsonContent = FileUtils.readFileToString(new File(jsonFilePath));
+				String jsonContent = FileUtils.readFileToString(jsonFilePath);
 				BaseSteps.runJS(jsonContent);
 
 			}
@@ -183,7 +215,7 @@ public class PageRecorder {
 				}
 
 			}
-		}, 0, 100 * 1000);
+		}, 0, 3 * 1000);
 	}
 
 	/**
@@ -194,19 +226,24 @@ public class PageRecorder {
 	 * @param type
 	 *            type should be success,info,warning,error
 	 */
-	public static void showMessage(String message, String type,String title) {
+	public static void showMessage(String message, String type, String title) {
 		String msgType = "info"; //
+		int hidetimeout = 3000;
 		if (StringUtils.isNotEmpty(type)) {
 			msgType = type;
+			if (msgType.equalsIgnoreCase("error")) {
+				hidetimeout = 0;
+			}
 		}
+		message = StringEscapeUtils.escapeEcmaScript(message);
 		String notifyJS = "toastr.options.closeButton= true;toastr.options.debug= false;"
 				+ "toastr.options.newestOnTop=true;toastr.options.progressBar=false;"
 				+ "toastr.options.positionClass='toast-top-left';toastr.options.preventDuplicates= false;"
-				+ "toastr.options.showDuration=300;toastr.options.hideDuration=3000;"
-				+ "toastr.options.timeOut=8000;toastr.options.extendedTimeOut=1000;"
+				+ "toastr.options.showDuration=300;toastr.options.hideDuration=" + hidetimeout + ";"
+				+ "toastr.options.timeOut=8000;toastr.options.extendedTimeOut=3000;"
 				+ "toastr.options.showEasing='swing';toastr.options.hideEasing='linear';"
-				+ "toastr.options.showMethod='fadeIn';toastr.options.hideMethod='slideUp';" + "toastr['" + msgType
-				+ "'](\"" + message + "\", '"+title+"').css('width','350px');";
+				+ "toastr.options.showMethod='fadeIn';toastr.options.hideMethod='slideUp';toastr['" + msgType + "'](\""
+				+ message + "\", '" + title + "').css('width','400px');";
 		try
 
 		{
@@ -217,10 +254,9 @@ public class PageRecorder {
 		}
 
 	}
-	
 
 	public static void main(String[] args) {
-		showMessage("test", null,"");
+		showMessage("test", null, "");
 	}
 
 }

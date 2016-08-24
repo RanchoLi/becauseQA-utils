@@ -30,24 +30,24 @@
 
 
 			$('#showtoast').click(function() {
-				toastr.options = {
-  "closeButton": false,
-  "debug": false,
-  "newestOnTop": false,
-  "progressBar": false,
-  "positionClass": "toast-top-left",
-  "preventDuplicates": false,
-  "onclick": null,
-  "showDuration": "300",
-  "hideDuration": "1000",
-  "timeOut": "5000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
-              toastr['warning']('Are you the 6 fingered man?','title3232323232323232322323232323').css('width','350px')
+				toastr.options.closeButton= true;
+				toastr.options.debug= false;
+				toastr.options.newestOnTop=true;
+				toastr.options.progressBar=false;
+
+				toastr.options.positionClass='toast-top-left';
+				toastr.options.preventDuplicates= false;
+
+				toastr.options.showDuration=300;
+				toastr.options.hideDuration=3000;
+
+				toastr.options.timeOut=0;
+				toastr.options.extendedTimeOut=10000;
+				toastr.options.showEasing='swing';
+				toastr.options.hideEasing='linear';
+				toastr.options.showMethod='fadeIn';
+				toastr.options.hideMethod='slideUp';
+				toastr['error']("this is content", 'title').css('width','350px');
 			});
 		});
 	</script>
