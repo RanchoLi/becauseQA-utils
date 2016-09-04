@@ -19,6 +19,7 @@ public class TemplateUtilsTest {
 
 	private FileTemplateLoader fileTemplateLoader;
 	private File location;
+	private StringTemplateLoader stringTemplateLoader;
 	@Before
 	public void setup() throws IOException {
 		// Class<? extends Class> protectionDomain =
@@ -28,10 +29,23 @@ public class TemplateUtilsTest {
 		location = new File(location2);
 		fileTemplateLoader = new FileTemplateLoader(location);
 
-		new StringTemplateLoader();
+		stringTemplateLoader = new StringTemplateLoader();
 		new TemplateUtils();
 	}
 
+	@Test
+	public void testStringTemplate(){
+		String templateName="dataTemplate";
+		String parseContent="this is a template content ${sex} used to get it ${name}";
+		stringTemplateLoader.putTemplate(templateName, parseContent);
+		Map<String,Object> dataModel=new HashMap<>();
+		dataModel.put("name", "alter .hu");
+		dataModel.put("sex", true);
+		String renderContent = TemplateUtils.renderContent(stringTemplateLoader, templateName, null, dataModel);
+		System.out.println(renderContent);
+		
+	}
+	
 	@Ignore
 	@Test
 	public void testRenderResourceContent() {
@@ -45,11 +59,11 @@ public class TemplateUtilsTest {
 		// dataModel.setPassword("testingpasswd");
 		dataModel.setSalary(5000);
 		dataModel.setUsername("altertesting");
-
-		
+	
 		TemplateUtils.renderContent(fileTemplateLoader, "sample", locationPath, dataModel);
 
 	}
+
 
 	@Test
 	public void testRenderList() throws TemplateException, IOException {

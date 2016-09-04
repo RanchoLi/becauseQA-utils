@@ -9,6 +9,7 @@
 
 package com.github.becauseQA.host;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Locale;
@@ -191,4 +192,29 @@ public class HostUtils {
 		return userName;
 	}
 
+	/**
+	 * ping the server to see if it available for testing
+	 * @param url the request url ,like google.com
+	 * @return the host address ,like 10.50.14.13
+	 */
+	public static String pingIPAddress(String url){
+		return pingIPAddress(url, 60);
+	}
+	
+	public static String pingIPAddress(String url,int timeoutseconds){
+		String ipAddress=null;
+		try {
+			InetAddress inetAddress = InetAddress.getByName(url);
+			boolean reachable = inetAddress.isReachable(timeoutseconds/1000);
+			System.out.println("Is host reachable ?"+reachable);
+			ipAddress=inetAddress.getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ipAddress;
+	}
 }

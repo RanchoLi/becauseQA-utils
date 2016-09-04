@@ -30,7 +30,7 @@ public class HttpClientRequesterTest {
 	@Ignore
 	public void testFormData302Response() throws IOException {
 		Request request = new Request();
-		request.setUrl(new URL("https://www.attheregister.com/moneypak/login"));
+		request.setUrl(new URL("https://serverurl"));
 		request.setMethod(HttpMethod.GET);
 		// clientRequester.getResponse(request);
 
@@ -56,12 +56,12 @@ public class HttpClientRequesterTest {
 	@Test
 	public void testSSLRestFulAuth2AndJsonData() throws FileNotFoundException, IOException {
 		Request request = new Request();
-		request.setUrl(new URL("https://api.greendotonline.com/SecuredCard/CreateRegistration"));
+		request.setUrl(new URL("https://serverurl"));
 		request.setMethod(HttpMethod.POST);
 	
 		request.addHeader("content-type", "application/json");
-		request.addHeader("GDCorrelationId", "awBne7qZbaLqaKsV1j37e2WVwEN1K54oGzKHqcpvF4tzIfvYRWMeK3KAqWusP37w");
-		request.addHeader("GDSessionId", "VxnYyFHHRMAdd28COy8dTWYt7GsWe7YQhymWl1jLZpQWxu7NXkdg848b3swjWUA5");
+		request.addHeader("header1", "awBne7qZbaLqaKsV1j37e2WVwEN1K54oGzKHqcpvF4tzIfvYRWMeK3KAqWusP37w");
+		request.addHeader("header2", "VxnYyFHHRMAdd28COy8dTWYt7GsWe7YQhymWl1jLZpQWxu7NXkdg848b3swjWUA5");
 
 		AuthOAuth2 oAuth2 = new AuthOAuth2(
 				"yMbMKQhlPi2UcoZ9Xjk7Et-M2q5cEMm4XAN9Dxoml7zeXidQ9egEJhy7c2bjaeS-wBFB_au27b08wrLas7_J5wUcSzvOMSTDncPb4kt-8sE2m_gM7SuZ1gxLQJbQhwLQp-gpH2guKnPaJbhSbAptFM0zO2uENyUXs2IC4sKTsTFILfQxx-aJVIl7MA0A6Ez8n2yDv9NTR2LtZAx0D9AvkD1Hwaqu-vvMT0DjO1BGHcOHilY0WXdo13aZ4t20JzFe9vpdy7FlQEBO0dWQXoCDWXyNRnJDz99B2_EiMOLk7UhsSIsAb6PwxIDbA4K_hB55tylZASRj1-22LG-dZZkM13vMhzdVysYpr50o6V0FNK9iKbY5idcVyLU_PEzKcSfmKEQaVa63WltcUk0cz_jvEA");
@@ -83,16 +83,16 @@ public class HttpClientRequesterTest {
 	@Ignore
 	public void testRestFul() throws FileNotFoundException, IOException {
 		Request request = new Request();
-		request.setUrl(new URL("https://partners.greendotcorp.com/Disbursements/api/v1/AuthorizedPing"));
+		request.setUrl(new URL("https://serverurl"));
 		request.setMethod(HttpMethod.POST);
 
 		request.addHeader("accept", "application/json");
-		request.addHeader("Host", "partners.greendotcorp.com");
+		request.addHeader("Host", "hostname.com");
 		request.addHeader("Authorization", "Basic ZDJjdGVzdHVzZXI6WFBPN2QzQjAzTVFmMFN6bTFWa0RJNkVVM1djPQ==");
 		request.addHeader("endusersecurityid", "100tester");
 		request.addHeader("enduserip", "127.0.0.1");
 		request.addHeader("requestid", "2015232323");
-		request.addHeader("partneridentifier", "Direct2CashTest");
+		request.addHeader("testpar", "Direct2CashTest");
 
 		InputStream openStream = getClass().getResource("/jsonData.json").openStream();
 		String jsonData = IOUtils.toString(openStream);
@@ -109,10 +109,10 @@ public class HttpClientRequesterTest {
 
 		Request request = new Request();
 
-		request.setUrl(new URL("http://gdcdevipscom01/PANSerialNumberConverter/Converter.svc"));
+		request.setUrl(new URL("serverurl"));
 		request.setMethod(HttpMethod.POST);
-		request.addHeader("SOAPAction", "http://tempuri.org/IPanSerialNumberConverter/Decrypt");
-		request.addHeader("Host", "gdcdevipscom01");
+		request.addHeader("SOAPAction", "server2");
+		request.addHeader("Host", "server");
 		ContentType contentType = ContentType.create("text/xml", Consts.UTF_8);
 		InputStream resourceAsStream = getClass().getResourceAsStream("/xmlData.xml");
 		String xmlData = IOUtils.toString(resourceAsStream);

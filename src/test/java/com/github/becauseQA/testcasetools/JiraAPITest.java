@@ -22,17 +22,17 @@ public class JiraAPITest {
 	@Test
 	public void test() {
 		
-		String projectKey="GDN";
-		String parentIssueKey="GDN-20725";
+		String projectKey="testpr";
+		String parentIssueKey="testpr-20725";
 		String issueType="Sub-task";
 		
 		
-		String summary="Regresion Testing-moneypak email";
+		String summary="test summary";
 		String description="Create from jira api";
 		String OriginalEstimate="1h";
 		String priority="Minor";
 		String assigner="ahu";
-		String team="Mustang";
+		String team="teamname";
 	
 	
 		//String myself = jiraAPI.getMyself();

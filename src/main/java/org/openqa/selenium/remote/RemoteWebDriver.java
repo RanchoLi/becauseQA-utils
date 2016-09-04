@@ -38,6 +38,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchFrameException;
+import org.openqa.selenium.NoSuchSessionException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
@@ -625,12 +626,7 @@ public class RemoteWebDriver
 	@Override
 	@SuppressWarnings({ "unchecked" })
 	public Set<String> getWindowHandles() {
-		Response response;
-		if (getW3CStandardComplianceLevel() > 0) {
-			response = execute(DriverCommand.GET_WINDOW_HANDLES_W3C);
-		} else {
-			response = execute(DriverCommand.GET_WINDOW_HANDLES);
-		}
+		Response response = execute(DriverCommand.GET_WINDOW_HANDLES);
 		Object value = response.getValue();
 		try {
 			List<String> returnedValues = (List<String>) value;
@@ -642,9 +638,6 @@ public class RemoteWebDriver
 
 	@Override
 	public String getWindowHandle() {
-		if (getW3CStandardComplianceLevel() > 0) {
-			return String.valueOf(execute(DriverCommand.GET_CURRENT_WINDOW_HANDLE_W3C).getValue());
-		}
 		return String.valueOf(execute(DriverCommand.GET_CURRENT_WINDOW_HANDLE).getValue());
 	}
 
@@ -662,9 +655,6 @@ public class RemoteWebDriver
 
 		Map<String, ?> params = ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
 
-		if (getW3CStandardComplianceLevel() > 0) {
-			return execute(DriverCommand.EXECUTE_SCRIPT_W3C, params).getValue();
-		}
 		return execute(DriverCommand.EXECUTE_SCRIPT, params).getValue();
 	}
 
@@ -682,9 +672,6 @@ public class RemoteWebDriver
 
 		Map<String, ?> params = ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
 
-		if (getW3CStandardComplianceLevel() > 0) {
-			return execute(DriverCommand.EXECUTE_ASYNC_SCRIPT_W3C, params).getValue();
-		}
 		return execute(DriverCommand.EXECUTE_ASYNC_SCRIPT, params).getValue();
 	}
 
@@ -725,7 +712,6 @@ public class RemoteWebDriver
 		this.level = level;
 	}
 
-	@SuppressWarnings("deprecation")
 	protected Response execute(String driverCommand, Map<String, ?> parameters) {
 		Command command = new Command(sessionId, driverCommand, parameters);
 		Response response;
@@ -748,7 +734,7 @@ public class RemoteWebDriver
 			// {"ELEMENT": id} to RemoteWebElements.
 			Object value = converter.apply(response.getValue());
 			response.setValue(value);
-		} catch (SessionNotFoundException e) {
+		} catch (NoSuchSessionException e) {
 			throw e;
 		} catch (Exception e) {
 			log(sessionId, command.getName(), command, When.EXCEPTION);
@@ -846,412 +832,344 @@ public class RemoteWebDriver
 		return fileDetector;
 	}
 
-	protected class RemoteWebDriverOptions implements Options {
+	 protected class RemoteWebDriverOptions implements Options {
 
-		@Override
-		@Beta
-		public Logs logs() {
-			return remoteLogs;
-		}
+		    @Beta
+		    public Logs logs() {
+		      return remoteLogs;
+		    }
 
-		@Override
-		public void addCookie(Cookie cookie) {
-			cookie.validate();
-			execute(DriverCommand.ADD_COOKIE, ImmutableMap.of("cookie", cookie));
-		}
+		    public void addCookie(Cookie cookie) {
+		      cookie.validate();
+		      execute(DriverCommand.ADD_COOKIE, ImmutableMap.of("cookie", cookie));
+		    }
 
-		@Override
-		public void deleteCookieNamed(String name) {
-			execute(DriverCommand.DELETE_COOKIE, ImmutableMap.of("name", name));
-		}
+		    public void deleteCookieNamed(String name) {
+		      execute(DriverCommand.DELETE_COOKIE, ImmutableMap.of("name", name));
+		    }
 
-		@Override
-		public void deleteCookie(Cookie cookie) {
-			deleteCookieNamed(cookie.getName());
-		}
+		    public void deleteCookie(Cookie cookie) {
+		      deleteCookieNamed(cookie.getName());
+		    }
 
-		@Override
-		public void deleteAllCookies() {
-			execute(DriverCommand.DELETE_ALL_COOKIES);
-		}
+		    public void deleteAllCookies() {
+		      execute(DriverCommand.DELETE_ALL_COOKIES);
+		    }
 
-		@Override
-		@SuppressWarnings({ "unchecked" })
-		public Set<Cookie> getCookies() {
-			Object returned = execute(DriverCommand.GET_ALL_COOKIES).getValue();
+		    @SuppressWarnings({"unchecked"})
+		    public Set<Cookie> getCookies() {
+		      Object returned = execute(DriverCommand.GET_ALL_COOKIES).getValue();
 
-			Set<Cookie> toReturn = new HashSet<>();
+		      Set<Cookie> toReturn = new HashSet<>();
 
-			List<Map<String, Object>> cookies = new JsonToBeanConverter().convert(List.class, returned);
-			if (cookies == null) {
-				return toReturn;
-			}
+		      List<Map<String, Object>> cookies =
+		          new JsonToBeanConverter().convert(List.class, returned);
+		      if (cookies == null) {
+		        return toReturn;
+		      }
 
-			for (Map<String, Object> rawCookie : cookies) {
-				String name = (String) rawCookie.get("name");
-				String value = (String) rawCookie.get("value");
-				String path = (String) rawCookie.get("path");
-				String domain = (String) rawCookie.get("domain");
-				boolean secure = rawCookie.containsKey("secure") && (Boolean) rawCookie.get("secure");
-				boolean httpOnly = rawCookie.containsKey("httpOnly") && (Boolean) rawCookie.get("httpOnly");
+		      for (Map<String, Object> rawCookie : cookies) {
+		        String name = (String) rawCookie.get("name");
+		        String value = (String) rawCookie.get("value");
+		        String path = (String) rawCookie.get("path");
+		        String domain = (String) rawCookie.get("domain");
+		        boolean secure = rawCookie.containsKey("secure") && (Boolean) rawCookie.get("secure");
+		        boolean httpOnly = rawCookie.containsKey("httpOnly") && (Boolean) rawCookie.get("httpOnly");
 
-				Number expiryNum = (Number) rawCookie.get("expiry");
-				Date expiry = expiryNum == null ? null : new Date(TimeUnit.SECONDS.toMillis(expiryNum.longValue()));
+		        Number expiryNum = (Number) rawCookie.get("expiry");
+		        Date expiry = expiryNum == null ? null : new Date(
+		            TimeUnit.SECONDS.toMillis(expiryNum.longValue()));
 
-				toReturn.add(new Cookie.Builder(name, value).path(path).domain(domain).isSecure(secure)
-						.isHttpOnly(httpOnly).expiresOn(expiry).build());
-			}
+		        toReturn.add(new Cookie.Builder(name, value)
+		            .path(path)
+		            .domain(domain)
+		            .isSecure(secure)
+		            .isHttpOnly(httpOnly)
+		            .expiresOn(expiry)
+		            .build());
+		      }
 
-			return toReturn;
-		}
+		      return toReturn;
+		    }
 
-		@Override
-		public Cookie getCookieNamed(String name) {
-			Set<Cookie> allCookies = getCookies();
-			for (Cookie cookie : allCookies) {
-				if (cookie.getName().equals(name)) {
-					return cookie;
-				}
-			}
-			return null;
-		}
+		    public Cookie getCookieNamed(String name) {
+		      Set<Cookie> allCookies = getCookies();
+		      for (Cookie cookie : allCookies) {
+		        if (cookie.getName().equals(name)) {
+		          return cookie;
+		        }
+		      }
+		      return null;
+		    }
 
-		@Override
-		public Timeouts timeouts() {
-			return new RemoteTimeouts();
-		}
+		    public Timeouts timeouts() {
+		      return new RemoteTimeouts();
+		    }
 
-		@Override
-		public ImeHandler ime() {
-			return new RemoteInputMethodManager();
-		}
+		    public ImeHandler ime() {
+		      return new RemoteInputMethodManager();
+		    }
 
-		@Override
-		@Beta
-		public Window window() {
-			return new RemoteWindow();
-		}
+		    @Beta
+		    public Window window() {
+		      return new RemoteWindow();
+		    }
 
-		protected class RemoteInputMethodManager implements WebDriver.ImeHandler {
+		    protected class RemoteInputMethodManager implements WebDriver.ImeHandler {
 
-			@Override
-			@SuppressWarnings("unchecked")
-			public List<String> getAvailableEngines() {
-				Response response = execute(DriverCommand.IME_GET_AVAILABLE_ENGINES);
-				return (List<String>) response.getValue();
-			}
+		      @SuppressWarnings("unchecked")
+		      public List<String> getAvailableEngines() {
+		        Response response = execute(DriverCommand.IME_GET_AVAILABLE_ENGINES);
+		        return (List<String>) response.getValue();
+		      }
 
-			@Override
-			public String getActiveEngine() {
-				Response response = execute(DriverCommand.IME_GET_ACTIVE_ENGINE);
-				return (String) response.getValue();
-			}
+		      public String getActiveEngine() {
+		        Response response = execute(DriverCommand.IME_GET_ACTIVE_ENGINE);
+		        return (String) response.getValue();
+		      }
 
-			@Override
-			public boolean isActivated() {
-				Response response = execute(DriverCommand.IME_IS_ACTIVATED);
-				return (Boolean) response.getValue();
-			}
+		      public boolean isActivated() {
+		        Response response = execute(DriverCommand.IME_IS_ACTIVATED);
+		        return (Boolean) response.getValue();
+		      }
 
-			@Override
-			public void deactivate() {
-				execute(DriverCommand.IME_DEACTIVATE);
-			}
+		      public void deactivate() {
+		        execute(DriverCommand.IME_DEACTIVATE);
+		      }
 
-			@Override
-			public void activateEngine(String engine) {
-				execute(DriverCommand.IME_ACTIVATE_ENGINE, ImmutableMap.of("engine", engine));
-			}
-		} // RemoteInputMethodManager class
+		      public void activateEngine(String engine) {
+		        execute(DriverCommand.IME_ACTIVATE_ENGINE, ImmutableMap.of("engine", engine));
+		      }
+		    } // RemoteInputMethodManager class
 
-		protected class RemoteTimeouts implements Timeouts {
+		    protected class RemoteTimeouts implements Timeouts {
 
-			@Override
-			public Timeouts implicitlyWait(long time, TimeUnit unit) {
-				execute(DriverCommand.SET_TIMEOUT,
-						ImmutableMap.of("type", "implicit", "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
-				return this;
-			}
+		      public Timeouts implicitlyWait(long time, TimeUnit unit) {
+		        execute(DriverCommand.SET_TIMEOUT, ImmutableMap.of(
+		            "type", "implicit",
+		            "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
+		        return this;
+		      }
 
-			@Override
-			public Timeouts setScriptTimeout(long time, TimeUnit unit) {
-				execute(DriverCommand.SET_TIMEOUT,
-						ImmutableMap.of("type", "script", "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
-				return this;
-			}
+		      public Timeouts setScriptTimeout(long time, TimeUnit unit) {
+		        execute(DriverCommand.SET_TIMEOUT, ImmutableMap.of(
+		            "type", "script",
+		            "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
+		        return this;
+		      }
 
-			@Override
-			public Timeouts pageLoadTimeout(long time, TimeUnit unit) {
-				execute(DriverCommand.SET_TIMEOUT,
-						ImmutableMap.of("type", "page load", "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
-				return this;
-			}
-		} // timeouts class.
+		      public Timeouts pageLoadTimeout(long time, TimeUnit unit) {
+		        execute(DriverCommand.SET_TIMEOUT, ImmutableMap.of(
+		            "type", "page load",
+		            "ms", TimeUnit.MILLISECONDS.convert(time, unit)));
+		        return this;
+		      }
+		    } // timeouts class.
 
-		@Beta
-		protected class RemoteWindow implements Window {
+		    @Beta
+		    protected class RemoteWindow implements Window {
 
-			@Override
-			public void setSize(Dimension targetSize) {
-				if (getW3CStandardComplianceLevel() == 0) {
-					execute(DriverCommand.SET_WINDOW_SIZE, ImmutableMap.of("windowHandle", "current", "width",
-							targetSize.width, "height", targetSize.height));
-				} else {
-					execute(DriverCommand.SET_CURRENT_WINDOW_SIZE,
-							ImmutableMap.of("width", targetSize.width, "height", targetSize.height));
-				}
-			}
+		      public void setSize(Dimension targetSize) {
+		        execute(DriverCommand.SET_CURRENT_WINDOW_SIZE,
+		                ImmutableMap.of("width", targetSize.width, "height", targetSize.height));
+		      }
 
-			@Override
-			public void setPosition(Point targetPosition) {
-				if (getW3CStandardComplianceLevel() == 0) {
-					execute(DriverCommand.SET_WINDOW_POSITION,
-							ImmutableMap.of("windowHandle", "current", "x", targetPosition.x, "y", targetPosition.y));
-				} else {
-					executeScript("window.screenX = arguments[0]; window.screenY = arguments[1]", targetPosition.x,
-							targetPosition.y);
-				}
-			}
+		      public void setPosition(Point targetPosition) {
+		        execute(DriverCommand.SET_CURRENT_WINDOW_POSITION,
+		                ImmutableMap.of("x", targetPosition.x, "y", targetPosition.y));
+		      }
 
-			@Override
-			@SuppressWarnings({ "unchecked" })
-			public Dimension getSize() {
-				Response response = getW3CStandardComplianceLevel() == 0
-						? execute(DriverCommand.GET_WINDOW_SIZE, ImmutableMap.of("windowHandle", "current"))
-						: execute(DriverCommand.GET_CURRENT_WINDOW_SIZE);
+		      @SuppressWarnings({"unchecked"})
+		      public Dimension getSize() {
+		        Response response = execute(DriverCommand.GET_CURRENT_WINDOW_SIZE);
 
-				Map<String, Object> rawSize = (Map<String, Object>) response.getValue();
+		        Map<String, Object> rawSize = (Map<String, Object>) response.getValue();
 
-				int width = ((Number) rawSize.get("width")).intValue();
-				int height = ((Number) rawSize.get("height")).intValue();
+		        int width = ((Number) rawSize.get("width")).intValue();
+		        int height = ((Number) rawSize.get("height")).intValue();
 
-				return new Dimension(width, height);
-			}
+		        return new Dimension(width, height);
+		      }
 
-			@SuppressWarnings({})
-			Map<String, Object> rawPoint;
-
-			@Override
-			@SuppressWarnings("unchecked")
+		      @SuppressWarnings({})
+		      Map<String, Object> rawPoint;
+		      @SuppressWarnings("unchecked")
 			public Point getPosition() {
-				if (getW3CStandardComplianceLevel() == 0) {
-					Response response = execute(DriverCommand.GET_WINDOW_POSITION,
-							ImmutableMap.of("windowHandle", "current"));
-					rawPoint = (Map<String, Object>) response.getValue();
-				} else {
-					rawPoint = (Map<String, Object>) executeScript("return {x: window.screenX, y: window.screenY}");
-				}
+		        Response response = execute(DriverCommand.GET_CURRENT_WINDOW_POSITION,
+		                                    ImmutableMap.of("windowHandle", "current"));
+		        rawPoint = (Map<String, Object>) response.getValue();
 
-				int x = ((Number) rawPoint.get("x")).intValue();
-				int y = ((Number) rawPoint.get("y")).intValue();
+		        int x = ((Number) rawPoint.get("x")).intValue();
+		        int y = ((Number) rawPoint.get("y")).intValue();
 
-				return new Point(x, y);
-			}
+		        return new Point(x, y);
+		      }
 
-			@Override
-			public void maximize() {
-				if (getW3CStandardComplianceLevel() == 0) {
-					execute(DriverCommand.MAXIMIZE_WINDOW, ImmutableMap.of("windowHandle", "current"));
-				} else {
-					execute(DriverCommand.MAXIMIZE_CURRENT_WINDOW);
-				}
-			}
+		      public void maximize() {
+		        execute(DriverCommand.MAXIMIZE_CURRENT_WINDOW);
+		      }
 
-			@Override
-			public void fullscreen() {
-				execute(DriverCommand.FULLSCREEN_CURRENT_WINDOW);
-			}
-		}
-	}
+		      public void fullscreen() {
+		        execute(DriverCommand.FULLSCREEN_CURRENT_WINDOW);
+		      }
+		    }
+		  }
 
-	private class RemoteNavigation implements Navigation {
+		  private class RemoteNavigation implements Navigation {
 
-		@Override
-		public void back() {
-			execute(DriverCommand.GO_BACK);
-		}
+		    public void back() {
+		      execute(DriverCommand.GO_BACK);
+		    }
 
-		@Override
-		public void forward() {
-			execute(DriverCommand.GO_FORWARD);
-		}
+		    public void forward() {
+		      execute(DriverCommand.GO_FORWARD);
+		    }
 
-		@Override
-		public void to(String url) {
-			get(url);
-		}
+		    public void to(String url) {
+		      get(url);
+		    }
 
-		@Override
-		public void to(URL url) {
-			get(String.valueOf(url));
-		}
+		    public void to(URL url) {
+		      get(String.valueOf(url));
+		    }
 
-		@Override
-		public void refresh() {
-			execute(DriverCommand.REFRESH);
-		}
-	}
+		    public void refresh() {
+		      execute(DriverCommand.REFRESH);
+		    }
+		  }
 
-	protected class RemoteTargetLocator implements TargetLocator {
+		  protected class RemoteTargetLocator implements TargetLocator {
 
-		@Override
-		public WebDriver frame(int frameIndex) {
-			execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", frameIndex));
-			return RemoteWebDriver.this;
-		}
+		    public WebDriver frame(int frameIndex) {
+		      execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", frameIndex));
+		      return RemoteWebDriver.this;
+		    }
 
-		@Override
-		public WebDriver frame(String frameName) {
-			String name = frameName.replaceAll("(['\"\\\\#.:;,!?+<>=~*^$|%&@`{}\\-/\\[\\]\\(\\)])", "\\\\$1");
-			List<WebElement> frameElements = RemoteWebDriver.this
-					.findElements(By.cssSelector("frame[name='" + name + "'],iframe[name='" + name + "']"));
-			if (frameElements.size() == 0) {
-				frameElements = RemoteWebDriver.this.findElements(By.cssSelector("frame#" + name + ",iframe#" + name));
-			}
-			if (frameElements.size() == 0) {
-				throw new NoSuchFrameException("No frame element found by name or id " + frameName);
-			}
-			return frame(frameElements.get(0));
-		}
+		    public WebDriver frame(String frameName) {
+		      String name = frameName.replaceAll("(['\"\\\\#.:;,!?+<>=~*^$|%&@`{}\\-/\\[\\]\\(\\)])", "\\\\$1");
+		      List<WebElement> frameElements = RemoteWebDriver.this.findElements(
+		          By.cssSelector("frame[name='" + name + "'],iframe[name='" + name + "']"));
+		      if (frameElements.size() == 0) {
+		        frameElements = RemoteWebDriver.this.findElements(
+		            By.cssSelector("frame#" + name + ",iframe#" + name));
+		      }
+		      if (frameElements.size() == 0) {
+		        throw new NoSuchFrameException("No frame element found by name or id " + frameName);
+		      }
+		      return frame(frameElements.get(0));
+		    }
 
-		@Override
-		public WebDriver frame(WebElement frameElement) {
-			Object elementAsJson = new WebElementToJsonConverter().apply(frameElement);
-			execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", elementAsJson));
-			return RemoteWebDriver.this;
-		}
+		    public WebDriver frame(WebElement frameElement) {
+		      Object elementAsJson = new WebElementToJsonConverter().apply(frameElement);
+		      execute(DriverCommand.SWITCH_TO_FRAME, ImmutableMap.of("id", elementAsJson));
+		      return RemoteWebDriver.this;
+		    }
 
-		@Override
-		public WebDriver parentFrame() {
-			execute(DriverCommand.SWITCH_TO_PARENT_FRAME);
-			return RemoteWebDriver.this;
-		}
+		    public WebDriver parentFrame() {
+		      execute(DriverCommand.SWITCH_TO_PARENT_FRAME);
+		      return RemoteWebDriver.this;
+		    }
 
-		@Override
-		public WebDriver window(String windowHandleOrName) {
-			if (getW3CStandardComplianceLevel() == 0) {
-				execute(DriverCommand.SWITCH_TO_WINDOW, ImmutableMap.of("name", windowHandleOrName));
-				return RemoteWebDriver.this;
-			}
-			try {
-				execute(DriverCommand.SWITCH_TO_WINDOW, ImmutableMap.of("handle", windowHandleOrName));
-				return RemoteWebDriver.this;
-			} catch (NoSuchWindowException nsw) {
-				// simulate search by name
-				String original = getWindowHandle();
-				for (String handle : getWindowHandles()) {
-					switchTo().window(handle);
-					if (windowHandleOrName.equals(executeScript("return window.name"))) {
-						return RemoteWebDriver.this; // found by name
-					}
-				}
-				switchTo().window(original);
-				throw nsw;
-			}
-		}
+		    public WebDriver window(String windowHandleOrName) {
+		      try {
+		        execute(DriverCommand.SWITCH_TO_WINDOW, ImmutableMap.of("handle", windowHandleOrName));
+		        return RemoteWebDriver.this;
+		      } catch (NoSuchWindowException nsw) {
+		        // simulate search by name
+		        String original = getWindowHandle();
+		        for (String handle : getWindowHandles()) {
+		          switchTo().window(handle);
+		          if (windowHandleOrName.equals(executeScript("return window.name"))) {
+		            return RemoteWebDriver.this; // found by name
+		          }
+		        }
+		        switchTo().window(original);
+		        throw nsw;
+		      }
+		    }
 
-		@Override
-		public WebDriver defaultContent() {
-			Map<String, Object> frameId = Maps.newHashMap();
-			frameId.put("id", null);
-			execute(DriverCommand.SWITCH_TO_FRAME, frameId);
-			return RemoteWebDriver.this;
-		}
+		    public WebDriver defaultContent() {
+		      Map<String, Object> frameId = Maps.newHashMap();
+		      frameId.put("id", null);
+		      execute(DriverCommand.SWITCH_TO_FRAME, frameId);
+		      return RemoteWebDriver.this;
+		    }
 
-		@Override
-		public WebElement activeElement() {
-			Response response = execute(DriverCommand.GET_ACTIVE_ELEMENT);
-			return (WebElement) response.getValue();
-		}
+		    public WebElement activeElement() {
+		      Response response = execute(DriverCommand.GET_ACTIVE_ELEMENT);
+		      return (WebElement) response.getValue();
+		    }
 
-		@Override
-		public Alert alert() {
-			execute(DriverCommand.GET_ALERT_TEXT);
-			return new RemoteAlert();
-		}
-	}
+		    public Alert alert() {
+		      execute(DriverCommand.GET_ALERT_TEXT);
+		      return new RemoteAlert();
+		    }
+		  }
 
-	private class RemoteAlert implements Alert {
+		  private class RemoteAlert implements Alert {
 
-		public RemoteAlert() {
-		}
+		    public RemoteAlert() {
+		    }
 
-		@Override
-		public void dismiss() {
-			if (getW3CStandardComplianceLevel() > 0) {
-				execute(DriverCommand.DISMISS_ALERT_W3C);
-			} else {
-				execute(DriverCommand.DISMISS_ALERT);
-			}
-		}
+		    public void dismiss() {
+		      execute(DriverCommand.DISMISS_ALERT);
+		    }
 
-		@Override
-		public void accept() {
-			if (getW3CStandardComplianceLevel() > 0) {
-				execute(DriverCommand.ACCEPT_ALERT_W3C);
-			} else {
-				execute(DriverCommand.ACCEPT_ALERT);
-			}
-		}
+		    public void accept() {
+		      execute(DriverCommand.ACCEPT_ALERT);
+		    }
 
-		@Override
-		public String getText() {
-			if (getW3CStandardComplianceLevel() > 0) {
-				return (String) execute(DriverCommand.GET_ALERT_TEXT_W3C).getValue();
-			}
-			return (String) execute(DriverCommand.GET_ALERT_TEXT).getValue();
-		}
+		    public String getText() {
+		      return (String) execute(DriverCommand.GET_ALERT_TEXT).getValue();
+		    }
 
-		@Override
-		public void sendKeys(String keysToSend) {
-			if (getW3CStandardComplianceLevel() > 0) {
-				execute(DriverCommand.SET_ALERT_VALUE_W3C, ImmutableMap.of("text", keysToSend));
-			} else {
-				execute(DriverCommand.SET_ALERT_VALUE, ImmutableMap.of("text", keysToSend));
-			}
-		}
+		    public void sendKeys(String keysToSend) {
+		      execute(DriverCommand.SET_ALERT_VALUE, ImmutableMap.of("text", keysToSend));
+		    }
 
-		@Override
-		@Beta
-		public void setCredentials(Credentials credentials) {
-			if (!(credentials instanceof UserAndPassword)) {
-				throw new RuntimeException("Unsupported credentials: " + credentials);
-			}
+		    @Beta
+		    public void setCredentials(Credentials credentials) {
+		      if (!(credentials instanceof UserAndPassword)) {
+		        throw new RuntimeException("Unsupported credentials: " + credentials);
+		      }
 
-			UserAndPassword userAndPassword = (UserAndPassword) credentials;
-			execute(DriverCommand.SET_ALERT_CREDENTIALS, ImmutableMap.of("username", userAndPassword.getUsername(),
-					"password", userAndPassword.getPassword()));
-		}
+		      UserAndPassword userAndPassword = (UserAndPassword) credentials;
+		      execute(
+		        DriverCommand.SET_ALERT_CREDENTIALS,
+		        ImmutableMap.of(
+		          "username", userAndPassword.getUsername(),
+		          "password", userAndPassword.getPassword()));
+		    }
 
-		/**
-		 * Authenticate an HTTP Basic Auth dialog. Implicitly 'clicks ok'
-		 *
-		 * Usage: driver.switchTo().alert().authenticateUsing(new
-		 * UsernamePasswordCredentials("cheese", "secretGouda"));
-		 * 
-		 * @param credentials
-		 *            credentials to pass to Auth prompt
-		 */
-		@Override
-		@Beta
-		public void authenticateUsing(Credentials credentials) {
-			this.setCredentials(credentials);
-			this.accept();
-		}
-	}
+		    /**
+		     * Authenticate an HTTP Basic Auth dialog.
+		     * Implicitly 'clicks ok'
+		     *
+		     * Usage: driver.switchTo().alert().authenticateUsing(new UsernamePasswordCredentials("cheese",
+		     *        "secretGouda"));
+		     * @param credentials credentials to pass to Auth prompt
+		     */
+		    @Beta
+		    public void authenticateUsing(Credentials credentials) {
+		      this.setCredentials(credentials);
+		      this.accept();
+		    }
+		  }
 
-	public enum When {
-		BEFORE, AFTER, EXCEPTION
-	}
+		  public enum When {
+		    BEFORE,
+		    AFTER,
+		    EXCEPTION
+		  }
 
-	@Override
-	public String toString() {
-		Capabilities caps = getCapabilities();
-		if (caps == null) {
-			return super.toString();
-		}
-		return String.format("%s: %s on %s (%s)", getClass().getSimpleName(), caps.getBrowserName(), caps.getPlatform(),
-				getSessionId());
-	}
+		  @Override
+		  public String toString() {
+		    Capabilities caps = getCapabilities();
+		    if (caps == null) {
+		      return super.toString();
+		    }
+		    return String.format("%s: %s on %s (%s)", getClass().getSimpleName(),
+		        caps.getBrowserName(), caps.getPlatform(), getSessionId());
+		  }
 
 }

@@ -2,10 +2,12 @@ package com.github.becauseQA.template;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -84,6 +86,19 @@ public class TemplateUtils {
 	}
 
 	/**
+	 * @param content the string content 
+	 * @param dataModel
+	 * @return
+	 */
+	public static String renderStringContent(String content, Object dataModel) {
+		String templateName = "defaultStringTemplate";
+		StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
+		stringTemplateLoader.putTemplate(templateName, content);
+		return renderContent(stringTemplateLoader, templateName, null, dataModel);
+
+	}
+
+	/**
 	 * @param templateLoader
 	 *            FileTemplateLoader StringTemplateLoader for testing
 	 *            URLTemplateLoader ClassTemplateLoader WebappTemplateLoader
@@ -91,17 +106,19 @@ public class TemplateUtils {
 	 * @param filePath
 	 * @param dataModel
 	 */
-	public static void renderContent(TemplateLoader templateLoader, String templatename, String filePath,
+	public static String renderContent(TemplateLoader templateLoader, String templatename, String filePath,
 			Object dataModel) {
 		// String outputPath = templatename + ".html";
+		StringWriter stringWriter = null;
 		try {
 			initializeFreemarkerConfiguration();
 			configuration.setTemplateLoader(templateLoader);
 			// configuration.setTemplateLoader(new
 			// FileTemplateLoader(templateFolder));
-			if (!templatename.endsWith(".ftl")) {
+			if (!templatename.endsWith(".ftl") && filePath != null) {
 				templatename = templatename + ".ftl";
 			}
+
 			Template template = configuration.getTemplate(templatename);
 
 			// Writer out = new OutputStreamWriter(System.out);
@@ -112,6 +129,8 @@ public class TemplateUtils {
 				template.process(dataModel, writer);
 				// writer.close();
 			}
+			stringWriter = new StringWriter();
+			template.process(dataModel, stringWriter);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,6 +138,7 @@ public class TemplateUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return stringWriter.toString();
 
 	}
 

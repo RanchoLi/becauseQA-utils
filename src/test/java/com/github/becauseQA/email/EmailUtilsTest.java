@@ -24,7 +24,7 @@ public class EmailUtilsTest {
 		String emailContent = IOUtils.toString(resourceAsStream);
 		File emailfile = new File(getClass().getClassLoader().getResource("email.properties").getPath());
 		EmailUtils.setEmailfile(emailfile);
-		emailUtils.sendEmail("ahu@greendotcorp.com", "ahu@greendotcorp.com", "First Designer", emailContent);
+		emailUtils.sendEmail("email@gamillc.o", "alterhu20202@gmail.coms", "First Designer", emailContent);
 	}
 
 	@Test

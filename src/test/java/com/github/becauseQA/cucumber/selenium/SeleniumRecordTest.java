@@ -16,20 +16,7 @@ public class SeleniumRecordTest {
 		BaseSteps.driver=chromeDriver;
 		//PageRecorder.startRecord(chromeDriver);
 		chromeDriver.manage().window().maximize();
-		chromeDriver.get("https://tools.pingdom.com/");
-		//PageRecorder.InjectPageRecorder(chromeDriver);
-		//PageRecorder.showMessage("open this browser now good", null);
-		PageRecorder.InjectJQuery();
-		PageRecorder.InjectPageRecorder();
-		PageRecorder.InjectAlertifyFile();
-		PageRecorder.showMessage("Given I begin to sleep this whole night1", null,"test title");
-		
-
-		chromeDriver.get("http://www.google.com");
-		PageRecorder.InjectJQuery();
-		PageRecorder.InjectPageRecorder();
-		PageRecorder.InjectAlertifyFile();
-		PageRecorder.showMessage("Given I begin to sleep this whole night1", null,"test title");
+		chromeDriver.get("https://www.attheregister.com/moneypak");
 		
 
 

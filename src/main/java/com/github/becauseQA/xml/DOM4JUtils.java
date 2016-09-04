@@ -44,7 +44,7 @@ import org.dom4j.xpath.DefaultXPath;
  */
 public class DOM4JUtils {
 
-	private static Document document = null;
+	public static Document document = null;
 
 	public DOM4JUtils(String xmlfile) {
 		try {
@@ -133,6 +133,38 @@ public class DOM4JUtils {
 		foundnode = document.selectSingleNode(xpath);
 
 		return foundnode;
+
+	}
+
+	/**
+	 * @param node
+	 *            the xml node object
+	 * @param xpath
+	 *            the xpath need to query, here we ignore the namespace,
+	 *            like if you want to query the node ,you can use below xpaths
+	 *            : //*[local-name()='nodename' and text()='nodetext']
+	 *            : //*[count()]
+	 * @return found node object
+	 */
+	public Node getNodeIgnoreNamespace(String xpath) {
+		Node foundnode = document.selectSingleNode(xpath);
+		return foundnode;
+
+	}
+	/**
+	 * @param node
+	 *            the xml node object
+	 * @param xpath
+	 *            the xpath need to query, here we ignore the namespace,
+	 *            like if you want to query the node ,you can use below xpaths
+	 *            : //*[local-name()='nodename' and text()='nodetext']
+	 *            
+	 * @return found node object
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Node> getNodesIgnoreNamespace(String xpath) {
+		 List<Node> selectNodes = document.selectNodes(xpath);
+		 return selectNodes;
 
 	}
 

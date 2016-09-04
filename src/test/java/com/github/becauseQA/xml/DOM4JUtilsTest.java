@@ -36,9 +36,9 @@ public class DOM4JUtilsTest {
 
 	@Test
 	public void testWriteSampleXml() {
-		
-		DOM4JUtils dom4jUtils=new DOM4JUtils("sample.xml");
-		List<Node> nodes = dom4jUtils.getNodes("//sample/hello");
+		String content="<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body><CreateResponse xmlns=\"http://comparee.com/WebServices/Corporate/wodee/\"><CustomerId>8124138</CustomerId><InternalResponseCode>Success</InternalResponseCode><ResponseCode>0</ResponseCode><ResponseDate>2016-08-31T07:57:22.7760577Z</ResponseDate><ResponseDescription>Success</ResponseDescription><UserId>7424876375</UserId></CreateResponse></s:Body></s:Envelope>";
+		DOM4JUtils dom4jUtils=new DOM4JUtils(content);
+		List<Node> nodes = dom4jUtils.getNodes("//*[local-name()='CustomerId']");
 		for(Node node: nodes){
 			String name = node.getName();
 			System.out.println(name);

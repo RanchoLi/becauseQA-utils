@@ -31,7 +31,7 @@ public class LDAPUtilsTest {
 	@Before
 	public void setUp() throws Exception {
 		//ldapUtils = new LDAPUtils();
-		String server="ldap://gdcad01.nextestate.com/DC=NEXTESTATE,DC=COM";
+		String server="ldap://servername/DC=domainname,DC=COM";
 		String username="ahu";
 		String password="gu.chan-102633";
 		LDAPUtils.getContext(server, username, password);
