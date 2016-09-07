@@ -108,6 +108,7 @@ public class JDBCUtils {
 				String driverurl = driver.getdriverUrl() + "://" + serverName + "/" + defaultDatabaseName;
 				String NTLMStr = (StringUtils.isNotEmpty(domain)) ? ";useNTLMv2=true;domain=" + domain : "";
 				connection = DriverManager.getConnection(driverurl + NTLMStr, username, password);
+				queryRunner = new QueryRunner(false);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -130,7 +131,8 @@ public class JDBCUtils {
 		}
 		queryRunner = new QueryRunner(dataSource, false);
 		try {
-			connection = dataSource.getConnection();
+			dataSource.setValidationQuery("select 1"); // http://stackoverflow.com/questions/26404283/java-hibernate-with-sql-server-2012-not-working/27847317#27847317
+			connection = queryRunner.getDataSource().getConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,7 +146,8 @@ public class JDBCUtils {
 			dataSource = new BasicDataSource();
 			dataSource.setDriverClassName(driver.getdriverClassName());
 			String driverurl = driver.getdriverUrl() + "://" + serverName + "/" + defaultDatabaseName;
-			String NTLMStr = (StringUtils.isNotEmpty(domain)) ? ";useNTLMv2=true;domain=" + domain : "";
+			String NTLMStr = (StringUtils.isNotEmpty(domain))
+					? ";integrated security=false;useNTLMv2=true;domain=" + domain : ";useKerberos=true;";
 			dataSource.setUrl(driverurl + NTLMStr);
 			dataSource.setUsername(username);
 			dataSource.setPassword(password);
@@ -155,7 +158,8 @@ public class JDBCUtils {
 		}
 		queryRunner = new QueryRunner(dataSource, false);
 		try {
-			connection = dataSource.getConnection();
+			dataSource.setValidationQuery("select 1"); // http://stackoverflow.com/questions/26404283/java-hibernate-with-sql-server-2012-not-working/27847317#27847317
+			connection = queryRunner.getDataSource().getConnection();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -186,18 +190,20 @@ public class JDBCUtils {
 
 		return ps;
 	}
-	
-	
+
 	/**
-	 * Execute a batch of SQL INSERT, UPDATE, or DELETE queries. 
-	 * The Connection is retrieved from the DataSource set in the constructor. 
-	 * This Connection must be in auto-commit mode or the update will not be saved. 
-	 * @param sql sql statement
-	 * @param params the parameters
+	 * Execute a batch of SQL INSERT, UPDATE, or DELETE queries. The Connection
+	 * is retrieved from the DataSource set in the constructor. This Connection
+	 * must be in auto-commit mode or the update will not be saved.
+	 * 
+	 * @param sql
+	 *            sql statement
+	 * @param params
+	 *            the parameters
 	 * @return the update rows
 	 */
 	public static int[] batch(String sql, Object[][] params) {
-		int[] resultSize =null;
+		int[] resultSize = null;
 		synchronized (queryRunner) {
 			try {
 				resultSize = queryRunner.batch(sql, params);
@@ -223,8 +229,8 @@ public class JDBCUtils {
 	 *            BeanListHandler<Boolean>(Boolean.class); 3. if return a
 	 *            list<Map<bean>> ResultSetHandler<List<Map<String, Object>>>
 	 *            resultSetHandler = new MapListHandler(); 4. if return a
-	 *            column's list  list data
-	 *            ArrayHandler ：将结果集中第一行的数据转化成对象数组。返回值类型：Object[]
+	 *            column's list list data ArrayHandler
+	 *            ：将结果集中第一行的数据转化成对象数组。返回值类型：Object[]
 	 * 
 	 *            ArrayListHandler将结果集中所有的数据转化成List。返回值类型：List<Object[]>
 	 * 
@@ -253,7 +259,7 @@ public class JDBCUtils {
 	public static <T> T query(String sql, ResultSetHandler<T> resultSetHandler, Object... params) {
 		T result = null;
 		try {
-			result = queryRunner.query(sql, resultSetHandler, params);
+			result = queryRunner.query(connection, sql, resultSetHandler, params);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -265,7 +271,7 @@ public class JDBCUtils {
 		int resultSize = 0;
 		synchronized (queryRunner) {
 			try {
-				resultSize = queryRunner.update(sql, params);
+				resultSize = queryRunner.update(connection, sql, params);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -274,12 +280,12 @@ public class JDBCUtils {
 
 		return resultSize;
 	}
-	
+
 	public static <T> T insert(String sql, ResultSetHandler<T> resultSetHandler, Object... params) {
 		T result = null;
 		synchronized (queryRunner) {
 			try {
-				result = queryRunner.insert(sql, resultSetHandler, params);
+				result = queryRunner.insert(connection, sql, resultSetHandler, params);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -288,11 +294,12 @@ public class JDBCUtils {
 
 		return result;
 	}
+
 	public static <T> T insertBatch(String sql, ResultSetHandler<T> resultSetHandler, Object[][] params) {
 		T result = null;
 		synchronized (queryRunner) {
 			try {
-				result = queryRunner.insertBatch(sql, resultSetHandler, params);
+				result = queryRunner.insertBatch(connection, sql, resultSetHandler, params);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

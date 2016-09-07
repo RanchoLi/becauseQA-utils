@@ -78,6 +78,8 @@ public class SeleniumCore {
 		// the default platform is pc .
 		PLATFORM platform = PLATFORM.PC;
 
+		RemoteWebDriver.useSession = useSession;
+
 		String pchub = "http://" + servername + ":4444/wd/hub";
 		String mobilehub = "http://" + servername + ":4723/wd/hub";
 
@@ -144,18 +146,22 @@ public class SeleniumCore {
 		switch (platform) {
 		case PC:
 			// start the web driver
+
 			if (servername.trim().equalsIgnoreCase("localhost") || servername.trim().equalsIgnoreCase("127.0.0.1")) {
 				startSeleniumServer(); // everytime start the server will caused
 										// reused session not worked.you need to
 										// run server command-line
-				/*if (useSession) {
-					logger.error(
-							"Not Supported non-command line execution. As Selenium standalone start from existing page session ,you need to run thread from command line:");
-					logger.error("java -jar " + SeleniumDownloader.seleniumstandaloneName
-							+ " -trustAllSSLCertificates -browserSessionReuse -debug" + " -Dwebdriver.chrome.driver="
-							+ SeleniumDownloader.chromedriverFilePath + " -Dwebdriver.ie.driver="
-							+ SeleniumDownloader.iedriverFilePath);
-				}*/
+				/*
+				 * if (useSession) { logger.error(
+				 * "Not Supported non-command line execution. As Selenium standalone start from existing page session ,you need to run thread from command line:"
+				 * ); logger.error("java -jar " +
+				 * SeleniumDownloader.seleniumstandaloneName +
+				 * " -trustAllSSLCertificates -browserSessionReuse -debug" +
+				 * " -Dwebdriver.chrome.driver=" +
+				 * SeleniumDownloader.chromedriverFilePath +
+				 * " -Dwebdriver.ie.driver=" +
+				 * SeleniumDownloader.iedriverFilePath); }
+				 */
 			}
 			try {
 				// RemoteWebDriver.useSession=true;
@@ -198,7 +204,7 @@ public class SeleniumCore {
 		logger.info("Server Capabilities are :\n" + actualCapabilities.toString() + "\nBrowser Name:" + browser
 				+ " , is mobile emulation:?? ");
 		seleniumDriverManager(driver);
-		
+
 		// inject the page recorder
 		PageRecorder.startRecord(driver);
 
@@ -588,6 +594,7 @@ public class SeleniumCore {
 		configuration.debug = true;
 
 		try {
+			//boolean useSession = RemoteWebDriver.useSession;
 
 			JCommander commander = new JCommander(configuration, args.toArray(new String[args.size()]));
 			commander.setProgramName("Selenium-3-Server");
@@ -595,6 +602,7 @@ public class SeleniumCore {
 			seleniumServer = new SeleniumServer(configuration);
 			seleniumServer.boot();
 			logger.info("Start selenium remote server with configuration: " + configuration);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
