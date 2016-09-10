@@ -1,6 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<sample>
-   <hello name="tester">testhello</hello>
-   <hello2>testhello2: http://www.cnblogs.com/mengdd/archive/2013/06/05/3119927.html</hello2>
-</sample>
+<metadata>
+	<groupId>${project.groupId}</groupId>
+	<artifactId>${project.artifactId}</artifactId>
+	<name>${project.name}</name>
+	<versioning>
+		<latest>${project.version}.${timestamp}</latest>
+		<latestBuild>${application.installername}</latestBuild>
+		<release>${project.version}.${timestamp}</release>
+		<versions>
+			<version>1.0.0</version>
+			<version>1.0.1</version>
+			<version>1.0.2</version>
+			<version>${project.version}</version>
+		</versions>
+		<lastUpdated>${timestamp}</lastUpdated>
+	</versioning>
+</metadata>

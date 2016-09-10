@@ -41,8 +41,11 @@ public class SeleniumDownloader {
 	public static String getLatestSeleniumVersionNumber() {
 		String xml_versions_url = SELENIUM_URL + "?delimiter=/&prefix=";
 
-		List<String> result = XMLUtils.SAXParse(xml_versions_url, "Prefix");
-		String latestVersionStr = result.get(result.size() - 2);
+		XMLUtils.read(xml_versions_url);
+		String latestVersionStr=XMLUtils.getXPathNode("//ns:ListBucketResult/ns:CommonPrefixes[last()-1]").getStringValue().trim();
+		/*List<String> result = 
+		"Prefix");
+		String latestVersionStr = result.get(result.size() - 2);*/
 		latestVersionStr = latestVersionStr.substring(0, latestVersionStr.length() - 1);
 		logger.info("latest selenium version is: " + latestVersionStr);
 		return latestVersionStr;

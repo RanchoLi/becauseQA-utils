@@ -42,7 +42,7 @@ public class EmailUtils {
 
 	public boolean sendEmail(String from, String to, String subject, String bodycontent) {
 
-		PropertiesUtils.setResource(emailfile);
+		PropertiesUtils.setPropertiesFile(emailfile);
 		
 		String host = PropertiesUtils.getPropertyString("smtp.host");
 		String port = PropertiesUtils.getPropertyString("smtp.port");

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>becauseQA-utils</artifactId>
 	<groupId>com.github.becauseQA</groupId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<packaging>jar</packaging>
 	<description>A common libraries used for testing framework.</description>
 	<url>https://github.com/BecauseQA/becauseQA-utils</url>

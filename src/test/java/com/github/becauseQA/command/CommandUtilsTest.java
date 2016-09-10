@@ -20,7 +20,7 @@ public class CommandUtilsTest {
 		//fail("Not yet implemented");
 		//commandUtils.runCommand("cmd.exe","/c","java.exe","-jar","C:\\Selenium-Server\\selenium-server-standalone-2.53.0.jar" );
 		int asc='-';
-		int unicode='–';
+		int unicode='-';
 		String hexString = Integer.toHexString('-');
 		
 		System.out.println(asc+"\n"+unicode+"\n"+hexString);
