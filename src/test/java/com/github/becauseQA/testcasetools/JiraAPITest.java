@@ -17,7 +17,7 @@ public class JiraAPITest {
 	
 	@Before
 	public void setup(){
-		jiraAPI = new JiraAPI();
+		jiraAPI = new JiraAPI("","","");
 	}
 	@Test
 	public void test() {

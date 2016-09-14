@@ -1,9 +1,8 @@
-                                  Commons 
+                                  BecauseQA-Utils 
   
 what is it?
 
-commons libraries  is a 100% pure Java libraries designed to test
-and learning java api. 
+BecauseQA-Utils libraries  is a 100% pure Java libraries designed to use any popular open java libraries easily.
 
 ## Apache Common libraries (com.github.becauseQA.apache.commons)
   
@@ -64,6 +63,24 @@ and learning java api.
 ## Web service operation for SOAP/RESTFul(com.github.becauseQA.webservices)
 
 ## Xml operation(com.github.becauseQA.xml)
+
+*   Covert Java object to Xml String or XML File
+  
+    
+	//Parse the java Bean Object
+	String xmlContent=XMLUtils.marshal(Object);
+	
+   
+	//covert object to xml file
+	XMLUtils.marshal(tables,outputXmlFile );
+	
+*  Covert the xml file or xml string to Java Entity
+   
+	Result result=(Result) XMLUtils.unmarshal(XmlFile, Result.class);
+or 
+    
+	Result result=(Result) XMLUtils.unmarshal(XmlString, Result.class);
+
 
 
 ------------------------------------------------------------

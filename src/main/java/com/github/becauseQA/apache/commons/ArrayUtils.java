@@ -302,7 +302,8 @@ public class ArrayUtils {
      * @return the array, not null unless a null array is passed in
      * @since  3.0
      */
-    public static <T> T[] toArray(final T... items) {
+    @SuppressWarnings("unchecked")
+	public static <T> T[] toArray(final T... items) {
         return items;
     }
 
@@ -4609,7 +4610,6 @@ public class ArrayUtils {
      * (index &lt; 0 || index &gt;= array.length), or if the array is {@code null}.
      * @since 2.1
      */
-    @SuppressWarnings("unchecked") // remove() always creates an array of the same type as its input
     public static <T> T[] remove(final T[] array, final int index) {
         return remove(array, index);
     }
@@ -5230,7 +5230,6 @@ public class ArrayUtils {
      * (index &lt; 0 || index &gt;= array.length), or if the array is {@code null}.
      * @since 3.0.1
      */
-    @SuppressWarnings("unchecked") // removeAll() always creates an array of the same type as its input
     public static <T> T[] removeAll(final T[] array, final int... indices) {
         return removeAll(array, clone(indices));
     }

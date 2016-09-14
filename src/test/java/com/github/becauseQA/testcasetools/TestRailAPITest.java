@@ -19,7 +19,7 @@ public class TestRailAPITest {
 
 	@Before
 	public void setUp() throws Exception {
-		api = new TestRailAPI();
+		api = new TestRailAPI("","","");
 	}
 
 	@After

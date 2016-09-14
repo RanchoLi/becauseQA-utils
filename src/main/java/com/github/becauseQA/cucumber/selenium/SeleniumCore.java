@@ -29,6 +29,7 @@ import org.openqa.selenium.remote.server.SeleniumServer;
 import org.openqa.selenium.safari.SafariOptions;
 
 import com.beust.jcommander.JCommander;
+import com.github.becauseQA.apache.commons.StringUtils;
 import com.github.becauseQA.cucumber.selenium.appium.AppiumCommonArgs;
 import com.github.becauseQA.cucumber.selenium.appium.AppiumServer;
 import com.github.becauseQA.cucumber.selenium.appium.ServerArguments;
@@ -64,8 +65,8 @@ public class SeleniumCore {
 	 * start the selenium driver fro RemoteWebDriver instance.
 	 * 
 	 * @param servername
-	 *            the selenium hub name, like http://localhost:4444/wd/hub, then
-	 *            the parameter should be localhost.
+	 *            the selenium hub name, like localhost,192.168.1.3, then the
+	 *            parameter should be localhost.
 	 * @param devicename
 	 *            the device name you want to use ,like
 	 *            ie,firefox,chrome,safari.etc
@@ -147,7 +148,7 @@ public class SeleniumCore {
 		case PC:
 			// start the web driver
 
-			if (servername.trim().equalsIgnoreCase("localhost") || servername.trim().equalsIgnoreCase("127.0.0.1")) {
+			if (StringUtils.isEmpty(servername) || servername.trim().equalsIgnoreCase("localhost")) {
 				startSeleniumServer(); // everytime start the server will caused
 										// reused session not worked.you need to
 										// run server command-line
@@ -594,7 +595,7 @@ public class SeleniumCore {
 		configuration.debug = true;
 
 		try {
-			//boolean useSession = RemoteWebDriver.useSession;
+			// boolean useSession = RemoteWebDriver.useSession;
 
 			JCommander commander = new JCommander(configuration, args.toArray(new String[args.size()]));
 			commander.setProgramName("Selenium-3-Server");

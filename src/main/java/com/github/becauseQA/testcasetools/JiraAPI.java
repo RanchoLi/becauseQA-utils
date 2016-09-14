@@ -49,18 +49,6 @@ public class JiraAPI {
 	}
 
 	/**
-	 * Creates a new instance of TestRailAPI.
-	 *
-	 */
-	public JiraAPI() {
-		this.setBase_Url("https://pd/rest/api/2/");
-		this.setUser("qa_test_automation");
-		this.setPassword("Gr33nDot!");
-		//this.setUser("ahu");
-		//this.setPassword("gu.chan-102633");
-	}
-
-	/**
 	 * getRequest:
 	 * 
 	 * @author alterhu2020@gmail.com
@@ -126,18 +114,29 @@ public class JiraAPI {
 		 * @param projectname
 		 * @return
 		 */
-		public String getMyself() {
-			String emailAddress= null;
+		public JsonObject getMyself() {
+			JsonObject myself= null;
 			String url = "myself";
 			Object response = getRequest(url);
 			if (response instanceof JsonObject) {
-				JsonObject myself = (JsonObject) response;
-				emailAddress=myself.get("emailAddress").getAsString();
+				 myself = (JsonObject) response;
+				//emailAddress=myself.get("emailAddress").getAsString();
 
 			}
-			return emailAddress;
+			return myself;
 		}
 		
+		public JsonObject getUserInfo(String shortUsername){
+			JsonObject myself= null;
+			String url = String.format("user?username=%s", shortUsername);
+			Object response = getRequest(url);
+			if (response instanceof JsonObject) {
+				 myself = (JsonObject) response;
+				//emailAddress=myself.get("emailAddress").getAsString();
+
+			}
+			return myself;
+		}
 
 	// *************************************
 	/**
@@ -541,28 +540,16 @@ public class JiraAPI {
 
 	}
 
-	public String getBase_Url() {
+	private String getBase_Url() {
 		return base_Url;
 	}
 
-	public void setBase_Url(String base_Url) {
-		this.base_Url = base_Url;
-	}
-
-	public String getUser() {
+	private String getUser() {
 		return user;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	public String getPassword() {
+	private String getPassword() {
 		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 }

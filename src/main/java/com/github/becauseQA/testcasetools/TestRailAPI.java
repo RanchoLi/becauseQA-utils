@@ -128,15 +128,6 @@ public class TestRailAPI {
 
 	}
 
-	/**
-	 * Creates a new instance of TestRailAPI.
-	 *
-	 */
-	public TestRailAPI() {
-		this.setBase_Url("https://gdcqatestrail01/testrail/index.php?/api/v2/");
-		this.setUser("qa_test_automation@greendotcorp.com");
-		this.setPassword("qa_test_automation");
-	}
 
 	/**
 	 * getRequest:

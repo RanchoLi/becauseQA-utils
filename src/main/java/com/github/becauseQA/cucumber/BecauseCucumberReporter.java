@@ -16,6 +16,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.github.becauseQA.cucumber.selenium.BaseSteps;
 import com.github.becauseQA.cucumber.selenium.PageRecorder;
 import com.github.becauseQA.cucumber.selenium.SeleniumCore;
 import com.github.becauseQA.reflections.RefelectionUtils;
@@ -112,8 +113,10 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	 * BecauseCucumber.METHOD_AFTERSTEP, step, result); } }
 	 */
 	private void becauseCucumberStartOfScenarioLifeCycle(Scenario scenario) {
-		String message = scenario.getKeyword() + " " + scenario.getName() + ":" + scenario.getLine();
-		PageRecorder.showMessage(message, "info", cucumberScenarioTitle);
+		String message = scenario.getKeyword() + " Name: " + scenario.getName() + ",Description: " + scenario.getLine();
+		if (BaseSteps.driver != null) {
+			PageRecorder.showMessage(message, "info", cucumberScenarioTitle);
+		}
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
 			RefelectionUtils.getMethod(reportInstance, BecauseCucumber.METHOD_BEFORESCENARIO, scenario);
@@ -165,13 +168,14 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 		String failedScenarioMessage = "Total Failed Scenarios: " + failedScenariosCount + "\n";
 		String skippedScenarioMessage = "Total Skipped Scenarios: " + skippedScenariosCount + "\n";
 		String undefinedScenarioMessage = "Total Undefined Scenarios: " + undefinedScenariosCount + "\n";
-		String endhorizonline = "--------------------------------------------\n";
+		//String endhorizonline = "--------------------------------------------\n";
 
-		logger.info("[" + this.getClass().getName() + "]\nFinish Scenario: " + scenario.getName() + ", Status: "
+		logger.info("Finish Scenario: " + scenario.getName() + ", Status: "
 				+ result.getStatus() + "");
 		logger.info(starthorizonline + passedMessage + failedMessage + skippedMessage + undefinedMessage
 				+ passedScenarioMessage + failedScenarioMessage + skippedScenarioMessage + undefinedScenarioMessage
-				+ endhorizonline);
+				);
+		logger.info(starthorizonline);
 
 		Object reportInstance = BecauseCucumber.reportInstance;
 		if (reportInstance != null) {
@@ -238,28 +242,27 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 	public void result(Result result) {
 		// fix this issue only for failed or passed steps to log the global
 		// result
-		/*int size = steps.size();
-		String cucumberStep = "Last Step Execution Result";
-		if (size > 0) {
-			Step step = steps.get(size - 1);
-			cucumberStep = step.getKeyword() + " " + step.getName() + " (lineNumber:" + step.getLine() + ")";
-		}*/
+		/*
+		 * int size = steps.size(); String cucumberStep =
+		 * "Last Step Execution Result"; if (size > 0) { Step step =
+		 * steps.get(size - 1); cucumberStep = step.getKeyword() + " " +
+		 * step.getName() + " (lineNumber:" + step.getLine() + ")"; }
+		 */
 
 		String resultStatus = result.getStatus();
 		if (Result.FAILED == resultStatus || Result.PASSED == resultStatus) {
 			BecauseCucumberReporter.result = result;
 		}
 		Throwable error = result.getError();
-
+		String popupMesageType = "info";
 		if (Result.SKIPPED == result) {
 			skippedStepsCount.incrementAndGet();
 			stepNotifier.fireTestIgnored();
-
-			PageRecorder.showMessage(description.getDisplayName(), "warning","[Skipped] "+ cucumberStepTitle);
+			popupMesageType="warning";			
 		} else if (isPendingOrUndefined(result)) {
 			undefinedStepsCount.incrementAndGet();
 			addFailureOrIgnoreStep(result);
-			PageRecorder.showMessage(description.getDisplayName(), "warning", "[Pending] "+cucumberStepTitle);
+			popupMesageType="warning";
 		} else {
 			if (stepNotifier != null) {
 				// Should only fireTestStarted if not ignored
@@ -269,15 +272,19 @@ public class BecauseCucumberReporter implements Reporter, Formatter {
 					stepNotifier.addFailure(error);
 				} else {
 					passStepsCount.incrementAndGet();
-					PageRecorder.showMessage(description.getDisplayName(), "success", "[Passed] "+cucumberStepTitle);
+					popupMesageType="success";
 				}
 				stepNotifier.fireTestFinished();
 			}
 			if (error != null) {
 				failedStep = true;
+				popupMesageType="error";
 				executionUnitNotifier.addFailure(error);
-				PageRecorder.showMessage(description + "\n\n" + error.getMessage(), "error","[Failed] "+cucumberStepTitle);
 			}
+		}
+		if (BaseSteps.driver != null) {
+			PageRecorder.showMessage(description.getDisplayName() + "\n\n" + (error != null ? error.getMessage() : ""),
+					popupMesageType, "[" + result.getStatus().toUpperCase() + "] " + cucumberStepTitle);
 		}
 		if (steps.isEmpty()) {
 			// We have run all of our steps. Set the stepNotifier to null so

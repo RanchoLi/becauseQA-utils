@@ -121,7 +121,7 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 		featurePaths.add(classPathFeature);
 		// String string = System.getenv().get("cucumber.options");
 		if (BecauseCucumberHook.class.isAssignableFrom(clazz)) {
-			logger.info("implement the BecauseCucumberHook interface");
+			//logger.info("implement the BecauseCucumberHook interface");
 			reportInstance = RefelectionUtils.getContractorInstance(clazz, new Object[] {});
 
 			RefelectionUtils.getMethod(reportInstance, METHOD_BEFORERUN, new Object[] {});
@@ -167,6 +167,7 @@ public class BecauseCucumber extends ParentRunner<FeatureRunner> {
 			Object formatObj = pluginFactory.create(format);
 			runtimeOptions.addPlugin(formatObj);
 		}
+		runtimeOptions.getGlue().clear(); //fix the duplicate step definition exception
 		runtimeOptions.getGlue().addAll(stepdefinitionList);
 		cucumberFeatures = CucumberFeature.load(resourceLoader, featurePaths, filters);
 

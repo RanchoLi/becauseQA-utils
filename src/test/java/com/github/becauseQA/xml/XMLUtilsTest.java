@@ -43,7 +43,7 @@ public class XMLUtilsTest {
 		System.out.println("sample xml content is: "+xPathNode.getStringValue().trim());
 	}
 	
-	@Ignore
+	
 	@Test
 	public void testObject(){
 		
@@ -66,7 +66,7 @@ public class XMLUtilsTest {
 		String marshal = XMLUtils.marshal(tables);
 		System.out.println("parse result is\n"+marshal);
 		//covert object to xml file
-		//XMLUtils.marshal(tables,outputXmlFile );
+		XMLUtils.marshal(tables,outputXmlFile );
 		
 		//covert xml to object
 		
