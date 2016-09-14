@@ -254,8 +254,8 @@ public class XMLUtils {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(rootObject.getClass());
 			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); //格式化输出
-			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 设置输出编码,默认为UTF-8
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); //
+			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 
 			marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.example.com/address address.xsd");
 			//marshaller.setProperty("eclipselink.media.type", "application/json");
 			marshaller.marshal(rootObject, stringWriter);
