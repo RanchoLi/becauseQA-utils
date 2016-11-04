@@ -3,7 +3,9 @@ package com.github.becauseQA.cucumber.selenium;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -52,7 +54,7 @@ public class SeleniumDownloader {
 
 	}
 
-	public static String downloadSeleniumResources(String destinationFolder) {
+	public static String downloadSeleniumServerStandalone(String destinationFolder) {
 		String latestVersionStr = getLatestSeleniumVersionNumber();
 
 		// String seleniumName = "selenium-server-standalone-" +
@@ -130,7 +132,7 @@ public class SeleniumDownloader {
 			try {
 				String edgeDriverContent = HttpUtils.getRequestAsString(new URL(EDGE_DRIVER_URL), null).trim();
 				String pattern = "(https://download.microsoft.com/download/[^=]*/MicrosoftWebDriver.exe)";
-				List<String> validateStrings = RegexpUtils.validateStrings(edgeDriverContent, pattern);
+				List<String> validateStrings = RegexpUtils.matchTextList(edgeDriverContent, pattern);
 				String latestVersionUrl = validateStrings.get(0);
 				FileUtils.copyURLToFile(new URL(latestVersionUrl), new File(edgeDriverPath));
 			} catch (IOException e) {
@@ -149,7 +151,7 @@ public class SeleniumDownloader {
 		String chromedriver_linux_zipname = "chromedriver_linux64.zip";
 		String chromedriver_mac_zipname = "chromedriver_mac32.zip";
 
-		chromedriverFilePath = destinationFolder + File.separator + chromedriver_name;
+		
 		try {
 			String latest_chromedriver_version = HttpUtils.getRequestAsString(new URL(chrome_note_url), null).trim();
 			logger.info("latest chrome driver version is: " + latest_chromedriver_version);
@@ -173,7 +175,7 @@ public class SeleniumDownloader {
 				chromedriver_path = CHROME_DRIVER_URL + latest_chromedriver_version + "/" + chromedriver_mac_zipname;
 				destination_chromedriver_path = destinationFolder + File.separator + chromedriver_mac_zipname;
 			}
-
+			chromedriverFilePath = destinationFolder + File.separator + chromedriver_name;
 			if (!new File(chromedriverFilePath).exists()) {
 				logger.info("Begin to download the chrome driver from server: " + CHROME_DRIVER_URL);
 				FileUtils.copyURLToFile(new URL(chromedriver_path), new File(destination_chromedriver_path));
@@ -206,6 +208,8 @@ public class SeleniumDownloader {
 				platformstrin = "mac";
 			}
 
+			Map<String, String> headers=new HashMap<>();
+			headers.put("Cookies", "logged_in=no"); //fix the autherization issue ,2016-10-18 Alter
 			String request = HttpUtils.getRequestAsString(new URL(latest_firefoxdriver), null);
 			JsonElement jsonElement = JSONUtils.toJsonElement(request);
 			JsonArray downloadPackages = jsonElement.getAsJsonArray().get(0).getAsJsonObject().get("assets")

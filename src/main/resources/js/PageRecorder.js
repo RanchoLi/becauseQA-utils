@@ -87,20 +87,24 @@
 		else
 			return '';
 	}
-	const PageRecorderClass = /\s*PageRecorder\s*/g;
+	const PageRecorderClass = /\s+PageRecorder.[^\s]+/gi; //replace the word start with PageRecorder
 
 	isClassNameUnique = function(node) {
-		if (!node.className || !node.className.replace(PageRecorderClass, '')) {
-			return '';
-		}
-		var classname = node.className.replace(PageRecorderClass, '');
+
+		var classNames = node.className;
 		var doc = node.ownerDocument;
-		//avoid to use classname contains too many spaces
-		if (classname.split(' ').length > 3) {
+		var originalClassname = classNames.replace(PageRecorderClass, '');
+		//var originalClassname=node.removeClass('PageRecorder_highlight');
+
+		if (!node.className || !originalClassname) {
 			return '';
 		}
-		if (doc.getElementsByClassName(classname).length == 1) {
-			return classname;
+		//avoid to use classname contains too many spaces
+		if (originalClassname.split(' ').length > 3) {
+			return '';
+		}
+		if (doc.getElementsByClassName(originalClassname).length == 1) {
+			return originalClassname;
 		}
 		return '';
 	}
@@ -114,12 +118,16 @@
 		}
 		var className = node.className.replace(PageRecorderClass, '').split(' ');
 		var len = className.length;
-		var selector = '.' + className[len - 1];
-		var document = node.ownerDocument;
+		var selector = '';
+		var pagedocument = node.ownerDocument;
 		for (i = len - 1; i >= 0; i--) {
-			if (document.querySelectorAll(selector).length == 1)
-				return selector;
-			selector = '.' + className[i] + selector;
+			if (className[i] != '') {
+				selector = '.' + className[i] + selector;
+				var nodeList = pagedocument.querySelectorAll(selector);
+				if (nodeList.length == 1) {
+					return selector;
+				}
+			}
 
 		}
 		return '';
@@ -145,40 +153,155 @@
 		return toReturn;
 	}
 
-	getPageObjectElementName = function(element) {
-		var element_sibling, siblingTagName, siblings, cnt, sibling_count;
+	if (![].includes) {
+		Array.prototype.includes =
+			function(searchElement /*, fromIndex*/ ) {
+				'use strict';
+				var O = Object(this);
+				var len = parseInt(O.length) || 0;
+				if (len === 0) {
+					return false;
+				}
+				var n = parseInt(arguments[1]) || 0;
+				var k;
+				if (n >= 0) {
+					k = n;
+				} else {
+					k = len + n;
+					if (k < 0) {
+						k = 0;
+					}
+				}
+				var currentElement;
+				while (k < len) {
+					currentElement = O[k];
+					if (searchElement === currentElement ||
+						(searchElement !== searchElement && currentElement !== currentElement)) {
+						return true;
+					}
+					k++;
+				}
+				return false;
+			};
+	}
+	var findTag = '';
+	var topParentNode = 0;
+	getTopParentNodeName = function(element, tagNames) {
+		if (element.nodeType == Node.ELEMENT_NODE) {
+			var elementTag = element.tagName.toLowerCase();
+			topParentNode = topParentNode + 1;
+			if (topParentNode > 6) {
+				findTag='';
+				return findTag;
+			}
 
-		log("getPageObjectElementName");
-		var elementTagName = element.tagName.toLowerCase();
-		//log("element id:"+element.id)
+			if (tagNames.includes(elementTag)) { // Array include function
+				findTag = elementTag;				
+				return findTag;
+			} else {
+				findTag='';
+				getTopParentNodeName(element.parentNode, tagNames);
+			}
+		}
+		topParentNode = 0;
+		console.log(findTag);
+		return findTag;
+	}
+	getPageObjectElementName = function(element) {
+		var prefixStr = '';
+		var suffixStr = '';
+		var elementTagName =
+			element.tagName.toLowerCase();
+		var elementText = '_';
+		if (element.innerText) { //first we use the text              elementText =
+			elementText = element.innerText.replace(/[\s•.'",:;\/?<>,!@#\+\-_\=&^%$^&\*()\[\]{}|\\]/gi, '_');
+			if (elementText.length > 25) {
+				elementText =
+					elementText.substring(0, 24);
+			}
+		}
+		//get the globalatrribute: http: //www.w3schools.com/tags/ref_standardattributes.asp
+		foundTag='';
+		var foundTag = getTopParentNodeName(element, ['header', 'footer','label','form','table']);
+		if (foundTag != '') {
+			prefixStr = foundTag.charAt(0).toUpperCase() + foundTag.substring(1) + "_";
+		}
+		if (element.name != '') {
+			suffixStr = element.name;
+		} else
 		if (element.id != '') {
-			//log("not empty elementid")
-			return elementTagName + '_' + element.id;
-			// alternative : 
-			// return '*[@id="' + element.id + '"]';
-		} else if (element.name && document.getElementsByName(element.name).length === 1) {
-			return elementTagName + '_' + element.name;
+			suffixStr = element.id;
+		} else if (element.hasAttribute('title')) {
+			suffixStr =
+				element.attributes['title'].value;
+		} else if (element.hasAttribute('class')) {
+			suffixStr =
+				element.attributes['class'].value;
+			suffixStr =
+				suffixStr.replace(/\s/g, '')
+		} else {
+			suffixStr = "";
 		}
-		if (element === document.body) {
-			return 'html_' + elementTagName;
+		// get the element second indetifier             
+		if (elementTagName == 'a') {
+			prefixStr = prefixStr + 'Hyperlink_';
+			if (suffixStr == '' && element.hasAttribute('href')) {
+				var
+					targetUrl = element.attributes['href'].value;
+				if (targetUrl.indexOf('/') !== -1) {
+					var lastSeperator =
+						targetUrl.lastIndexOf('/');
+					targetUrl =
+						targetUrl.substring(lastSeperator + 1, targetUrl.length - 1);
+				}
+				targetUrl = targetUrl.replace(/\..*/gi, '');
+				suffixStr = targetUrl;
+			}
+
+
+		} else if (elementTagName == 'img') {
+			prefixStr = "Image_";
+			if (suffixStr == '' && element.hasAttribute('src')) {
+				var targetUrl = element.attributes['src'].value;
+				if (targetUrl.indexOf('/') !== -1) {
+					var lastSeperator = targetUrl.lastIndexOf('/');
+					targetUrl = targetUrl.substring(lastSeperator + 1, targetUrl.length - 1);
+				}
+				targetUrl = targetUrl.replace(/\..*/gi, '');
+				suffixStr = targetUrl;
+			}
+		} else
+		if (elementTagName == 'i') {
+			prefixStr = prefixStr+"Icon_";
+		} else if (elementTagName.substring(0,1) && !elementTagName.substring(elementTagName.length-1)) {
+			prefixStr = prefixStr+'Title_' + elementTagName + '_';
+		} else if (elementTagName == 'hr') {
+			prefixStr = prefixStr+"ThematicBreakLine_";
+		} else if (elementTagName == 'table') {
+			//prefixStr = prefixStr+"Table_";  not used covered above
+		} else if (elementTagName == 'input') { // input field
+			prefixStr = prefixStr+"Inputbox_";
+		} else if (elementTagName == 'select' || elementTagName == 'ul' || elementTagName == 'dl' || elementTagName == 'dt') { //dropdown list
+			prefixStr = prefixStr+"DropDownList_";
+		} else if (elementTagName == 'caption') {
+			prefixStr = prefixStr+"TableTitle_";
+		} else if (elementTagName == 'fieldset') { // from fieldset
+			//prefixStr = prefixStr+"FormFieldGroup_"; //covered above
+		} else {
+			prefixStr = prefixStr+elementTagName.charAt(0).toUpperCase() + elementTagName.substring(1) + '_';
 		}
-		sibling_count = 0;
-		siblings = element.parentNode.childNodes;
-		siblings_length = siblings.length;
-		for (cnt = 0; cnt < siblings_length; cnt++) {
-			var element_sibling = siblings[cnt];
-			if (element_sibling.nodeType !== ELEMENT_NODE) { // not ELEMENT_NODE
-				continue;
+
+		//return the value
+		if (elementText != '_') {
+			if (elementText.substring(0,1)) {
+				elementText = elementText.replace(/_+/i, '');
 			}
-			if (element_sibling === element) {
-				return getPageObjectElementName(element.parentNode) + '_' + elementTagName + (sibling_count + 1);
-			}
-			if (element_sibling.nodeType === 1 && element_sibling.tagName.toLowerCase() === elementTagName) {
-				sibling_count++;
-			}
+			return prefixStr + 'Text_' + elementText;
+		} else {
+			return prefixStr + suffixStr;
 		}
-		return log("getPageObjectElementName");
-	};
+
+	}
 
 
 	getCssSelectorPath = function(node) {
@@ -236,23 +359,25 @@
 
 	getAbsoluteXPath = function(element) {
 		var element_sibling, siblingTagName, siblings, cnt, sibling_count;
-		var elementTagName = element.tagName.toLowerCase();
-		if (element === document.body) {
-			return '/html/' + elementTagName;
-		}
-		sibling_count = 0;
-		siblings = element.parentNode.childNodes;
-		siblings_length = siblings.length;
-		for (cnt = 0; cnt < siblings_length; cnt++) {
-			var element_sibling = siblings[cnt];
-			if (element_sibling.nodeType !== Node.ELEMENT_NODE) { // not ELEMENT_NODE
-				continue;
+		if (element.tagName == null) {
+			var elementTagName = element.tagName.toLowerCase();
+			if (element === document.body) {
+				return '/html/' + elementTagName;
 			}
-			if (element_sibling === element) {
-				return getAbsoluteXPath(element.parentNode) + '/' + elementTagName + '[' + (sibling_count + 1) + ']';
-			}
-			if (element_sibling.nodeType === 1 && element_sibling.tagName.toLowerCase() === elementTagName) {
-				sibling_count++;
+			sibling_count = 0;
+			siblings = element.parentNode.childNodes;
+			siblings_length = siblings.length;
+			for (cnt = 0; cnt < siblings_length; cnt++) {
+				var element_sibling = siblings[cnt];
+				if (element_sibling.nodeType !== Node.ELEMENT_NODE) { // not ELEMENT_NODE
+					continue;
+				}
+				if (element_sibling === element) {
+					return getAbsoluteXPath(element.parentNode) + '/' + elementTagName + '[' + (sibling_count + 1) + ']';
+				}
+				if (element_sibling.nodeType === 1 && element_sibling.tagName.toLowerCase() === elementTagName) {
+					sibling_count++;
+				}
 			}
 		}
 		return log("finish the getAbsolutePath");
@@ -285,7 +410,7 @@
 				case Node.ELEMENT_NODE:
 
 					var name = node.tagName.toLowerCase();
-
+					classname = isClassNameUnique(node);
 					if (node.id && node.id != "") {
 						str = ".//*[@id='" + node.id + "']";
 						position = null;
@@ -293,7 +418,8 @@
 					} else if (name == 'label' && isInForm(node) && (_for = getForAttribute(node))) {
 						str = ".//*[@for='" + _for + "']";
 						stop = true;
-					} else if (classname = isClassNameUnique(node) && usingClass) {
+					} else if (classname != "" && usingClass) {
+						//classname=isClassNameUnique(node);
 						str = ".//*[@class='" + classname + "']";
 						position = null;
 						stop = true;
@@ -422,7 +548,7 @@
 		}
 		if (prev) {
 			log("prev the event to occurred")
-			//prev.style.background='';
+				//prev.style.background='';
 			prev.className = prev.className.replace(/\s?\PageRecorder_highlight\b/, '');
 			prev = void 0;
 		}
@@ -439,7 +565,7 @@
 		//remove the prvious step's event
 		if (prev) {
 			log("prev the event to occurred")
-			//prev.style.background='';
+				//prev.style.background='';
 			prev.className = prev.className.replace(/\s?\PageRecorder_highlight\b/, '');
 			prev = void 0;
 		}
@@ -456,6 +582,7 @@
 		root = document.compatMode === 'CSS1Compat' ? document.documentElement : document.body;
 		mxy = [event.clientX + root.scrollLeft, event.clientY + root.scrollTop];
 		name = getPageObjectElementName(target);
+		var elementText = target.innerText;
 		path = getXPath(target);
 		txy = getPageXY(target);
 		css_selector = getCssSelectorPath(target);
@@ -467,11 +594,12 @@
 			"Caller": "EventListener : mousedown",
 			"CommandId": getCommandGuid(),
 			"ElementId": id,
+			"Text": elementText,
 			"CSS": css_selector,
 			"XPath": xpath
 		};
 		createCommand(JsonData);
-		document.PageRecorder.showPos(event, name, xpath, css_selector, id);
+		document.PageRecorder.showPos(event, name, xpath, css_selector, id, elementText);
 
 		log("rightClickHandler");
 		return eventPreventingResult;
@@ -502,7 +630,7 @@
 			return log("displayPageRecorderForm");
 		};
 
-		PageRecorder.prototype.showPos = function(event, name, xpath, css_selector, id) {
+		PageRecorder.prototype.showPos = function(event, name, xpath, css_selector, id, text) {
 			var x, y;
 			log("showPos");
 			if (window.event) {
@@ -520,8 +648,8 @@
 			document.getElementById("PageRecorder_PopUp_XPathLocator").innerHTML = xpath;
 			document.getElementById("PageRecorder_PopUp_CssSelector").innerHTML = css_selector;
 			document.getElementById("PageRecorder_PopUp_ElementId").innerHTML = id;
-			document.getElementById("PageRecorder_PopUp_ElementText").innerHTML = getCommandGuid();
-			document.getElementById("PageRecorder_PopUp_CodeIDText").value = name;
+			document.getElementById("PageRecorder_PopUp_ElementText").innerHTML = text;
+			document.getElementById("PageRecorder_PopUp_ElementNameInput").value = name;
 			log(x + ";" + y);
 			return log("showPos");
 		};
@@ -555,7 +683,7 @@
               <td>\
                     <div id="PageRecorder_PopUp_Element_Name">\
                         <span id="PageRecorder_PopUp_CodeID">\
-                            <input type="text" id="PageRecorder_PopUp_CodeIDText">\
+                            <input type="text" id="PageRecorder_PopUp_ElementNameInput">\
                         </span>\
                         <span id="PageRecorder_PopUp_CodeClose"></span>\
                         <span id="PageRecorder_PopUp_CloseButton" onclick="document.PageRecorder.closeForm()">X</span>\
@@ -590,9 +718,10 @@
 		};
 
 		PageRecorder.prototype.addElement = function() {
-			var JsonData, XPathLocatorElement, codeIDTextElement, htmlIdElement;
+			var JsonData, XPathLocatorElement, elementNameInput, htmlIdElement, elementTextLabel;
 			log("addElement");
-			codeIDTextElement = document.getElementById("PageRecorder_PopUp_CodeIDText");
+			elementNameInput = document.getElementById("PageRecorder_PopUp_ElementNameInput");
+			elementTextLabel = document.getElementById("PageRecorder_PopUp_ElementText");
 			htmlIdElement = document.getElementById("PageRecorder_PopUp_ElementId");
 			CssSelectorElement = document.getElementById("PageRecorder_PopUp_CssSelector");
 			XPathLocatorElement = document.getElementById("PageRecorder_PopUp_XPathLocator");
@@ -600,10 +729,11 @@
 				"Command": "AddElement",
 				"Caller": "addElement",
 				"CommandId": getCommandGuid(),
-				"ElementName": codeIDTextElement.value,
+				"ElementName": elementNameInput.value,
 				"ElementId": (htmlIdElement.hasChildNodes()) ? htmlIdElement.firstChild.nodeValue : "",
-				"CSS": CssSelectorElement.firstChild.nodeValue,
-				"XPath": XPathLocatorElement.firstChild.nodeValue
+				"Text": (elementTextLabel.hasChildNodes()) ? elementTextLabel.firstChild.nodeValue : "",
+				"CSS": (CssSelectorElement.hasChildNodes()) ? CssSelectorElement.firstChild.nodeValue : "",
+				"XPath": (XPathLocatorElement.hasChildNodes()) ? XPathLocatorElement.firstChild.nodeValue : ""
 			};
 			createCommand(JsonData);
 			return log("PageRecorder");
@@ -619,7 +749,7 @@
 
 	// addCSSStyle("table#PageRecorder_Table input { background: white !important; } ");
 
-	addCSSStyle("input#PageRecorder_PopUp_CodeIDText { display:table-cell;width:95%; background: white ;}");
+	addCSSStyle("input#PageRecorder_PopUp_ElementNameInput { display:table-cell;width:95%; background: white ;}");
 
 	addCSSStyle("span#PageRecorder_PopUp_CloseButton {display:table-cell;-moz-border-radius: 4px;-webkit-border-radius: 4px;            -o-border-radius: 4px;            border-radius: 4px;            border: 1px solid #ccc;            color: white;            background-color: #980000;            cursor: pointer;            font-size: 10pt;            padding: 0px 2px;            font-weight: bold;            position: absolute;            right: 20px;            top: 20px;          }");
 

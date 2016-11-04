@@ -25,7 +25,7 @@ public class SeleniumRecordTest {
 	@Test
 	@Ignore
 	public void test2(){
-		SeleniumCore.startSeleniumDriver("localhost", "Chrome Emulation-Apple iPhone 6 Plus", true);
+		SeleniumCore.startBrowser("localhost", "Chrome Emulation-Apple iPhone 6 Plus", true,false);
 	}
 
 }

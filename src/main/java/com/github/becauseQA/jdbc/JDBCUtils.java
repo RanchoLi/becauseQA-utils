@@ -102,33 +102,30 @@ public class JDBCUtils {
 	 */
 	public static void getConnection(DatabaseDriver driver, String domain, String serverName,
 			String defaultDatabaseName, String username, String password) {
-		if (connection == null) {
-			try {
-				Class.forName(driver.getdriverClassName());
-				String driverurl = driver.getdriverUrl() + "://" + serverName + "/" + defaultDatabaseName;
-				String NTLMStr = (StringUtils.isNotEmpty(domain)) ? ";useNTLMv2=true;domain=" + domain : "";
-				connection = DriverManager.getConnection(driverurl + NTLMStr, username, password);
-				queryRunner = new QueryRunner(false);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			Class.forName(driver.getdriverClassName());
+			String driverurl = driver.getdriverUrl() + "://" + serverName + "/" + defaultDatabaseName;
+			String NTLMStr = (StringUtils.isNotEmpty(domain)) ? ";useNTLMv2=true;domain=" + domain : "";
+			connection = DriverManager.getConnection(driverurl + NTLMStr, username, password);
+			queryRunner = new QueryRunner(false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
 
 	public static DataSource getDataSource(Properties properties) {
-		if (dataSource == null) {
-			try {
-				dataSource = BasicDataSourceFactory.createDataSource(properties);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			dataSource = BasicDataSourceFactory.createDataSource(properties);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 		queryRunner = new QueryRunner(dataSource, false);
 		try {
 			dataSource.setValidationQuery("select 1"); // http://stackoverflow.com/questions/26404283/java-hibernate-with-sql-server-2012-not-working/27847317#27847317
@@ -142,20 +139,19 @@ public class JDBCUtils {
 
 	public static DataSource getDataSource(DatabaseDriver driver, String domain, String serverName,
 			String defaultDatabaseName, String username, String password) {
-		if (dataSource == null) {
-			dataSource = new BasicDataSource();
-			dataSource.setDriverClassName(driver.getdriverClassName());
-			String driverurl = driver.getdriverUrl() + "://" + serverName + "/" + defaultDatabaseName;
-			String NTLMStr = (StringUtils.isNotEmpty(domain))
-					? ";integrated security=false;useNTLMv2=true;domain=" + domain : ";useKerberos=true;";
-			dataSource.setUrl(driverurl + NTLMStr);
-			dataSource.setUsername(username);
-			dataSource.setPassword(password);
+		dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(driver.getdriverClassName());
+		String driverurl = driver.getdriverUrl() + "://" + serverName + "/" + defaultDatabaseName;
+		String NTLMStr = (StringUtils.isNotEmpty(domain)) ? ";integrated security=false;useNTLMv2=true;domain=" + domain
+				: ";useKerberos=true;";
+		dataSource.setUrl(driverurl + NTLMStr);
+		dataSource.setUsername(username);
+		dataSource.setPassword(password);
 
-			// set the auto commit for transaction
-			dataSource.setMaxTotal(100);
-			dataSource.setDefaultAutoCommit(true);
-		}
+		// set the auto commit for transaction
+		dataSource.setMaxTotal(100);
+		dataSource.setDefaultAutoCommit(true);
+
 		queryRunner = new QueryRunner(dataSource, false);
 		try {
 			dataSource.setValidationQuery("select 1"); // http://stackoverflow.com/questions/26404283/java-hibernate-with-sql-server-2012-not-working/27847317#27847317
@@ -165,30 +161,6 @@ public class JDBCUtils {
 			e.printStackTrace();
 		}
 		return dataSource;
-	}
-
-	/**
-	 * prepare the sql to run for select query,you need to use executeQuery();
-	 * for insert,update,delete you need to user executeUpdate(); for batch job
-	 * ,first addBatch(); then executeBatch();//
-	 * http://viralpatel.net/blogs/batch-insert-in-java-jdbc/ batch run
-	 * 
-	 * @param sql
-	 * @return PreparedStatement ps
-	 * @throws SQLException
-	 * @deprecated Use {@link #query(String, ResultSetHandler, Object...)}
-	 *             {@link #update(String, Object...)}
-	 *             {@link #insert(String, ResultSetHandler, Object...)}
-	 */
-	public static PreparedStatement prepareSql(String sql) {
-		try {
-			ps = connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return ps;
 	}
 
 	/**
@@ -330,6 +302,30 @@ public class JDBCUtils {
 			e.printStackTrace();
 		}
 		return cs;
+	}
+
+	/**
+	 * prepare the sql to run for select query,you need to use executeQuery();
+	 * for insert,update,delete you need to user executeUpdate(); for batch job
+	 * ,first addBatch(); then executeBatch();//
+	 * http://viralpatel.net/blogs/batch-insert-in-java-jdbc/ batch run
+	 * 
+	 * @param sql
+	 * @return PreparedStatement ps
+	 * @throws SQLException
+	 * @deprecated Use {@link #query(String, ResultSetHandler, Object...)}
+	 *             {@link #update(String, Object...)}
+	 *             {@link #insert(String, ResultSetHandler, Object...)}
+	 */
+	public static PreparedStatement prepareSql(String sql) {
+		try {
+			ps = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ps;
 	}
 
 	/**

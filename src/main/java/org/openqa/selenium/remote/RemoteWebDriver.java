@@ -17,6 +17,8 @@
 
 package org.openqa.selenium.remote;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,6 +66,12 @@ import org.openqa.selenium.logging.LoggingHandler;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.logging.NeedsLocalLogs;
+import org.openqa.selenium.remote.http.HttpClient;
+import org.openqa.selenium.remote.http.HttpMethod;
+import org.openqa.selenium.remote.http.HttpRequest;
+import org.openqa.selenium.remote.http.HttpResponse;
+import org.openqa.selenium.remote.http.JsonHttpResponseCodec;
+import org.openqa.selenium.remote.internal.ApacheHttpClient;
 import org.openqa.selenium.remote.internal.JsonToWebElementConverter;
 import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.openqa.selenium.security.Credentials;
@@ -155,7 +163,14 @@ public class RemoteWebDriver
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void getExistingSessionId() {
 		try {
-			Response response = execute(DriverCommand.GET_ALL_SESSIONS);
+			String url=System.getProperty("webdriver.remote.server", "http://localhost:4444/wd/hub");
+			//url=System.setProperty("webdriver.remote.server", "http://localhost:4444/wd/hub");
+			String allSessionId= "/sessions";
+			HttpClient newClient = new ApacheHttpClient.Factory().createClient(new URL(url));
+			HttpRequest request=new HttpRequest(HttpMethod.GET, allSessionId);
+			HttpResponse httpResponse=newClient.execute(request, true);
+			Response response = new JsonHttpResponseCodec().decode(httpResponse);
+			//Response response = execute(DriverCommand.GET_ALL_SESSIONS);
 			ArrayList sessionsList = (ArrayList) response.getValue();
 			int size = sessionsList.size();
 			if (size > 0) {
@@ -201,7 +216,13 @@ public class RemoteWebDriver
 		} catch (UnreachableBrowserException e) {
 			// TODO: handle exception
 			logger.warning("Not found existing browser session ,take to create a new browser session.");
-		}
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
 
 	}
 

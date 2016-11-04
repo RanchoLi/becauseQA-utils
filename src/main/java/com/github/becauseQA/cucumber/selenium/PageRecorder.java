@@ -25,10 +25,9 @@ public class PageRecorder {
 	private static String javaScript_GetCommand = "return document.selenium_data === undefined ? '' : document.selenium_data;";
 
 	private static String lastCommandid = null;
-	private static String elementName;
 	private static String jsFolder = "/js/";
 
-	public static File copyResource2TempFolder(String filename) {
+	private static File copyResource2TempFolder(String filename) {
 		String tempdllpath = System.getProperty("java.io.tmpdir");
 		String destinationPath = tempdllpath + filename;
 		File jsFile = new File(destinationPath);
@@ -46,27 +45,22 @@ public class PageRecorder {
 	}
 
 	public static void InjectAlertifyFile() {
-		// String alertifyJS =
-		// PageRecorder.class.getResourceAsStream("/js/toastr.min.js").getFile();
 		try {
-			File alertifyJS = copyResource2TempFolder("toastr.min.js");
-			File alertifyCSS = copyResource2TempFolder("toastr.min.css");
-			String alertifyJSContent = FileUtils.readFileToString(alertifyJS);
-			String toastrJSContent = FileUtils.readFileToString(alertifyCSS, "UTF-8");
-			// String alertifyFound = "return typeof $.notify=='function'; ";
 			String alertifyFound = "return typeof toastr=='object'; ";
-			boolean alertSupport = (boolean) BaseSteps.runJS(alertifyFound);
+			boolean alertSupport = (boolean) BaseSteps.javascript(alertifyFound);
 			if (!alertSupport) {
-				BaseSteps.runJS(alertifyJSContent);
-				BaseSteps.addCssStyle(toastrJSContent);
+				File alertifyJS = copyResource2TempFolder("toastr.min.js");
+				File alertifyCSS = copyResource2TempFolder("toastr.min.css");
+				String alertifyJSContent = FileUtils.readFileToString(alertifyJS);
+				String toastrJSContent = FileUtils.readFileToString(alertifyCSS, "UTF-8");
+				BaseSteps.javascript(alertifyJSContent);
+				BaseSteps.PageCssStyleAdd(toastrJSContent);
 			} else {
 				log.info("Current browser had support toastr object,it's modern browser");
 			}
 
 			// String toastrCSS =
 			// PageRecorder.class.getResource("/js/toastr.min.css").getFile();
-
-			
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -78,12 +72,12 @@ public class PageRecorder {
 		// String jsonFilePath =
 		// PageRecorder.class.getResource("/js/json2.js").getFile();
 		try {
-			File jsonFilePath = copyResource2TempFolder("json2.js");
-			String jsonContent = FileUtils.readFileToString(jsonFilePath);
 			String IsJson2ObjectExists = "return typeof JSON === 'object';";
-			boolean jsonSupport = (boolean) BaseSteps.runJS(IsJson2ObjectExists);
+			boolean jsonSupport = (boolean) BaseSteps.javascript(IsJson2ObjectExists);
 			if (!jsonSupport) {
-				BaseSteps.runJS(jsonContent);
+				File jsonFilePath = copyResource2TempFolder("json2.js");
+				String jsonContent = FileUtils.readFileToString(jsonFilePath);
+				BaseSteps.javascript(jsonContent);
 			} else {
 				log.info("Current browser had support JSON object,it's modern browser");
 			}
@@ -97,12 +91,12 @@ public class PageRecorder {
 		// String jqueryFilePath =
 		// PageRecorder.class.getResource("/js/jquery-3.1.0.min.js").getFile();
 		try {
-			File jqueryFilePath = copyResource2TempFolder("jquery-3.1.0.min.js");
-			String jqueryContent = FileUtils.readFileToString(jqueryFilePath);
 			String IsJqueryObjectExists = "return typeof jQuery  === 'undefined';";
-			boolean jqueryNotSupport = (boolean) BaseSteps.runJS(IsJqueryObjectExists);
+			boolean jqueryNotSupport = (boolean) BaseSteps.javascript(IsJqueryObjectExists);
 			if (jqueryNotSupport) {
-				BaseSteps.runJS(jqueryContent);
+				File jqueryFilePath = copyResource2TempFolder("jquery-3.1.0.min.js");
+				String jqueryContent = FileUtils.readFileToString(jqueryFilePath);
+				BaseSteps.javascript(jqueryContent);
 			} else {
 				log.info("Current browser had support JQuery object,it's modern browser");
 			}
@@ -114,26 +108,23 @@ public class PageRecorder {
 
 	public static boolean IsVisualSearchScriptInjected() {
 		String jsCheckScript = "return document.PageRecorder === undefined ? false : true;";
-		boolean IsVisualSearchScriptInjected = (boolean) BaseSteps.runJS(jsCheckScript);
+		boolean IsVisualSearchScriptInjected = (boolean) BaseSteps.javascript(jsCheckScript);
 		return IsVisualSearchScriptInjected;
 	}
 
 	public static void InjectPageRecorder() {
-
-		InjectJQuery();
-		InjectJSON2ObjectForWierdBrowsers();
-		InjectAlertifyFile();
-		// String jsonFilePath =
-		// PageRecorder.class.getResource("/js/PageRecorder.js").getFile();
 		try {
 			File jsonFilePath = copyResource2TempFolder("PageRecorder.js");
 			boolean isVisualSearchScriptInjected = IsVisualSearchScriptInjected();
 			if (!isVisualSearchScriptInjected) {
+				InjectJQuery();
+				InjectJSON2ObjectForWierdBrowsers();
+				InjectAlertifyFile();
 				String jsonContent = FileUtils.readFileToString(jsonFilePath);
-				BaseSteps.runJS(jsonContent);
+				BaseSteps.javascript(jsonContent);
 
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -153,7 +144,7 @@ public class PageRecorder {
 
 		if (IsVisualSearchScriptInjected()) {
 			log.info("DestroyVisualSearch: Scripts have been injected previously. Kill'em all!");
-			BaseSteps.runJS(deathBuilder.toString());
+			BaseSteps.javascript(deathBuilder.toString());
 		}
 
 	}
@@ -162,7 +153,7 @@ public class PageRecorder {
 		String seleniumDataStr = "";
 		JsonObject seleniumData = null;
 		try {
-			seleniumDataStr = (String) BaseSteps.runJS(javaScript_GetCommand);
+			seleniumDataStr = (String) BaseSteps.javascript(javaScript_GetCommand);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -183,6 +174,11 @@ public class PageRecorder {
 		return seleniumData;
 	}
 
+	public static void inspector(TimerTask task, long timeMillSeconds) {
+		Timer timer = new Timer();
+		timer.schedule(task, 0, timeMillSeconds);
+	}
+
 	public static void startRecord(WebDriver driver) {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
@@ -195,17 +191,20 @@ public class PageRecorder {
 					JsonObject seleniumCommand = PageRecorder.getSeleniumCommand();
 					if (seleniumCommand != null) {
 						String commandName = seleniumCommand.get("Command").getAsString();
+						// elementName =
+						// seleniumCommand.get("ElementName").getAsString();
 						if (commandName.equals("rightClickHandler")) {
 							// when you right click the element
 						} else if (commandName.equals("AddElement")) {
 							// add the command to any place you want
-							if (!elementName.equals(seleniumCommand.get("ElementName").getAsString())) {
-								String elementId = seleniumCommand.get("ElementId").getAsString();
-								String cssPath = seleniumCommand.get("CSS").getAsString();
-								String XPath = seleniumCommand.get("XPath").getAsString();
-								log.info("Add Element: " + elementName + "," + elementId + "," + cssPath + "," + XPath);
-								elementName = seleniumCommand.get("ElementName").getAsString();
-							}
+
+							String elementId = seleniumCommand.get("ElementId").getAsString();
+							String cssPath = seleniumCommand.get("CSS").getAsString();
+							String XPath = seleniumCommand.get("XPath").getAsString();
+							String content = seleniumCommand.get("Text").getAsString();
+							String elementName = seleniumCommand.get("ElementName").getAsString();
+							log.info("Add Element: " + elementName + "," +content+","+ elementId + "," + cssPath + "," + XPath);
+
 						}
 					}
 				} catch (Exception e) {
@@ -247,7 +246,7 @@ public class PageRecorder {
 		try
 
 		{
-			BaseSteps.runJS(notifyJS);
+			BaseSteps.javascript(notifyJS);
 		} catch (WebDriverException e) {
 			// TODO: handle exception
 			e.printStackTrace();

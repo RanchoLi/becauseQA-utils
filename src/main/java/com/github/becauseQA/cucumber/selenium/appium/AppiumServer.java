@@ -202,7 +202,8 @@ public class AppiumServer implements IMobileServer {
     /**
      * Stops an already running Appium server.
      */
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void stopServer() {
         String[] stopServerCommand = null;
 

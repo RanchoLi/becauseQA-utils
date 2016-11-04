@@ -45,7 +45,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * @ClassName: BaseSteps
  * @Description: TODO
- * @author ahu@greendotcorp.com
+ * @author alterhu2020@gmail.com
  * @date Jun 25, 2015 11:17:17 PM
  * 
  */
@@ -56,91 +56,15 @@ public class BaseSteps {
 	public static final Logger log = Logger.getLogger(BaseSteps.class);
 
 	/**
-	 * @Title: visitPage @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @return void return
-	 *         type @throws
-	 */
-
-	public void visitPage(String params1) {
-		// driver = SeleniumCore.driver;
-		driver.get(params1);
-	}
-
-	/**
-	 * http://www.w3schools.com/jsref/dom_obj_style.asp
-	 * 
-	 * @Title: highLight @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 * 
-	 */
-
-	public void highLight(WebElement e) {
-		if (driver instanceof JavascriptExecutor) {
-			String jsString = "element = arguments[0];\r\n" + "original_style = element.getAttribute('style');"
-					+ "element.setAttribute('style', original_style + \"; background: yellow; border: 2px solid red;outline:2px dashed #00F;\");"
-					+ "setTimeout(function(){" + "element.setAttribute('style', original_style);" + "        }, 300);";
-
-			runJS(jsString, e);
-		}
-
-	}
-
-	/**
-	 * @Title: currentUrlIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param url @return void return
-	 *         type @throws
-	 */
-
-	public void currentUrlIs(String url) {
-		pageUrlIs(url);
-	}
-
-	/**
-	 * @Title: clearBrowserData @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
-	 */
-
-	public void clearBrowserCookies() {
-		driver.manage().deleteAllCookies();
-		// driver.quit();
-	}
-
-	/**
-	 * @Title: runJS @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param script @param @return @return
-	 *         Object return type @throws
-	 *//*
-		 * 
-		 * public static Object runJS(String script) { //
-		 * logger.info("Run the javascript from page ,the java script is:" // +
-		 * script); JavascriptExecutor je = (JavascriptExecutor) driver; return
-		 * je.executeScript(script);
-		 * 
-		 * }
-		 */
-
-	/**
-	 * Run js not sync simple thread
+	 * Run java script in the page using selenium
 	 * 
 	 * @param script
-	 *            js script
-	 * @return the js object
+	 *            The java script need to use
+	 * @param e
+	 *            the web element which will use this script
+	 * @return the java script return's object
 	 */
-	public static Object runJSAsync(String script, Object... element) {
-		if (driver == null)
-			driver = SeleniumCore.driver;
-		JavascriptExecutor je = (JavascriptExecutor) driver;
-		return je.executeAsyncScript(script, element);
-
-	}
-
-	/**
-	 * @Title: runJS @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param script @param @param e @return
-	 *         void return type @throws
-	 */
-
-	public static Object runJS(String script, Object... e) {
+	public static Object javascript(String script, Object... e) {
 		// logger.info("Run the javascript from page ,the java script is:"
 		// + script);
 		// highLight(e);
@@ -150,39 +74,56 @@ public class BaseSteps {
 	}
 
 	/**
-	 * add the css style file content
+	 * Run js not sync simple thread
 	 * 
-	 * @param css
-	 *            css file content
-	 * @return the return value
+	 * @param script
+	 *            js script
+	 * @return the js object
 	 */
-	public static Object addCssStyle(String css) {
-		// logger.info("Run the javascript from page ,the java script is:"
-		// + script);
-		// highLight(e);
-		String cssFunction = "var pageRecordHeader = document.getElementsByTagName('head')[0];\n"
-				+ "var pageRecordStyle=document.createElement('style');\n"
-				+ "pageRecordStyle.setAttribute('type', 'text/css');\n";
-		String injectCSSAlreadyContent = "function supportCSSType(){" + cssFunction
-				+ "if(pageRecordStyle.styleSheet){console.log('pageRecord:true');return true;}else{console.log('pageRecord:true');return false;}};\n"
-				+ "return supportCSSType();";
-		boolean hasCssStyleAlready = (boolean) BaseSteps.runJS(injectCSSAlreadyContent);
-		if (hasCssStyleAlready) {
-			cssFunction += "pageRecordStyle.styleSheet.cssText = '" + css + "';";
-			// log.info(CSSFunctionInjectedObject.toString());
-		} else {
-			cssFunction += "pageRecordStyle.appendChild(document.createTextNode('" + css + "'));";
-		}
-		cssFunction += "\n pageRecordHeader.appendChild(pageRecordStyle);";
+	public static Object javescriptAsync(String script, Object... element) {
+		if (driver == null)
+			driver = SeleniumCore.driver;
+		JavascriptExecutor je = (JavascriptExecutor) driver;
+		return je.executeAsyncScript(script, element);
 
-		return BaseSteps.runJS(cssFunction);
+	}
+
+	/**
+	 * http://www.w3schools.com/jsref/dom_obj_style.asp
+	 * 
+	 * @Title: highLight @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
+	 * 
+	 */
+
+	public void elementHighLight(WebElement e) {
+		elementHighLight(e, 300);
+	}
+
+	/**
+	 * http://www.w3schools.com/jsref/dom_obj_style.asp
+	 * 
+	 * @Title: highLight @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
+	 * 
+	 */
+
+	public void elementHighLight(WebElement e, long timeInMillseconds) {
+		if (driver instanceof JavascriptExecutor) {
+			String jsString = "element = arguments[0];\r\n" + "original_style = element.getAttribute('style');"
+					+ "element.setAttribute('style', original_style + \"; backgroundColor: yellow; border: 2px solid red;outline:#8f8 solid 3px;\");"
+					+ "setTimeout(function(){try {if (!element.parentNode) {return;} element.setAttribute('style', original_style);}catch (e) {} }, "
+					+ timeInMillseconds + ");";
+
+			javascript(jsString, e);
+		}
 
 	}
 
 	/**
 	 * @Title: clickElement
 	 * @Description: TODO
-	 * @author ahu@greendotcorp.com
+	 * @author alterhu2020@gmail.com
 	 * @param @param
 	 *            e
 	 * @return void return type
@@ -192,35 +133,35 @@ public class BaseSteps {
 	 *             element would receive the click:
 	 */
 
-	public void clickElement(WebElement e) {
+	public void elementClick(WebElement e) {
 		// throw new PendingException();
-		highLight(e);
-		scrollPagetoElement(e);
+		elementHighLight(e);
+		elementScrollIntoView(e);
 		e.click();
 	}
 
 	/**
 	 * @Title: clickElementJS @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public void clickElementJS(WebElement e) {
+	public void elementClickViaJavascript(WebElement e) {
 		// log.info("Click elements in page-clicked this element:"
 		// + e.getTagName() + ",the text is:" + e.getText());
 		// In chrome browser this function didn't work ,so give a solution to
 		// load the page correctly
-		highLight(e);
-		runJS("arguments[0].click();", e);
+		elementHighLight(e);
+		javascript("arguments[0].click();", e);
 	}
 
 	/**
 	 * @Title: rightClickElement @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public void rightClickElement(WebElement e) {
+	public void elementRightClick(WebElement e) {
 		// throw new PendingException();
 		// log.info("Highlight the element ,the object is:" + e.getTagName()
 		// + ",the text in this object is:" + e.getText());
@@ -232,28 +173,28 @@ public class BaseSteps {
 
 	/**
 	 * @Title: clickElementUsingjavascriptWithId @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param id @return void return
+	 *         alterhu2020@gmail.com @param @param id @return void return
 	 *         type @throws
 	 */
 
-	public void clickElementViaId(String id) {
+	public void elementClickById(String id) {
 		// throw new PendingException();
 		// log.info("Click elements in page-clicked this element html id
 		// is"+id);
 		// In chrome browser this function didn't work ,so give a solution to
 		// load the page correctly
 		// highLight(e);
-		runJS("document.getElementById('" + id + "').click();");
+		javascript("document.getElementById('" + id + "').click();");
 		// log.info("Clicked element's html ID is:"+id);
 	}
 
 	/**
 	 * @Title: clickElementUsingMouse @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public void clickElementViaMouse(WebElement e) {
+	public void elementMouseClick(WebElement e) {
 		// throw new PendingException();
 		// log.info("Click elements in page-clicked this element:"
 		// + e.getTagName() + ",the text is:" + e.getText());
@@ -261,327 +202,404 @@ public class BaseSteps {
 		// load the page correctly
 		// ((JavascriptExecutor)
 		// driver).executeScript("window.scrollTo(0,"+e.getLocation().y+")");
-		highLight(e);
+		elementHighLight(e);
 		new Actions(driver).moveToElement(e).clickAndHold().release().build().perform();
 
 	}
 
 	/**
-	 * @Title: clickOKButtonInAlertDialog @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
+	 * @Title: inputValue @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         params1 @return void return type @throws
 	 */
 
-	public void clickOKButtonInAlertDialog() {
+	public void elementInput(WebElement e, String params1) {
 		// throw new PendingException();
+		// e.clear();
+		elementHighLight(e);
+		e.sendKeys(params1);
 
-		boolean isclicked = false;
-		WebDriverWait wait = new WebDriverWait(driver, SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME);
-		try {
-			Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-			// log.info("Pop up Alert text is:"+alert.getText());
-			alert.authenticateUsing(new UserAndPassword("ahu", "gu.chan-10266"));
-			alert.accept();
-			isclicked = true;
-		} catch (NoAlertPresentException e) {
-			// log.info("the Alert didn't pop up currently:"+e.getMessage());
-		} catch (TimeoutException e) {
-			log.error("Time out we cannot find this OK button:" + e.getMessage());
+	}
+
+	/**
+	 * @Title: clearAndInputValue @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param value @return
+	 *         void return type @throws
+	 */
+
+	public void elementInputBeforeClear(WebElement e, String value) {
+		// throw new PendingException();
+		elementHighLight(e);
+		e.clear();
+		e.sendKeys(value);
+
+	}
+
+	/**
+	 * @Title: inputValueJS @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         params1 @return void return type @throws
+	 */
+
+	public void elementInputByJavascriptAttribute(WebElement e, String value) {
+		// throw new PendingException();
+		// e.clear();
+		javascript("arguments[0].setAttribute('value', '" + value + "')", e);
+	}
+
+	/**
+	 * @Title: inputValueJS @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param elementlocator @param @param
+	 *         value @return void return type @throws
+	 */
+
+	public void elementInputByJavascriptJquery(String elementlocator, String value) {
+		// throw new PendingException();
+		// e.clear();
+		javascript("$('" + elementlocator + "').val('" + value + "')");
+	}
+
+	/**
+	 * @Title: inputKey @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         params1 @return void return type @throws
+	 */
+
+	public void elementInputKey(WebElement e, Keys params1) {
+		// throw new PendingException();
+		// e.clear();
+		elementHighLight(e);
+		e.sendKeys(params1);
+
+	}
+
+	/**
+	 * @Title: checkElement @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
+	 *         type @throws
+	 */
+
+	public void elementSelectOrCheck(WebElement e) {
+		// throw new PendingException();
+		elementHighLight(e);
+		if (!(e.isSelected())) {
+			// log.info("Check the checkbox,the webelment :" + e.getTagName()
+			// + e.getText() + ",had been selected now");
+			e.click();
+		} else {
+			// log.info("Check the checkbox,the webelment :" + e.getTagName()
+			// + e.getText() + ",had been selected by default");
 		}
-		Assert.assertTrue(isclicked);
 
 	}
 
 	/**
-	 * @Title: clickCancelButtonInAlertDialog @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
+	 * @Title: selectValue @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         params1 @return void return type @throws
 	 */
 
-	public void clickCancelButtonInAlertDialog() {
+	public void elementSelectByValue(WebElement e, String params1) {
 		// throw new PendingException();
+		// log.info("selectValue: Select option index from the list ,the option
+		// value is:"
+		// + params1);
+		elementHighLight(e);
+		Select select = new Select(e);
+		select.selectByValue(params1);
+	}
 
-		boolean isclicked = false;
-		WebDriverWait wait = new WebDriverWait(driver, SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME);
-		try {
-			Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-			// log.info("Pop up Alert text is:"+alert.getText());
-			alert.dismiss();
-			isclicked = true;
-		} catch (NoAlertPresentException e) {
-			// log.info("the Alert didn't pop up currently:"+e.getMessage());
-		} catch (TimeoutException e) {
-			log.error("Time out we cannot find this OK button:" + e.getMessage());
+	/**
+	 * Element tag should be select not ul
+	 * 
+	 * @param e
+	 * @param params1
+	 */
+	public void elementSelectByVisibleText(WebElement e, String params1) {
+		// throw new PendingException();
+		// log.info("selectValue: Select option index from the list ,the option
+		// value is:"
+		// + params1);
+		// highLight(e);
+		Select select = new Select(e);
+		select.selectByVisibleText(params1);
+	}
+
+	/**
+	 * @Title: dropdownListContainOptions @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         dropdownoptions @return void return type @throws
+	 */
+
+	public void elementSelectContainOptions(WebElement e, List<String> dropdownoptions) {
+		// throw new PendingException();
+		List<String> elements = new ArrayList<String>();
+		// log.info("Select option index from the list ,list element option
+		// value is:"
+		// + e);
+		elementHighLight(e);
+		Select select = new Select(e);
+		List<WebElement> options = select.getOptions();
+		for (WebElement item : options) {
+			elements.add(item.getText());
 		}
-		Assert.assertTrue(isclicked);
+
+		Assert.assertEquals(dropdownoptions, elements);
 
 	}
 
 	/**
-	 * @Title: pageTitleIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @return void return
+	 * @Title: focusElment @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public void pageTitleIs(String params1) {
-		// throw new PendingException();
-		String title = driver.getTitle();
-		Assert.assertEquals(params1, title);
+	public void elementFocus(WebElement e) {
+		if ("input".equals(e.getTagName())) {
+			e.sendKeys("");
+		} else {
+			new Actions(driver).moveToElement(e).perform();
+
+		}
 	}
 
 	/**
-	 * @Title: pageUrlIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @return void return
-	 *         type @throws
-	 */
-
-	public void pageUrlIs(String params1) {
-		// throw new PendingException();
-		String url = driver.getCurrentUrl();
-		Assert.assertEquals(params1, url);
-	}
-
-	/**
-	 * @Title: pageContains @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @return void return
-	 *         type @throws
-	 */
-
-	public void pageContains(String params1) {
-		// throw new PendingException();
-		boolean sourcecontent = driver.getPageSource().contains(params1);
-		Assert.assertTrue(sourcecontent);
-	}
-
-	/**
-	 * @Title: pageRefresh @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
-	 */
-
-	public void pageRefresh() {
-		refreshPage();
-	}
-
-	/**
-	 * @Title: pageContainText @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param text @return void return
-	 *         type @throws
-	 */
-
-	public void pageContainText(String text) {
-		// throw new PendingException();
-		boolean textpresent = driver.getPageSource().contains(text);
-		// log.info("Verify the element text present in the page,the text found
-		// is:"+textpresent);
-		Assert.assertTrue(textpresent);
-	}
-
-	/**
-	 * @Title: refreshPage @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
-	 */
-
-	public void refreshPage() {
-		// throw new PendingException();
-		// log.info("Now refresh the page to keep the session valid");
-		// or blow
-		Actions actions = new Actions(driver);
-		actions.sendKeys(Keys.F5).perform();
-	}
-
-	/**
-	 * @Title: assertElementIsPresented @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void assertElementIsPresented(WebElement e) {
-		// throw new PendingException();
-		elementIsPresented(e);
-	}
-
-	/**
-	 * @Title: assertElementIsNotPresented @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void assertElementNotPresented(WebElement e) {
-		elementIsNotPresented(e);
-	}
-
-	/**
-	 * @Title: assertDropdownListContainOptions @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         options @return void return type @throws
-	 */
-
-	public void assertDropdownListContainOptions(WebElement e, List<String> options) {
-		dropdownListContainOptions(e, options);
-	}
-
-	/**
-	 * @Title: assertElementTextIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param element @param @param
-	 *         expectedtext @return void return type @throws
-	 */
-
-	public void assertElementTextIs(WebElement element, String expectedtext) {
-		elementTextIs(element, expectedtext);
-	}
-
-	/**
-	 * @Title: assertElementContentIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param element @param @param
-	 *         expectedtext @return void return type @throws
-	 */
-
-	public void assertElementContentIs(WebElement element, String expectedtext) {
-		elementTextIs(element, expectedtext);
-	}
-
-	/**
-	 * @Title: assertElementIsEnabled @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
+	 * @Title: elementTextIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
 	 *         params2 @return void return type @throws
 	 */
 
-	public void assertElementIsEnabled(WebElement e) {
+	public void elementTextIs(WebElement e, String params2) {
 		// throw new PendingException();
-		elementIsEnabled(e);
-
+		// log.info("Get the element text.The webelement is:" + e.getTagName()
+		// + ",the text in the webelement is:" + e.getText().trim());
+		elementHighLight(e);
+		String visibletext = e.getText().trim();
+		Assert.assertEquals(params2.trim(), visibletext);
 	}
 
 	/**
-	 * @Title: assertElementIsSelected @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
+	 * @Title: elementTextIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @return @return
+	 *         String return type @throws
 	 */
 
-	public void assertElementIsSelected(WebElement e) {
-		elementIsSelected(e);
+	public String elementTextIs(WebElement e) {
+		// throw new PendingException();
+		// log.info("Get the element text.The webelement is:" + e.getTagName()
+		// + ",the text in the webelement is:" + e.getText().trim());
+		elementHighLight(e);
+		String visibletext = e.getText().trim();
+		return visibletext;
 	}
 
 	/**
-	 * @Title: assertRadioButtonIsSelected @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void assertRadioButtonIsSelected(WebElement e) {
-		elementIsSelected(e);
-	}
-
-	/**
-	 * @Title: assertElementIsNotSelected @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void assertElementIsNotSelected(WebElement e) {
-		elementIsNotSelected(e);
-	}
-
-	/**
-	 * @Title: assertElementAttributeValueIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
+	 * @Title: elementAttributeValueIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
 	 *         attributename @param @param params3 @return void return
 	 *         type @throws
 	 */
 
-	public void assertElementAttributeValueIs(WebElement e, String attributename, String params3) {
-		elementAttributeValueIs(e, attributename, params3);
+	public String elementAttributeValueIs(WebElement e, String attributename) {
+		// throw new PendingException();
+		String attributevalue = e.getAttribute(attributename);
+		return attributevalue;
 	}
 
 	/**
-	 * @Title: assertPageUrlIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param url @return void return
+	 * @Title: elementAttributeValueIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         attributename @param @param params3 @return void return
 	 *         type @throws
 	 */
 
-	public void assertPageUrlIs(String url) {
-		pageUrlIs(url);
+	public void elementAttributeValueIs(WebElement e, String attributename, String params3) {
+		// throw new PendingException();
+		String attributevalue = e.getAttribute(attributename);
+		Assert.assertEquals(params3, attributevalue);
 	}
 
 	/**
-	 * @Title: assertPageTitleIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param title @return void return
-	 *         type @throws
+	 * @Title: elementCSSValue @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         attr @param @return @return String return type @throws
 	 */
 
-	public void assertPageTitleIs(String title) {
-		pageTitleIs(title);
+	public String elementCSSValueIs(WebElement e, String attr) {
+		return e.getCssValue(attr);
 	}
 
 	/**
-	 * @Title: elementIsPresented @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
+	 * @Title: assertElementIsPresented @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public void elementIsPresented(WebElement e) {
+	public void elementDisplayed(WebElement e) {
 		// throw new PendingException();
 		boolean displayed = e.isDisplayed();
 		Assert.assertTrue(displayed);
 	}
 
 	/**
-	 * @Title: elementIsPresented @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
+	 * @Title: assertElementIsNotPresented @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public void elementIsNotPresented(WebElement e) {
-		// throw new PendingException();
+	public void elementNotDisplayed(WebElement e) {
 		boolean displayed = e.isDisplayed();
 		Assert.assertFalse(displayed);
 	}
 
 	/**
-	 * @Title: waitForSeconds @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param s @return void return
+	 * @Title: assertElementIsPresented @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public static void waitForSeconds(int s) {
+	public boolean elementPresent(WebElement e) {
 		// throw new PendingException();
-		// int seconds=Integer.parseInt(s);
+		boolean foundElement = false;
 		try {
-			Thread.sleep(s * 1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			log.error("Sleep current step met an error:" + e.getMessage());
+			foundElement = e.isDisplayed();
+		} catch (Exception ex) {
+			// TODO: handle exception
 		}
+		return foundElement;
 	}
 
 	/**
-	 * @return the WebDriverWait element.
+	 * @Title: elementStatusIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         params2 @return void return type @throws
 	 */
-	protected WebDriverWait waitforElement() {
-		WebDriverWait webDriverWait = new WebDriverWait(driver, SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME);
-		return webDriverWait;
+
+	public void elementIsEnabled(WebElement e) {
+		// throw new PendingException();
+		elementHighLight(e);
+		boolean enabled = e.isEnabled();
+		Assert.assertTrue(enabled);
+
+	}
+
+	/**
+	 * @Title: elementStatusIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @param
+	 *         params2 @return void return type @throws
+	 */
+
+	public boolean elementEnabled(WebElement e) {
+		boolean enabled = e.isEnabled();
+		return enabled;
+	}
+
+	/**
+	 * @Title: elementIsSelected @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
+	 *         type @throws
+	 */
+
+	public void elementIsSelected(WebElement e) {
+		// throw new PendingException();
+		elementHighLight(e);
+		boolean selected = e.isSelected();
+		Assert.assertTrue(selected);
+	}
+
+	/**
+	 * @Title: elementIsSelected @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
+	 *         type @throws
+	 */
+
+	public boolean elementSelected(WebElement e) {
+		// throw new PendingException();
+		// elementHighLight(e);
+		boolean selected = e.isSelected();
+		return selected;
+	}
+
+	/**
+	 * @Title: elementIsNotSelected @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
+	 *         type @throws
+	 */
+
+	public void elementIsNotSelected(WebElement e) {
+		// throw new PendingException();
+		elementHighLight(e);
+		boolean selected = e.isSelected();
+		Assert.assertFalse(selected);
+	}
+
+	/**
+	 * @Title: elementHtmlCodeIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @param @return @return
+	 *         String return type @throws
+	 */
+
+	public String elementHtmlCodeIs(WebElement e) {
+		// throw new PendingException();
+		String contents = (String) javascript("return arguments[0].innerHTML;", e);
+		return contents;
+	}
+
+	/**
+	 * @Title: scrollPagetoElement @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param e @return void return
+	 *         type @throws
+	 */
+
+	public void elementScrollIntoView(WebElement e) {
+		// throw new PendingException();
+		elementHighLight(e);
+		javascript("window.scrollTo(0," + e.getLocation().y + ")");
+		javascript("arguments[0].scrollIntoView(true);", e);
+		// log.info("Now we scroll the view to the position we can see");
+
+	}
+
+	/**
+	 * @Title: waitForPageFullVisible @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param element @return void return
+	 *         type @throws
+	 */
+
+	public void elementWaitVisible(WebElement element) {
+		// log.info("waitForPageFullsync: Current browser state
+		// is:"+currentbowserstate);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+				.withTimeout(SeleniumCore.DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+				.pollingEvery(SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME, TimeUnit.SECONDS)
+				.ignoring(NoSuchElementException.class).ignoring(StaleElementReferenceException.class);
+
+		wait.until(ExpectedConditions.visibilityOf(element));
+
 	}
 
 	/**
 	 * @Title: waitForSeconds @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
+	 *         alterhu2020@gmail.com @param @param e @return void return
 	 *         type @throws
 	 */
 
-	public void waitForElementPresent(WebElement e) {
+	public void elementWaitPresent(WebElement e) {
 		// throw new PendingException();
 		// int seconds=Integer.parseInt(s);
-		waitforElement().until(ExpectedConditions.visibilityOf(e));
+		AbstractWebDriverWait().until(ExpectedConditions.visibilityOf(e));
 	}
 
 	/**
 	 * @Title: findElementByXpath @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param xpath @param @return @return
+	 *         alterhu2020@gmail.com @param @param xpath @param @return @return
 	 *         WebElement return type @throws
 	 */
 
-	public WebElement waitForElementByXpath(String xpath) {
+	public WebElement elementWaitPresent(String xpath) {
 		WebElement e = null;
 		try {
-			waitforElement().until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+			AbstractWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
 
 		} catch (TimeoutException ex) {
 			// TODO: handle exception
@@ -591,68 +609,18 @@ public class BaseSteps {
 	}
 
 	/**
-	 * @Title: waitForStableElement @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param locator @param @return @return
-	 *         WebElement return type @throws
-	 */
-
-	public WebElement waitForStableElement(final By locator, Object page) {
-		// resolve the pagefactory issue
-		pageElementsRelocatored(page);
-
-		waitforElement().until(ExpectedConditions.presenceOfElementLocated(locator));
-		try {
-			return driver.findElement(locator);
-		} catch (StaleElementReferenceException e) {
-			System.out.println("Attempting to recover from StaleElementReferenceException ..." + locator);
-			return waitForStableElement(locator, page);
-		}
-	}
-
-	/**
-	 * @Title: resolveStableElementException @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param locator @param @param
-	 *         page @param @return @return WebElement return type @throws
-	 */
-
-	public WebElement resolveStableElementException(final By locator, Object page) {
-		return waitForStableElement(locator, page);
-	}
-
-	/**
-	 * @Title: waitForStableElements @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param locator @param @return @return
-	 *         List<WebElement> return type @throws
-	 */
-
-	public List<WebElement> waitForStableElements(final By locator, Object page) {
-		// resolve the pagefactory issue
-		pageElementsRelocatored(page);
-		return waitforElement().until(new ExpectedCondition<List<WebElement>>() {
-			@Override
-			public List<WebElement> apply(WebDriver d) {
-				try {
-					return d.findElements(locator);
-				} catch (StaleElementReferenceException ex) {
-					return null;
-				}
-			}
-		});
-	}
-
-	/**
 	 * @Title: waitElementbePresent @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @param
+	 *         alterhu2020@gmail.com @param @param params1 @param @param
 	 *         e @return void return type @throws
 	 */
 
-	public void waitforElementbePresent(WebElement e) {
+	public void elementWaitDisplayed(WebElement e) {
 		// throw new PendingException();
 		int waitcount = 0;
 		boolean isDisplayed = e.isDisplayed();
 		while (!isDisplayed) {
 			waitcount = waitcount + 1;
-			waitForSeconds(3);
+			pageWait(3);
 			isDisplayed = e.isDisplayed();
 			if (waitcount == 60) {
 				log.error("Waitting for the object displayed status-the object cannot show in the page:"
@@ -666,15 +634,15 @@ public class BaseSteps {
 
 	/**
 	 * @Title: waitAjaxbePresent @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @param
+	 *         alterhu2020@gmail.com @param @param params1 @param @param
 	 *         e @return void return type @throws
 	 */
 
-	public void waitAjaxbePresent(String params1, final WebElement e) {
+	public void elementWaitPresentAjax(final WebElement e, String timeoutInSeconds) {
 		// throw new PendingException();
 
 		boolean findobject = false;
-		long time = Long.parseLong(params1);
+		long time = Long.parseLong(timeoutInSeconds);
 		WebDriverWait wait = new WebDriverWait(driver, time);
 
 		try {
@@ -700,374 +668,54 @@ public class BaseSteps {
 	}
 
 	/**
-	 * @Title: selectValue @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         params1 @return void return type @throws
+	 * @Title: waitForStableElement @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param
+	 *         locator @param @return @return WebElement return type @throws
 	 */
 
-	public void selectValue(WebElement e, String params1) {
-		// throw new PendingException();
-		// log.info("selectValue: Select option index from the list ,the option
-		// value is:"
-		// + params1);
-		highLight(e);
-		Select select = new Select(e);
-		select.selectByValue(params1);
-	}
+	public WebElement elementWaitStable(final By locator, Object pageClass) {
+		// resolve the pagefactory issue
+		pageFactoryReload(pageClass);
 
-	/**
-	 * @Title: selectDropDownValue @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param value @return
-	 *         void return type @throws
-	 */
-
-	public void selectDropDownValue(WebElement e, String value) {
-		selectValue(e, value);
-	}
-
-	/**
-	 * @Title: selectVisibleText @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         params1 @return void return type @throws
-	 */
-
-	public void selectVisibleText(WebElement e, String params1) {
-		// throw new PendingException();
-		// log.info("selectValue: Select option index from the list ,the option
-		// value is:"
-		// + params1);
-		// highLight(e);
-		Select select = new Select(e);
-		select.selectByVisibleText(params1);
-	}
-
-	public void selectDropDownVisibleValue(WebElement e, String value) {
-		selectVisibleText(e, value);
-	}
-
-	/**
-	 * @Title: dropdownListContainOptions @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         dropdownoptions @return void return type @throws
-	 */
-
-	public void dropdownListContainOptions(WebElement e, List<String> dropdownoptions) {
-		// throw new PendingException();
-		List<String> elements = new ArrayList<String>();
-		// log.info("Select option index from the list ,list element option
-		// value is:"
-		// + e);
-		highLight(e);
-		Select select = new Select(e);
-		List<WebElement> options = select.getOptions();
-		for (WebElement item : options) {
-			elements.add(item.getText());
-		}
-
-		Assert.assertEquals(dropdownoptions, elements);
-
-	}
-
-	/**
-	 * @Title: clearAndInputValue @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param value @return
-	 *         void return type @throws
-	 */
-
-	public void clearAndInputValue(WebElement e, String value) {
-		// throw new PendingException();
-		highLight(e);
-		e.clear();
-		e.sendKeys(value);
-
-	}
-
-	/**
-	 * @Title: elementFocus @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void elementFocus(WebElement e) {
-		focusElment(e);
-	}
-
-	/**
-	 * @Title: focusElment @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void focusElment(WebElement e) {
-		if ("input".equals(e.getTagName())) {
-			e.sendKeys("");
-		} else {
-			new Actions(driver).moveToElement(e).perform();
-
+		AbstractWebDriverWait().until(ExpectedConditions.presenceOfElementLocated(locator));
+		try {
+			return driver.findElement(locator);
+		} catch (StaleElementReferenceException e) {
+			System.out.println("Attempting to recover from StaleElementReferenceException ..." + locator);
+			return elementWaitStable(locator, pageClass);
 		}
 	}
 
 	/**
-	 * @Title: inputValue @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         params1 @return void return type @throws
-	 */
-
-	public void inputValue(WebElement e, String params1) {
-		// throw new PendingException();
-		// e.clear();
-		highLight(e);
-		e.sendKeys(params1);
-
-	}
-
-	/**
-	 * @Title: setValue @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param value @return
-	 *         void return type @throws
-	 */
-
-	public void setValue(WebElement e, String value) {
-		inputValue(e, value);
-	}
-
-	/**
-	 * @Title: inputValueJS @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         params1 @return void return type @throws
-	 */
-
-	public void inputValueViaJS(WebElement e, String value) {
-		// throw new PendingException();
-		// e.clear();
-		runJS("arguments[0].setAttribute('value', '" + value + "')", e);
-	}
-
-	/**
-	 * @Title: inputValueJS @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param elementlocator @param @param
-	 *         value @return void return type @throws
-	 */
-
-	public void inputValueViaJS(String elementlocator, String value) {
-		// throw new PendingException();
-		// e.clear();
-		runJS("$('" + elementlocator + "').val('" + value + "')");
-	}
-
-	/**
-	 * @Title: inputKey @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         params1 @return void return type @throws
-	 */
-
-	public void inputKey(WebElement e, Keys params1) {
-		// throw new PendingException();
-		// e.clear();
-		highLight(e);
-		e.sendKeys(params1);
-
-	}
-
-	/**
-	 * @Title: checkElement @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
+	 * @Title: waitForStableElements @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param
+	 *         locator @param @return @return List<WebElement> return
 	 *         type @throws
 	 */
 
-	public void checkedElement(WebElement e) {
-		// throw new PendingException();
-		highLight(e);
-		if (!(e.isSelected())) {
-			// log.info("Check the checkbox,the webelment :" + e.getTagName()
-			// + e.getText() + ",had been selected now");
-			e.click();
-		} else {
-			// log.info("Check the checkbox,the webelment :" + e.getTagName()
-			// + e.getText() + ",had been selected by default");
-		}
-
-	}
-
-	/**
-	 * @Title: checkBoxElement @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void checkBoxElement(WebElement e) {
-		// throw new PendingException();
-		checkedElement(e);
-
-	}
-
-	/**
-	 * @Title: checkRadioBox @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void checkRadioBox(WebElement e) {
-		checkedElement(e);
-	}
-
-	/**
-	 * @Title: elementTextIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         params2 @return void return type @throws
-	 */
-
-	public void elementTextIs(WebElement e, String params2) {
-		// throw new PendingException();
-		// log.info("Get the element text.The webelement is:" + e.getTagName()
-		// + ",the text in the webelement is:" + e.getText().trim());
-		highLight(e);
-		String visibletext = e.getText().trim();
-		Assert.assertEquals(params2.trim(), visibletext);
-	}
-
-	/**
-	 * @Title: elementWithText @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params2 @param @return @return
-	 *         WebElement return type @throws
-	 */
-
-	public WebElement elementWithText(String params2) {
-		// throw new PendingException();
-		// log.info("Get the element text.The webelement is:" + e.getTagName()
-		// + ",the text in the webelement is:" + e.getText().trim());
-		WebElement findElementContainText = findElementContainText(params2);
-		return findElementContainText;
-	}
-
-	/**
-	 * @Title: elementTextIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @return @return
-	 *         String return type @throws
-	 */
-
-	public String elementTextIs(WebElement e) {
-		// throw new PendingException();
-		// log.info("Get the element text.The webelement is:" + e.getTagName()
-		// + ",the text in the webelement is:" + e.getText().trim());
-		highLight(e);
-		String visibletext = e.getText().trim();
-		return visibletext;
-	}
-
-	/**
-	 * @Title: getElementText @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @return @return
-	 *         String return type @throws
-	 */
-
-	public String getElementText(WebElement e) {
-		return elementTextIs(e);
-	}
-
-	/**
-	 * @Title: getAlertMessage @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return @return String return
-	 *         type @throws
-	 */
-
-	public String getAlertMessage() {
-		Object objmsg = runJS("return window.message;");
-		return objmsg.toString();
-	}
-
-	/**
-	 * @Title: pageElementsRelocatored @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param page @return void return
-	 *         type @throws
-	 */
-
-	public void pageElementsRelocatored(Object page) {
-		PageFactory.initElements(driver, page);
-	}
-
-	/**
-	 * @Title: elementCSSValue @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         attr @param @return @return String return type @throws
-	 */
-
-	public String elementCSSValue(WebElement e, String attr) {
-		return e.getCssValue(attr);
-	}
-
-	/**
-	 * @Title: getCSSValue @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         attr @param @return @return String return type @throws
-	 */
-
-	public String getCSSValue(WebElement e, String attr) {
-		return elementCSSValue(e, attr);
-	}
-
-	/**
-	 * @Title: elementStatusIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         params2 @return void return type @throws
-	 */
-
-	public void elementIsEnabled(WebElement e) {
-		// throw new PendingException();
-		highLight(e);
-		boolean enabled = e.isEnabled();
-		Assert.assertTrue(enabled);
-
-	}
-
-	/**
-	 * @Title: elementIsSelected @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void elementIsSelected(WebElement e) {
-		// throw new PendingException();
-		highLight(e);
-		boolean selected = e.isSelected();
-		Assert.assertTrue(selected);
-	}
-
-	/**
-	 * @Title: elementIsNotSelected @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
-	 */
-
-	public void elementIsNotSelected(WebElement e) {
-		// throw new PendingException();
-		highLight(e);
-		boolean selected = e.isSelected();
-		Assert.assertFalse(selected);
-	}
-
-	/**
-	 * @Title: elementAttributeValueIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @param
-	 *         attributename @param @param params3 @return void return
-	 *         type @throws
-	 */
-
-	public void elementAttributeValueIs(WebElement e, String attributename, String params3) {
-		// throw new PendingException();
-		String attributevalue = e.getAttribute(attributename);
-		// log.info("Get the webelement Attribute-the webelement's attribute:"
-		// + attributename + " value is:" + attributevalue);
-		Assert.assertEquals(params3, attributevalue);
+	public List<WebElement> elementsWaitStable(final By locator, Object page) {
+		// resolve the pagefactory issue
+		pageFactoryReload(page);
+		return AbstractWebDriverWait().until(new ExpectedCondition<List<WebElement>>() {
+			@Override
+			public List<WebElement> apply(WebDriver d) {
+				try {
+					return d.findElements(locator);
+				} catch (StaleElementReferenceException ex) {
+					return null;
+				}
+			}
+		});
 	}
 
 	/**
 	 * @Title: findElementsWithTagname @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         List<WebElement> return type @throws
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return List<WebElement> return
+	 *         type @throws
 	 */
 
-	public List<WebElement> findElementsWithTagname(String params1) {
+	public List<WebElement> elementFindByTagName(String params1) {
 		// throw new PendingException();
 		List<WebElement> findElements = driver.findElements(By.tagName(params1));
 		return findElements;
@@ -1075,11 +723,11 @@ public class BaseSteps {
 
 	/**
 	 * @Title: findElementWithCSS @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithCSS(String params1) {
+	public WebElement elementFindByCSS(String params1) {
 		// throw new PendingException();
 		WebElement findElements = driver.findElement(By.cssSelector(params1));
 		return findElements;
@@ -1087,11 +735,11 @@ public class BaseSteps {
 
 	/**
 	 * @Title: findElementWithXPath @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithXPath(String params1) {
+	public WebElement elementFindByXPath(String params1) {
 		// throw new PendingException();
 		WebElement findElements = driver.findElement(By.xpath(params1));
 		return findElements;
@@ -1104,7 +752,7 @@ public class BaseSteps {
 	 *         type @throws
 	 */
 
-	public List<WebElement> findElementsWithXPath(String params1) {
+	public List<WebElement> elementsFindByXPath(String params1) {
 		// throw new PendingException();
 		List<WebElement> findElements = driver.findElements(By.xpath(params1));
 		return findElements;
@@ -1112,11 +760,11 @@ public class BaseSteps {
 
 	/**
 	 * @Title: findElementWithID @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithID(String params1) {
+	public WebElement elementFindByID(String params1) {
 		// throw new PendingException();
 		WebElement findElements = driver.findElement(By.id(params1));
 		return findElements;
@@ -1124,11 +772,11 @@ public class BaseSteps {
 
 	/**
 	 * @Title: findElementWithClassName @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithClassName(String params1) {
+	public WebElement elementFindByClassName(String params1) {
 		// throw new PendingException();
 		WebElement findElements = driver.findElement(By.className(params1));
 		return findElements;
@@ -1136,25 +784,13 @@ public class BaseSteps {
 
 	/**
 	 * @Title: findElementWithLinkText @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithLinkText(String params1) {
+	public WebElement elementFindByLinkText(String params1) {
 		// throw new PendingException();
 		WebElement findElements = driver.findElement(By.linkText(params1));
-		return findElements;
-	}
-
-	/**
-	 * @Title: findElementWithName @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
-	 */
-
-	public WebElement findElementWithName(String params1) {
-		// throw new PendingException();
-		WebElement findElements = driver.findElement(By.name(params1));
 		return findElements;
 	}
 
@@ -1162,18 +798,30 @@ public class BaseSteps {
 	 * @param params1
 	 * @return List<WebElement>
 	 */
-	public List<WebElement> findElementsWithLinkText(String params1) {
+	public List<WebElement> elementFindByLinkTexts(String params1) {
 		List<WebElement> findElements = driver.findElements(By.linkText(params1));
 		return findElements;
 	}
 
 	/**
-	 * @Title: findElementWithpartialLinkText @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
+	 * @Title: findElementWithName @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithpartialLinkText(String params1) {
+	public WebElement elementFindByName(String params1) {
+		// throw new PendingException();
+		WebElement findElements = driver.findElement(By.name(params1));
+		return findElements;
+	}
+
+	/**
+	 * @Title: findElementWithpartialLinkText @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
+	 */
+
+	public WebElement elementFindByPartialLinkText(String params1) {
 		// throw new PendingException();
 		WebElement findElements = driver.findElement(By.partialLinkText(params1));
 
@@ -1182,11 +830,11 @@ public class BaseSteps {
 
 	/**
 	 * @Title: findElementContainText @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param params1 @param @return @return
-	 *         WebElement return type @throws
+	 *         alterhu2020@gmail.com @param @param
+	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementContainText(String text) {
+	public WebElement elementFindByText(String text) {
 		// throw new PendingException();
 		WebElement findElements = driver.findElement(By.xpath("//*[contains(text(), '" + text + "')]"));
 
@@ -1199,7 +847,7 @@ public class BaseSteps {
 	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithButtonText(String text) {
+	public WebElement elementFindByButtonText(String text) {
 		// throw new PendingException();
 		WebElement findElement = driver.findElement(By.xpath("//button[contains(text(),'" + text + "')]"));
 
@@ -1212,18 +860,29 @@ public class BaseSteps {
 	 *         params1 @param @return @return WebElement return type @throws
 	 */
 
-	public WebElement findElementWithTextboxPlaceholder(String text) {
-		WebElement textbox = findElementWithXPath("//input[@placeholder=\"" + text + "\"]");
+	public WebElement elementFindByInputboxPlaceholder(String text) {
+		WebElement textbox = elementFindByXPath("//input[@placeholder=\"" + text + "\"]");
 
 		return textbox;
 	}
 
 	/**
-	 * @Title: waitForPageFullsync @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
+	 * @Title: visitPage @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param params1 @return void return
+	 *         type @throws
 	 */
 
-	public void waitForPageFullsync() {
+	public void pageVisit(String params1) {
+		// driver = SeleniumCore.driver;
+		driver.get(params1);
+	}
+
+	/**
+	 * @Title: waitForPageFullsync @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
+	 */
+
+	public void pageWaitFullSync() {
 		// log.info("waitForPageFullsync: Current browser state
 		// is:"+currentbowserstate);
 		// wait for jQuery to load
@@ -1231,7 +890,7 @@ public class BaseSteps {
 			@Override
 			public Boolean apply(WebDriver driver) {
 				// TODO Auto-generated method stub
-				Long newpagestate = (Long) runJS("return jQuery.active;");
+				Long newpagestate = (Long) javascript("return jQuery.active;");
 				log.debug("the new page state is:" + newpagestate);
 				return (newpagestate == 0);
 			}
@@ -1242,13 +901,13 @@ public class BaseSteps {
 			@Override
 			public Boolean apply(WebDriver driver) {
 				// TODO Auto-generated method stub
-				String newpagestate = (String) runJS("return document.readyState;");
+				String newpagestate = (String) javascript("return document.readyState;");
 				log.debug("the new page state is:" + newpagestate);
 				return (newpagestate.equals("complete"));
 			}
 		};
 		try {
-			WebDriverWait waitforElement = waitforElement();
+			WebDriverWait waitforElement = AbstractWebDriverWait();
 			boolean loaded = waitforElement.until(jqueryload) && waitforElement.until(jsload);
 			log.debug("finally the load is loading with completed status is:" + loaded);
 		} catch (org.openqa.selenium.WebDriverException e) {
@@ -1258,97 +917,214 @@ public class BaseSteps {
 	}
 
 	/**
-	 * @Title: waitForPageFullVisible @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param element @return void return
+	 * @Title: waitForSeconds @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param s @return void return
 	 *         type @throws
 	 */
 
-	public void waitForPageFullVisible(WebElement element) {
-		// log.info("waitForPageFullsync: Current browser state
-		// is:"+currentbowserstate);
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(SeleniumCore.DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-				.pollingEvery(SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME, TimeUnit.SECONDS)
-				.ignoring(NoSuchElementException.class).ignoring(StaleElementReferenceException.class);
+	public static void pageWait(int timeoutInSeconds) {
+		// throw new PendingException();
+		// int seconds=Integer.parseInt(s);
+		try {
+			Thread.sleep(timeoutInSeconds * 1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			log.error("Sleep current step met an error:" + e.getMessage());
+		}
+	}
 
-		wait.until(ExpectedConditions.visibilityOf(element));
+	/**
+	 * @Title: pageTitleIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param params1 @return void return
+	 *         type @throws
+	 */
+
+	public void pageTitleIs(String params1) {
+		// throw new PendingException();
+		String title = driver.getTitle();
+		Assert.assertEquals(params1, title);
+	}
+
+	/**
+	 * @Title: currentUrlIs @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param url @return void return
+	 *         type @throws
+	 */
+
+	public void pageUrlIs(String url) {
+		String ActualUrl = driver.getCurrentUrl();
+		Assert.assertEquals(url, ActualUrl);
+	}
+
+	/**
+	 * @Title: pageContains @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param params1 @return void return
+	 *         type @throws
+	 */
+
+	public void pageSourceContains(String params1) {
+		// throw new PendingException();
+		boolean sourcecontent = driver.getPageSource().contains(params1);
+		Assert.assertTrue(sourcecontent);
+	}
+
+	/**
+	 * @Title: pageRefresh @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
+	 */
+
+	public void pageRefresh() {
+		driver.navigate().refresh();
+	}
+
+	/**
+	 * @Title: pageRefresh @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
+	 */
+
+	public void pageF5Refresh() {
+		Actions actions = new Actions(driver);
+		actions.sendKeys(Keys.F5).perform();
+	}
+
+	/**
+	 * @Title: pageRefresh @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
+	 */
+
+	public void pageBack() {
+		driver.navigate().back();
+	}
+
+	/**
+	 * @Title: pageRefresh @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
+	 */
+
+	public void pageForward() {
+		driver.navigate().forward();
+	}
+
+	/**
+	 * @Title: pageElementsRelocatored @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param page @return void return
+	 *         type @throws
+	 */
+
+	public void pageFactoryReload(Object page) {
+		PageFactory.initElements(driver, page);
+	}
+
+	/**
+	 * add the css style file content
+	 * 
+	 * @param css
+	 *            css file content
+	 * @return the return value
+	 */
+	public static Object PageCssStyleAdd(String css) {
+		// logger.info("Run the javascript from page ,the java script is:"
+		// + script);
+		// highLight(e);
+		String cssFunction = "var pageRecordHeader = document.getElementsByTagName('head')[0];\n"
+				+ "var pageRecordStyle=document.createElement('style');\n"
+				+ "pageRecordStyle.setAttribute('type', 'text/css');\n";
+		String injectCSSAlreadyContent = "function supportCSSType(){" + cssFunction
+				+ "if(pageRecordStyle.styleSheet){console.log('pageRecord:true');return true;}else{console.log('pageRecord:true');return false;}};\n"
+				+ "return supportCSSType();";
+		boolean hasCssStyleAlready = (boolean) BaseSteps.javascript(injectCSSAlreadyContent);
+		if (hasCssStyleAlready) {
+			cssFunction += "pageRecordStyle.styleSheet.cssText = '" + css + "';";
+			// log.info(CSSFunctionInjectedObject.toString());
+		} else {
+			cssFunction += "pageRecordStyle.appendChild(document.createTextNode('" + css + "'));";
+		}
+		cssFunction += "\n pageRecordHeader.appendChild(pageRecordStyle);";
+
+		return BaseSteps.javascript(cssFunction);
 
 	}
 
 	/**
-	 * @Title: switchToWindowWithTitle @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param windowTitle @return void
-	 *         return type @throws
+	 * @Title: isChromeEmulation @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return @return boolean return
+	 *         type @throws
 	 */
 
-	public void switchToWindowWithTitle(String windowTitle) {
-		// throw new PendingException();
-
-		try {
-			Robot robot = new Robot();
-			Set<String> allwindows = driver.getWindowHandles();
-			for (String window : allwindows) {
-				driver.switchTo().window(window);
-				if (driver.getTitle().contains(windowTitle)) {
-					robot.delay(5000);
-					// robot.keyPress(keycode);
-				}
+	public boolean browserIsChromeEmulator() {
+		Capabilities actualCapabilities = ((RemoteWebDriver) driver).getCapabilities();
+		String browser = actualCapabilities.getBrowserName();
+		Object isemulator = actualCapabilities.getCapability("mobileEmulationEnabled");
+		if (isemulator != null) {
+			boolean isemulatorbool = (boolean) isemulator;
+			if (browser.equalsIgnoreCase("chrome") && isemulatorbool) {
+				return true;
 			}
-		} catch (AWTException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
+		return false;
 	}
 
 	/**
-	 * @Title: elementHtmlCodeIs @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @param @return @return
-	 *         String return type @throws
+	 * @Title: getOutputlog @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
 	 */
 
-	public String elementHtmlCodeIs(WebElement e) {
-		// throw new PendingException();
-		String contents = (String) runJS("return arguments[0].innerHTML;", e);
-		return contents;
+	public void browserConsoleLog() {
+		LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
+		for (LogEntry entry : logEntries) {
+			log.info(Calendar.getInstance().getTime() + " " + entry.getLevel() + " " + entry.getMessage());
+			// do something useful with the data
+		}
 	}
 
 	/**
-	 * @Title: scrollPagetoElement @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @param e @return void return
-	 *         type @throws
+	 * getBrowserType:(get the current running browser type and version number).
+	 * 
+	 * @param driver
+	 *            ---the web driver instance
+	 * 
+	 * @since JDK 1.6
+	 * @return String --- the browser type and version number
+	 */
+	public static String browserTypeAndVersionIs(RemoteWebDriver driver) {
+		Capabilities caps = driver.getCapabilities();
+		String browserName = caps.getBrowserName();
+		String browserVersion = caps.getVersion();
+		// String platform=caps.getPlatform().toString();
+		log.info("Get the current running browser is:" + browserName + ",the browser version is:" + browserVersion);
+		return browserName + " " + browserVersion;
+	}
+
+	/**
+	 * @Title: clearBrowserData @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
 	 */
 
-	public void scrollPagetoElement(WebElement e) {
-		// throw new PendingException();
-		highLight(e);
-		runJS("window.scrollTo(0," + e.getLocation().y + ")");
-		runJS("arguments[0].scrollIntoView(true);", e);
-		// log.info("Now we scroll the view to the position we can see");
-
+	public void browserClearCookies() {
+		driver.manage().deleteAllCookies();
+		// driver.quit();
 	}
 
 	/**
 	 * @Title: hideAlert @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
+	 *         alterhu2020@gmail.com @param @return void return type @throws
 	 */
 
-	public void hideAlert() {
-		runJS("window.alert=function(msg){window.message=msg};");
+	public void alertHide() {
+		javascript("window.alert=function(msg){window.message=msg};");
 	}
 
 	/**
 	 * @Title: isAlertPresent @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return @return boolean return
+	 *         alterhu2020@gmail.com @param @return @return boolean return
 	 *         type @throws
 	 */
 
-	public boolean isAlertPresent() {
-
+	public boolean alertIsPresent() {
 		boolean presentFlag = false;
-
 		try {
-			Alert alert = waitforElement().until(ExpectedConditions.alertIsPresent());
+			Alert alert = AbstractWebDriverWait().until(ExpectedConditions.alertIsPresent());
 			// Check the presence of alert
 			// Alert alert = driver.switchTo().alert();
 			// Alert present; set the flag
@@ -1378,40 +1154,14 @@ public class BaseSteps {
 	}
 
 	/**
-	 * @Title: isChromeEmulation @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return @return boolean return
+	 * @Title: getAlertMessage @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return @return String return
 	 *         type @throws
 	 */
 
-	public boolean isChromeEmulationBrowser() {
-		Capabilities actualCapabilities = ((RemoteWebDriver) driver).getCapabilities();
-		String browser = actualCapabilities.getBrowserName();
-		Object isemulator = actualCapabilities.getCapability("mobileEmulationEnabled");
-		if (isemulator != null) {
-			boolean isemulatorbool = (boolean) isemulator;
-			if (browser.equalsIgnoreCase("chrome") && isemulatorbool) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * @Title: getOutputlog @Description: TODO @author
-	 *         ahu@greendotcorp.com @param @return void return type @throws
-	 */
-
-	public void getOutputlog() {
-		LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
-		for (LogEntry entry : logEntries) {
-			log.info(Calendar.getInstance().getTime() + " " + entry.getLevel() + " " + entry.getMessage());
-			// do something useful with the data
-		}
-	}
-
-	public void switchtoDesktopPage() {
-
+	public String alertMessageIs() {
+		Object objmsg = javascript("return window.message;");
+		return objmsg.toString();
 	}
 
 	/**
@@ -1419,39 +1169,91 @@ public class BaseSteps {
 	 *         Judy.Zhu@greendotcorp.com @param @return void return type @throws
 	 */
 
-	public void switchToIframe(int iframeSequence) {
+	public void iframeSwitchTo(int iframeSequence) {
 		driver.switchTo().frame(driver.findElements(By.tagName("iframe")).get(iframeSequence));
 	}
 
 	/**
-	 * getBrowserType:(get the current running browser type and version number).
-	 * 
-	 * @param driver
-	 *            ---the web driver instance
-	 * 
-	 * @since JDK 1.6
-	 * @return String --- the browser type and version number
+	 * @Title: clickOKButtonInAlertDialog @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
 	 */
-	public static String getBrowserType(RemoteWebDriver driver) {
-		Capabilities caps = driver.getCapabilities();
-		String browserName = caps.getBrowserName();
-		String browserVersion = caps.getVersion();
-		// String platform=caps.getPlatform().toString();
-		log.info("Get the current running browser is:" + browserName + ",the browser version is:" + browserVersion);
-		return browserName + " " + browserVersion;
+
+	public void dialogClickAlertOKButton() {
+		// throw new PendingException();
+
+		boolean isclicked = false;
+		WebDriverWait wait = new WebDriverWait(driver, SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME);
+		try {
+			Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+			// log.info("Pop up Alert text is:"+alert.getText());
+			alert.authenticateUsing(new UserAndPassword("ahu", "gu.chan-10266"));
+			alert.accept();
+			isclicked = true;
+		} catch (NoAlertPresentException e) {
+			// log.info("the Alert didn't pop up currently:"+e.getMessage());
+		} catch (TimeoutException e) {
+			log.error("Time out we cannot find this OK button:" + e.getMessage());
+		}
+		Assert.assertTrue(isclicked);
+
 	}
 
 	/**
-	 * getBrowserType:(get the current running browser type and version number).
-	 * 
-	 * @param driver
-	 *            ---the web driver instance
-	 * 
-	 * @since JDK 1.6
-	 * @return String --- the browser type and version number
+	 * @Title: clickCancelButtonInAlertDialog @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @return void return type @throws
 	 */
-	public static String BrowserType(RemoteWebDriver driver) {
-		return getBrowserType(driver);
+
+	public void dialogClickAlertCancelButton() {
+		// throw new PendingException();
+
+		boolean isclicked = false;
+		WebDriverWait wait = new WebDriverWait(driver, SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME);
+		try {
+			Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+			// log.info("Pop up Alert text is:"+alert.getText());
+			alert.dismiss();
+			isclicked = true;
+		} catch (NoAlertPresentException e) {
+			// log.info("the Alert didn't pop up currently:"+e.getMessage());
+		} catch (TimeoutException e) {
+			log.error("Time out we cannot find this OK button:" + e.getMessage());
+		}
+		Assert.assertTrue(isclicked);
+
+	}
+
+	/**
+	 * @Title: switchToWindowWithTitle @Description: TODO @author
+	 *         alterhu2020@gmail.com @param @param windowTitle @return void
+	 *         return type @throws
+	 */
+
+	public void windowSwitchToTitle(String windowTitle) {
+		// throw new PendingException();
+
+		try {
+			Robot robot = new Robot();
+			Set<String> allwindows = driver.getWindowHandles();
+			for (String window : allwindows) {
+				driver.switchTo().window(window);
+				if (driver.getTitle().contains(windowTitle)) {
+					robot.delay(5000);
+					// robot.keyPress(keycode);
+				}
+			}
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * @return the WebDriverWait element.
+	 */
+	protected WebDriverWait AbstractWebDriverWait() {
+		WebDriverWait webDriverWait = new WebDriverWait(driver, SeleniumCore.DEFAULT_WEBELEMENT_LOADING_TIME);
+		return webDriverWait;
 	}
 
 }

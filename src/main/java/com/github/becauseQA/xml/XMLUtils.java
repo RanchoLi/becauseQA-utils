@@ -31,8 +31,9 @@ import org.dom4j.xpath.DefaultXPath;
 import org.xml.sax.InputSource;
 
 /**
- * marshaller xml or unmarshaller xml 
+ * marshaller xml or unmarshaller xml
  * http://blog.bdoughan.com/2011/08/jaxb-and-java-io-files-streams-readers.html
+ * 
  * @author Administrator
  *
  */
@@ -132,7 +133,8 @@ public class XMLUtils {
 	/**
 	 * @param xpath
 	 *            xpath could be //ns:node1/ns://node2 it's from namespace xpath
-	 *            xpath could be //ns:ListBucketResult/ns:CommonPrefixes[last()-1]/ns:Prefix
+	 *            xpath could be
+	 *            //ns:ListBucketResult/ns:CommonPrefixes[last()-1]/ns:Prefix
 	 *            xpath could be //*[local-name()='nodename' and
 	 *            text()='nodetext']
 	 * @return Node the node object
@@ -150,16 +152,11 @@ public class XMLUtils {
 			defaultXPath.setNamespaceURIs(namespaces);
 			node = defaultXPath.selectSingleNode(document);
 
-		}else{
+		} else {
 			node = document.selectSingleNode(xpath);
 		}
-		
-		return node;
-	}
 
-	public static String getNodeAttributeValue(String xpath, String attributeName) {
-		Node xPathNode = getXPathNode(xpath);
-		return xPathNode.valueOf("@" + attributeName);
+		return node;
 	}
 
 	/**
@@ -170,8 +167,8 @@ public class XMLUtils {
 	 * @return Node the node object
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<Node> getXPathNodes(String xpath) {
-		List<Node> node = null;
+	public static List<Element> getXPathNodes(String xpath) {
+		List<Element> node = null;
 		if (xpath.contains("ns")) {// here had used the namespace path
 			DefaultXPath defaultXPath = new DefaultXPath(xpath);
 
@@ -183,11 +180,37 @@ public class XMLUtils {
 			defaultXPath.setNamespaceURIs(namespaces);
 			node = defaultXPath.selectNodes(document);
 
-		}else{
+		} else {
 			node = document.selectNodes(xpath);
 		}
-		
+
 		return node;
+	}
+
+	/**
+	 * @param node
+	 *            the node object
+	 *
+	 * @param xpath
+	 *            xpath could be //ns:node1/ns://node2 it's from namespace xpath
+	 *            xpath could be
+	 *            //ns:ListBucketResult/ns:CommonPrefixes[last()-1]/ns:Prefix
+	 *            xpath could be //*[local-name()='nodename' and
+	 *            text()='nodetext']
+	 * 
+	 * @return Node the node object
+	 */
+	public static Node getXPathNode(Element node, String xpath) {
+		Node childNode = null;
+		String namespaceURI = node.getNamespaceURI();
+		node.addNamespace("ns", namespaceURI);
+		childNode=node.selectSingleNode(xpath);
+		return childNode;
+	}
+
+	public static String getNodeAttributeValue(String xpath, String attributeName) {
+		Node xPathNode = getXPathNode(xpath);
+		return xPathNode.valueOf("@" + attributeName);
 	}
 
 	/**
@@ -229,13 +252,14 @@ public class XMLUtils {
 	 * @param rootClass
 	 *            the root xml object class
 	 */
-	public static void marshal(Object rootClass,File outputXmlFile) {
+	public static void marshal(Object rootClass, File outputXmlFile) {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(rootClass.getClass());
 			Marshaller marshaller = jc.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 设置输出编码,默认为UTF-8
-			//marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", value);
+			// marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper",
+			// value);
 			marshaller.marshal(rootClass, outputXmlFile);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
@@ -254,10 +278,11 @@ public class XMLUtils {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(rootObject.getClass());
 			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); //
-			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); // 格式化输出
+			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 设置输出编码,默认为UTF-8
 			marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://www.example.com/address address.xsd");
-			//marshaller.setProperty("eclipselink.media.type", "application/json");
+			// marshaller.setProperty("eclipselink.media.type",
+			// "application/json");
 			marshaller.marshal(rootObject, stringWriter);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
@@ -278,10 +303,13 @@ public class XMLUtils {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(rootClass);
 			Unmarshaller marshaller = jc.createUnmarshaller();
-			//The JAXB specification does not define any Unmarshaller properties, however individual implementations may.  
-			//EclipseLink JAXB (MOXy) for example offers a property that enables JSON binding.
-			//marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			//marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");// 设置输出编码,默认为UTF-8
+			// The JAXB specification does not define any Unmarshaller
+			// properties, however individual implementations may.
+			// EclipseLink JAXB (MOXy) for example offers a property that
+			// enables JSON binding.
+			// marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			// marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");//
+			// 设置输出编码,默认为UTF-8
 			object = marshaller.unmarshal(outputXmlFile);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block

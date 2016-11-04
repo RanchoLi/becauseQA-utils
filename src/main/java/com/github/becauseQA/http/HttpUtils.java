@@ -64,8 +64,8 @@ public class HttpUtils {
 		return response;
 
 	}
-	public static String postRequestAsString(URL url, Map<String, String> headers, Object data)
-			throws IOException {
+
+	public static String postRequestAsString(URL url, Map<String, String> headers, Object data) throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, HttpMethod.POST);
 		setHeaders(headers);
@@ -74,6 +74,7 @@ public class HttpUtils {
 		return response;
 
 	}
+
 	public static InputStream postRequestAsInputstream(URL url, Map<String, String> headers, Map<String, Object> data)
 			throws IOException {
 		HttpsCert.ignoreCert();
@@ -84,7 +85,8 @@ public class HttpUtils {
 		return response;
 
 	}
-	public static InputStream postRequestAsInputstream(URL url, Map<String, String> headers,Object data)
+
+	public static InputStream postRequestAsInputstream(URL url, Map<String, String> headers, Object data)
 			throws IOException {
 		HttpsCert.ignoreCert();
 		getConnection(url, HttpMethod.POST);
@@ -98,7 +100,7 @@ public class HttpUtils {
 	public static void getConnection(URL url, HttpMethod method) {
 		// HttpURLConnection connection = null;
 		try {
-			log.info("Request url: " + url.toString());
+			//log.info("Request url: " + url.toString());
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod(method.name());
 			// connection.setDoOutput(true);
@@ -132,7 +134,7 @@ public class HttpUtils {
 	 *            password.
 	 * @since JDK 1.8
 	 */
-	public static void setAuthorizationHeader(Map<String, String> header,String username, String password) {
+	public static void setAuthorizationHeader(Map<String, String> header, String username, String password) {
 		// Base64Utils base64 = new Base64Utils();
 		String userpass = username + ":" + password;
 		String basicAuth = Base64Utils.encryptBasic(userpass);
@@ -143,10 +145,10 @@ public class HttpUtils {
 		connection.setDoOutput(true);
 		try {
 			OutputStream outputStream = connection.getOutputStream();
-			if(data instanceof Map){
-				
-			}else{
-				
+			if (data instanceof Map) {
+
+			} else {
+
 			}
 			StringBuffer sb = new StringBuffer();
 			for (String key : data.keySet()) {
@@ -171,12 +173,12 @@ public class HttpUtils {
 		try {
 			OutputStream outputStream = connection.getOutputStream();
 			String jsonString = JSONUtils.fromObject(data);
-			log.info("Json Data: \n" + jsonString);
+			//log.info("HTTP Sending Json Data: \n" + jsonString);
 			byte[] bytes = jsonString.getBytes("UTF-8");
 
 			outputStream.write(bytes);
 			outputStream.flush();
-			//outputStream.close();
+			// outputStream.close();
 		} catch (IOException e) {
 
 			// TODO Auto-generated catch block
@@ -188,9 +190,9 @@ public class HttpUtils {
 	public static InputStream getResponseStream() {
 		int responseCode = 0;
 		InputStream inputStream = null;
-		String responseMessage = null;
+		//String responseMessage = null;
 		try {
-			responseMessage = connection.getResponseMessage();
+			//responseMessage = connection.getResponseMessage();
 			inputStream = connection.getInputStream();
 			responseCode = connection.getResponseCode();
 			// if (responseCode !=
@@ -202,12 +204,9 @@ public class HttpUtils {
 					throw new Exception("Http Response Inputstream,response code: " + responseCode);
 				}
 			}
-		} catch (IOException e) {
+		}  catch (Exception e) {
 			// TODO Auto-generated catch block
-			log.error("Response message:\n" + responseMessage, e);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Http Response Exception:",e);
 		}
 		return inputStream;
 
@@ -216,7 +215,6 @@ public class HttpUtils {
 	public static String getResponseString() {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader reader = null;
-
 		InputStream responseStream = null;
 		responseStream = getResponseStream();
 		if (responseStream != null) {
@@ -226,15 +224,22 @@ public class HttpUtils {
 				while ((tempLine = reader.readLine()) != null) {
 					sb.append(tempLine + System.getProperty("line.separator"));
 				}
-				reader.close();
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				log.error("Server Response Exception",e);
+				log.error("Http Server Response Exception:", e);
+			}finally {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 		}
 		String responseContent = sb.toString();
-		log.info("Response Content is:\n" + responseContent);
+		//log.info("Response Content is:\n" + responseContent);
 		return responseContent;
 	}
 }

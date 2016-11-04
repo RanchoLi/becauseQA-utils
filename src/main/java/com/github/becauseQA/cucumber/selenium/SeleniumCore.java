@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.openqa.grid.internal.utils.configuration.StandaloneConfiguration;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -35,6 +34,7 @@ import com.github.becauseQA.cucumber.selenium.appium.AppiumServer;
 import com.github.becauseQA.cucumber.selenium.appium.ServerArguments;
 import com.sun.jna.Platform;
 
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobileCapabilityType;
@@ -50,6 +50,7 @@ public class SeleniumCore {
 
 	public final static String PROJECT_DIR = new File("").getAbsolutePath() + File.separator; // like
 																								// "C:\workspace\Micro2_Automation_Selenium\"
+	public final static String userdir = System.getProperty("user.dir") + File.separator + "Drivers";
 
 	public static final int DEFAULT_PAGE_LOADING_TIME = 150;
 	public static final int DEFAULT_WEBELEMENT_LOADING_TIME = 6;
@@ -64,7 +65,7 @@ public class SeleniumCore {
 	/**
 	 * start the selenium driver fro RemoteWebDriver instance.
 	 * 
-	 * @param servername
+	 * @param serverName
 	 *            the selenium hub name, like localhost,192.168.1.3, then the
 	 *            parameter should be localhost.
 	 * @param devicename
@@ -75,35 +76,39 @@ public class SeleniumCore {
 	 *            session ,this parameter should better use in develop code .
 	 * @return the selenium web driver instance.
 	 */
-	public static void startSeleniumDriver(String servername, String devicename, boolean useSession) {
+	public static void startBrowser(String serverName, String devicename, boolean useSession, boolean insertJS) {
 		// the default platform is pc .
 		PLATFORM platform = PLATFORM.PC;
-
+		DesiredCapabilities capabilities = null;
 		RemoteWebDriver.useSession = useSession;
 
-		String pchub = "http://" + servername + ":4444/wd/hub";
-		String mobilehub = "http://" + servername + ":4723/wd/hub";
+		String pchub = "http://" + serverName + ":4444/wd/hub";
+		String mobilehub = "http://" + serverName + ":4723/wd/hub";
 
-		DesiredCapabilities capabilities = null;
-
-		if (devicename != null) {
+		if (StringUtils.isNotEmpty(devicename)) {
 			devicename = devicename.trim();
 			// PC Platform Browser Testing
 			if (devicename.equalsIgnoreCase("ie")) {
 				capabilities = IE();
+
 			} else if (devicename.equalsIgnoreCase("firefox")) {
 				capabilities = Firefox();
+
 			} else if (devicename.equalsIgnoreCase("chrome")) {
 				capabilities = Chrome();
+
 			} else if (devicename.equalsIgnoreCase("safari")) {
 				capabilities = Safari();
+
 			} else if (devicename.equalsIgnoreCase("opera")) {
 				capabilities = Opera();
+
 			}
 			// PC Platform Chrome Browser Emulator Testing
 			else if (devicename.toLowerCase().startsWith("chrome") && devicename.length() > 8) {
 				devicename = devicename.split("-")[1];
 				capabilities = ChromeEmulator(devicename);
+
 			}
 			// Android Browser Testing
 			else if (devicename.toLowerCase().startsWith("andriod")) {
@@ -111,16 +116,16 @@ public class SeleniumCore {
 				capabilities = mobile("", "Android", "Chrome", "Chrome");
 
 			}
-			// IPhone Browser Testing
-			else if (devicename.toLowerCase().startsWith("iphone")) {
-				platform = PLATFORM.IPHONE;
-				mobile("iPhone 6", "iOS", "safari", null);
-
-			}
 			// Android Application Testing
 			else if (devicename.toLowerCase().startsWith("andriod")) {
 				platform = PLATFORM.ANDROID;
 				mobile("", "Android", "Chrome", "Chrome");
+
+			}
+			// IPhone Browser Testing
+			else if (devicename.toLowerCase().startsWith("iphone")) {
+				platform = PLATFORM.IPHONE;
+				mobile("iPhone 6", "iOS", "safari", null);
 
 			}
 			// IPhone Application Testing
@@ -135,64 +140,51 @@ public class SeleniumCore {
 				platform = PLATFORM.IPAD;
 
 			}
-			// Default running in PC platform using Firefox browser
-			else { // default using pc firefox browser
-				capabilities = Firefox();
+			// Default running in PC platform using chrome browser
+			else { // default using pc chrome browser
+				capabilities = Chrome();
+
 			}
 
 		} else {
-			capabilities = Firefox();
+			capabilities = Chrome();
+
 		}
 
 		switch (platform) {
 		case PC:
 			// start the web driver
-
-			if (StringUtils.isEmpty(servername) || servername.trim().equalsIgnoreCase("localhost")) {
-				startSeleniumServer(); // everytime start the server will caused
-										// reused session not worked.you need to
-										// run server command-line
-				/*
-				 * if (useSession) { logger.error(
-				 * "Not Supported non-command line execution. As Selenium standalone start from existing page session ,you need to run thread from command line:"
-				 * ); logger.error("java -jar " +
-				 * SeleniumDownloader.seleniumstandaloneName +
-				 * " -trustAllSSLCertificates -browserSessionReuse -debug" +
-				 * " -Dwebdriver.chrome.driver=" +
-				 * SeleniumDownloader.chromedriverFilePath +
-				 * " -Dwebdriver.ie.driver=" +
-				 * SeleniumDownloader.iedriverFilePath); }
-				 */
-			}
-			try {
-				// RemoteWebDriver.useSession=true;
+			seleniumServerStart(serverName);
+			try { // RemoteWebDriver.useSession=true; startSeleniumServer();
 				driver = new RemoteWebDriver(new URL(pchub), capabilities);
+			} catch (MalformedURLException e) { // TODO Auto-generated catch
+				logger.error(e);
+			}
 
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			break;
-		default:
-			// init the web driver
+		case IPHONE:
 			// start the appium server
-			ServerArguments arguments = new ServerArguments();
-			arguments.setArgument(AppiumCommonArgs.IP_ADDRESS, servername);
-			arguments.setArgument(AppiumCommonArgs.PORT_NUMBER, 4723);
-			arguments.setArgument(AppiumCommonArgs.ENABLE_FULL_RESET, true);
-			boolean appiumserverRunning = false;
-			appiumServer = new AppiumServer(arguments);
-			appiumserverRunning = appiumServer.isServerRunning();
-			if (!appiumserverRunning && (servername.trim().toLowerCase().equals("localhost")
-					|| servername.trim().toLowerCase().equals("127.0.0.1"))) {
-				appiumServer.startServer();
-			}
+			appniumServerStart(serverName);
 			try {
 				driver = new IOSDriver<>(new URL(mobilehub), capabilities);
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 			}
+			break;
+		case ANDROID:
+			// start the appium server
+			appniumServerStart(serverName);
+			try {
+				driver = new AndroidDriver<>(new URL(mobilehub), capabilities);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				logger.error(e);
+			}
+			break;
+		case IPAD:
+			break;
+		default:
 			break;
 		}
 
@@ -207,14 +199,16 @@ public class SeleniumCore {
 		seleniumDriverManager(driver);
 
 		// inject the page recorder
-		PageRecorder.startRecord(driver);
+		if (insertJS) {
+			PageRecorder.startRecord(driver);
+		}
 
 	}
 
 	/**
 	 * close the selenium driver.
 	 */
-	public void closeSeleniumDriver() {
+	public void closeBrowser() {
 		if (driver != null) {
 			driver.close();
 			// factory.killDriverProcesses();
@@ -242,12 +236,11 @@ public class SeleniumCore {
 				// the js executor timeout
 				driver.manage().timeouts().setScriptTimeout(DEFAULT_JS_TIMEOUT, TimeUnit.SECONDS);
 			}
-
-			driver.manage().window().maximize();
-
-		} catch (TimeoutException e) {
-			logger.error("The page or the webelment had been waited for 120 second,it cannot showed ,so the test failed"
-					+ ",Exception:" + e.getMessage());
+			//Window window = driver.manage().window();
+			//window.maximize();
+			driver.manage().window().maximize();  //firefox latest geckodriver may not works
+		} catch (Exception e) {
+			logger.error("Selenium Driver Manager setting failed:" + ",Exception:" + e.getMessage());
 		}
 
 	}
@@ -313,7 +306,31 @@ public class SeleniumCore {
 	 *             selenium /ie/InternetExplorerDriver.html
 	 */
 
+	@SuppressWarnings("deprecation")
 	public static DesiredCapabilities IE() {
+
+		String iedriver = System.getProperty("webdriver.ie.driver");
+
+		if (iedriver == null) {
+			SeleniumDownloader.downloadIEDriverResources(userdir);
+			// ClassLoader loader = SeleniumCore.class.getClassLoader();
+			String iedriverPath = userdir + File.separator + "IEDriverServer.exe";
+			if (new File(iedriverPath).exists()) {
+				System.setProperty("webdriver.ie.driver", iedriverPath);
+				// System.setProperty("webdriver.ie.driver", iedriverPath);
+				logger.info("Set IE Driver in this location:" + iedriverPath);
+			}
+		}
+		String edgedriver = System.getProperty("webdriver.edge.driver");
+		if (edgedriver == null) {
+			SeleniumDownloader.downloadEdgeDriver(userdir);
+			String edgeDriverPath = userdir + File.separator + "MicrosoftWebDriver.exe";
+			if (new File(edgeDriverPath).exists()) {
+				System.setProperty("webdriver.edge.driver", edgeDriverPath);
+				// System.setProperty("webdriver.ie.driver", iedriverPath);
+				logger.info("Set Edge Driver in this location:" + edgeDriverPath);
+			}
+		}
 		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
 
 		// SSL url setting
@@ -328,22 +345,49 @@ public class SeleniumCore {
 		 */
 		capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		capability.setCapability(InternetExplorerDriver.LOG_LEVEL, "TRACE");
-		capability.setCapability(InternetExplorerDriver.LOG_FILE, "logs");
+		capability.setCapability(InternetExplorerDriver.LOG_FILE, "logs/iedriver.log");
 		// clear session
 		capability.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+		
+		//this is the importance
+		/* Unexpected error launching Internet Expl
+		 orer. IELaunchURL() returned HRESULT 80070057 ('E_INVALIDARG') for URL 'http://l
+		 ocalhost:21512/' (WARNING: The server did not provide any stacktrace information)
+		 Command duration or timeout: 1.19 seconds*/
+		capability.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
 
 		return capability;
 	}
 
 	/**
 	 * set the firefox profile ,like download file automatically .
-	 * 
+	 *  Still SSL issue: https://github.com/mozilla/geckodriver/issues/93
 	 * 
 	 * @return FirefoxProfile
 	 * @throws IOException
 	 * 
 	 */
 	public static DesiredCapabilities Firefox() {
+		String firefoxDriver = System.getProperty("webdriver.gecko.driver");
+		if (firefoxDriver == null) {
+			SeleniumDownloader.downloadfirefoxResources(userdir);
+			String firefoxDriverPath = null;
+			// ClassLoader loader = SeleniumCore.class.getClassLoader();
+			boolean windows = Platform.isWindows();
+			if (windows) {
+				firefoxDriverPath = userdir + File.separator + "geckodriver.exe";
+			} else {
+				firefoxDriverPath = userdir + File.separator + "geckodriver";
+			}
+			if (new File(firefoxDriverPath).exists()) {
+				System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
+				// System.setProperty("webdriver.chrome.driver",
+				// chromedriverPath);
+				logger.info("Firefox Driver location: " + firefoxDriverPath);
+				logger.info("webdriver.gecko.driver is:" + System.getProperty("webdriver.gecko.driver"));
+			}
+		}
+
 		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
 		FirefoxProfile fp = new FirefoxProfile();
 		// fp.addExtension(extensionToInstall);
@@ -351,7 +395,8 @@ public class SeleniumCore {
 		// http://www.webmaster-toolkit.com/mime-types.shtml
 		// for config list see this :
 		// http://kb.mozillazine.org/About:config_entries#Profile.
-		fp.setAcceptUntrustedCertificates(true);
+		// Open issue in geckodriver : https://github.com/mozilla/geckodriver/issues/93
+		fp.setAcceptUntrustedCertificates(true); 
 		fp.setAssumeUntrustedCertificateIssuer(true);
 		fp.setEnableNativeEvents(false);
 		// fp.setProxyPreferences(proxy);
@@ -366,6 +411,7 @@ public class SeleniumCore {
 
 		// fp.setPreference("browser.helperApps.alwaysAsk.force", false);
 		fp.setPreference("security.default_personal_cert", "Select Automatically");
+		fp.setPreference("security.ssl.enable_ocsp_stapling", "false");
 		fp.setPreference("browser.helperApps.neverAsk.saveToDisk",
 				"application/octet-stream,application/x-compressed,application/x-zip-compressed,application/zip,multipart/x-zip");
 		// File sslerror=new
@@ -399,6 +445,26 @@ public class SeleniumCore {
 
 	public static DesiredCapabilities Chrome() {
 
+		String chromeDriver = System.getProperty("webdriver.chrome.driver");
+		if (chromeDriver == null) {
+			SeleniumDownloader.downloadChromeResources(userdir);
+			String chromedriverPath = null;
+			// ClassLoader loader = SeleniumCore.class.getClassLoader();
+			boolean iswindows = Platform.isWindows();
+			if (iswindows) {
+				chromedriverPath = userdir + File.separator + "chromedriver.exe";
+			} else {
+				chromedriverPath = userdir + File.separator + "chromedriver";
+			}
+			if (new File(chromedriverPath).exists()) {
+				System.setProperty("webdriver.chrome.driver", chromedriverPath);
+				// System.setProperty("webdriver.chrome.driver",
+				// chromedriverPath);
+				logger.info("Chrome Driver location: " + chromedriverPath);
+				logger.info("webdriver.chrome.driver is:" + System.getProperty("webdriver.chrome.driver"));
+			}
+		}
+
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 		Map<String, Object> prefs = new HashMap<String, Object>();
 
@@ -409,6 +475,9 @@ public class SeleniumCore {
 
 		ChromeOptions chromeOptions = new ChromeOptions();
 		chromeOptions.setExperimentalOption("prefs", prefs);
+		chromeOptions.addArguments("--disable-extensions"); // disabled the
+															// developed mode
+															// popup dialog
 		chromeOptions.addArguments("start-maximized");
 		chromeOptions.addArguments("--test-type");
 		chromeOptions.addArguments("--disable-translate");
@@ -496,119 +565,73 @@ public class SeleniumCore {
 		return capabilities;
 	}
 
-	@SuppressWarnings("deprecation")
-	private static void startSeleniumServer() {
-		List<String> args = new ArrayList<String>();
+	public static void seleniumServerStart(String serverName) {
+		if (StringUtils.containsAny(serverName, "localhost", "127.0.0.1")) {
+			List<String> args = new ArrayList<String>();
 
-		// RemoteControlLauncher had deprecated from 2.49.0
-		// RemoteControlLauncher.class totally removed from
-		// org.openqa.selenium.server.cli package
-		// RemoteControlConfiguration rcc =
-		// RemoteControlLauncher.parseLauncherOptions(args);
-		// set the chrome and ie driver using this
-		// method:SeleniumServer.setSystemProperty();
-		String userdir = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main"
-				+ File.separator + "resources";
+			// RemoteControlLauncher had deprecated from 2.49.0
+			// RemoteControlLauncher.class totally removed from
+			// org.openqa.selenium.server.cli package
+			// RemoteControlConfiguration rcc =
+			// RemoteControlLauncher.parseLauncherOptions(args);
+			// set the chrome and ie driver using this
+			// method:SeleniumServer.setSystemProperty();
 
-		SeleniumDownloader.downloadSeleniumResources(userdir);
+			// SeleniumDownloader.downloadSeleniumServerStandalone(userdir);
 
-		String firefoxDriver = System.getProperty("webdriver.gecko.driver");
-		if (firefoxDriver == null) {
-			SeleniumDownloader.downloadfirefoxResources(userdir);
-			String firefoxDriverPath = null;
-			// ClassLoader loader = SeleniumCore.class.getClassLoader();
-			boolean windows = Platform.isWindows();
-			if (windows) {
-				firefoxDriverPath = userdir + File.separator + "geckodriver.exe";
-			} else {
-				firefoxDriverPath = userdir + File.separator + "geckodriver";
+			StandaloneConfiguration configuration = new StandaloneConfiguration();
+
+			/*
+			 * Selenium Server 2 or 3
+			 */
+			/*
+			 * RemoteControlConfiguration rcc =
+			 * SeleniumServer.parseLauncherOptions(args.toArray(new
+			 * String[args.size()]));
+			 * rcc.setPort(RemoteControlConfiguration.DEFAULT_PORT);
+			 * rcc.setTrustAllSSLCertificates(true);
+			 * rcc.setCaptureLogsOnQuit(true);
+			 * rcc.setBrowserSideLogEnabled(true);
+			 * rcc.setReuseBrowserSessions(true); rcc.setUserJSInjection(true);
+			 * 
+			 * rcc.setDebugMode(true);
+			 */
+			configuration.port = 4444;
+			configuration.debug = true;
+
+			try {
+				// boolean useSession = RemoteWebDriver.useSession;
+
+				JCommander commander = new JCommander(configuration, args.toArray(new String[args.size()]));
+				commander.setProgramName("Selenium-3-Server");
+
+				seleniumServer = new SeleniumServer(configuration);
+				// seleniumServer.stop();
+				seleniumServer.boot();
+
+				logger.info("Start selenium remote server with configuration: " + configuration);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				// seleniumServer.stop();
+				// seleniumServer.boot();
+				// e.printStackTrace();
 			}
-			if (new File(firefoxDriverPath).exists()) {
-				System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
-				// System.setProperty("webdriver.chrome.driver",
-				// chromedriverPath);
-				logger.info("Firefox Driver location: " + firefoxDriverPath);
-				logger.info("webdriver.gecko.driver is:" + System.getProperty("webdriver.gecko.driver"));
-			}
-		}
-
-		String iedriver = System.getProperty("webdriver.ie.driver");
-
-		if (iedriver == null) {
-			SeleniumDownloader.downloadIEDriverResources(userdir);
-			// ClassLoader loader = SeleniumCore.class.getClassLoader();
-			String iedriverPath = userdir + File.separator + "IEDriverServer.exe";
-			if (new File(iedriverPath).exists()) {
-				System.setProperty("webdriver.ie.driver", iedriverPath);
-				// System.setProperty("webdriver.ie.driver", iedriverPath);
-				logger.info("Set IE Driver in this location:" + iedriverPath);
-			}
-		}
-		String edgedriver = System.getProperty("webdriver.edge.driver");
-		if (edgedriver == null) {
-			SeleniumDownloader.downloadEdgeDriver(userdir);
-			String edgeDriverPath = userdir + File.separator + "MicrosoftWebDriver.exe";
-			if (new File(edgeDriverPath).exists()) {
-				System.setProperty("webdriver.edge.driver", edgeDriverPath);
-				// System.setProperty("webdriver.ie.driver", iedriverPath);
-				logger.info("Set Edge Driver in this location:" + edgeDriverPath);
-			}
-		}
-
-		String chromeDriver = System.getProperty("webdriver.chrome.driver");
-		if (chromeDriver == null) {
-			SeleniumDownloader.downloadChromeResources(userdir);
-			String chromedriverPath = null;
-			// ClassLoader loader = SeleniumCore.class.getClassLoader();
-			boolean iswindows = Platform.isWindows();
-			if (iswindows) {
-				chromedriverPath = userdir + File.separator + "chromedriver.exe";
-			} else {
-				chromedriverPath = userdir + File.separator + "chromedriver";
-			}
-			if (new File(chromedriverPath).exists()) {
-				System.setProperty("webdriver.chrome.driver", chromedriverPath);
-				// System.setProperty("webdriver.chrome.driver",
-				// chromedriverPath);
-				logger.info("Chrome Driver location: " + chromedriverPath);
-				logger.info("webdriver.chrome.driver is:" + System.getProperty("webdriver.chrome.driver"));
-			}
-		}
-
-		StandaloneConfiguration configuration = new StandaloneConfiguration();
-
-		/*
-		 * Selenium Server 2
-		 */
-		/*
-		 * RemoteControlConfiguration rcc =
-		 * SeleniumServer.parseLauncherOptions(args.toArray(new
-		 * String[args.size()]));
-		 * rcc.setPort(RemoteControlConfiguration.DEFAULT_PORT);
-		 * rcc.setTrustAllSSLCertificates(true); rcc.setCaptureLogsOnQuit(true);
-		 * rcc.setBrowserSideLogEnabled(true);
-		 * rcc.setReuseBrowserSessions(true); rcc.setUserJSInjection(true);
-		 * 
-		 * rcc.setDebugMode(true);
-		 */
-		configuration.port = 4444;
-		configuration.debug = true;
-
-		try {
-			// boolean useSession = RemoteWebDriver.useSession;
-
-			JCommander commander = new JCommander(configuration, args.toArray(new String[args.size()]));
-			commander.setProgramName("Selenium-3-Server");
-
-			seleniumServer = new SeleniumServer(configuration);
-			seleniumServer.boot();
-			logger.info("Start selenium remote server with configuration: " + configuration);
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 	}
 
+	public static void appniumServerStart(String serverName) {
+		if (StringUtils.containsAny(serverName, "localhost", "127.0.0.1")) {
+			ServerArguments arguments = new ServerArguments();
+			arguments.setArgument(AppiumCommonArgs.IP_ADDRESS, "127.0.0.1");
+			arguments.setArgument(AppiumCommonArgs.PORT_NUMBER, 4723);
+			arguments.setArgument(AppiumCommonArgs.ENABLE_FULL_RESET, true);
+			boolean appiumserverRunning = false;
+			appiumServer = new AppiumServer(arguments);
+			appiumserverRunning = appiumServer.isServerRunning();
+			if (!appiumserverRunning)
+				appiumServer.startServer();
+		}
+	}
 }

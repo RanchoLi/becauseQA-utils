@@ -11,11 +11,9 @@ package com.github.becauseQA.command;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.exec.CommandLine;
@@ -50,7 +48,7 @@ public class CommandUtils {
 	 * @return command line content
 	 * @since JDK 1.8
 	 */
-	public String runCommand(String workdirectory, List<String> commands) {
+	public static String runListCommand(String workdirectory, List<String> commands) {
 
 		StringBuffer output = new StringBuffer();
 		Process process = null;
@@ -89,12 +87,9 @@ public class CommandUtils {
 	 * @return command line content
 	 * @since JDK 1.8
 	 */
-	public String runCommand(String workdirectory, String... commands) {
-		List<String> listcommands = new LinkedList<String>();
-		for (String command : commands) {
-			listcommands.add(command);
-		}
-		return runCommand(workdirectory, listcommands);
+	public static String runArrayCommand(String workdirectory, String... commands) {
+		List<String> listcommands = Arrays.asList(commands);
+		return runListCommand(workdirectory, listcommands);
 	}
 	/*
 	 * apache command utility
@@ -110,6 +105,7 @@ public class CommandUtils {
 	 *            Whether or not to get the output/error streams of the process
 	 *            you forked. This is helpful for debugging reasons.
 	 * @return A string representation of output/error streams of the process.
+	 * @deprecated see runArrayCommand
 	 */
 	public static String runCommandUsingJavaRuntime(String[] command, boolean getOutput) {
 		String output = "";
@@ -213,39 +209,8 @@ public class CommandUtils {
 	 * @since JDK 1.8
 	 */
 	public static String destoryWindowsProcess(String processname) {
-
-		StringBuffer output = new StringBuffer();
-		Process process = null;
-		try {
-			List<String> command = new ArrayList<String>();
-			command.add("taskkill.exe");
-			command.add("/F");
-			command.add("/IM");
-			command.add(processname);
-			logger.info("Destorying Process Command>>> " + command.toString() + " !");
-			ProcessBuilder pb = new ProcessBuilder(command);
-
-			process = pb.start();
-			Thread.sleep(1000);
-			process.destroy();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-			String line = "";
-			while ((line = reader.readLine()) != null) {
-				output.append(line + "\n");
-				logger.info(line);
-			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("exception happened running command - here's what I know: ");
-			e.printStackTrace();
-			System.exit(-1);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return output.toString();
+		String output = runArrayCommand(null, "cmd.exe","/C","taskkill.exe /F /IM "+processname);
+		return output;
 	}
 
 	/**
@@ -257,7 +222,7 @@ public class CommandUtils {
 	 * @return content of command line
 	 * @since JDK 1.8
 	 */
-	public static String humanReadableCommandLineOutput(List<String> arguments) {
+	private static String humanReadableCommandLineOutput(List<String> arguments) {
 		String outputArguments = String.join(" ", arguments);
 		return outputArguments.trim();
 	}

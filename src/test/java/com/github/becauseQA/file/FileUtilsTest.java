@@ -30,6 +30,10 @@ public class FileUtilsTest {
 
 	@Before
 	public void setUp() throws Exception {
+		String property2 = System.getProperty("java.io.tmpdir");
+		System.out.println(property2);
+		String property = System.getProperty("user.dir");
+		System.out.println(property);
 		fileUtils = new FileUtils();
 
 	}
